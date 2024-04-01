@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './login.component';
+import { DashboardComponent } from './dashboard.component';
 import { MaterialModule } from '../material.module';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    LoginComponent
+    DashboardComponent
   ],
   imports: [
     CommonModule,
-    MaterialModule,
-    ReactiveFormsModule
+    MaterialModule
   ]
 })
-export class LoginModule { }
+export class DashboardModule { }

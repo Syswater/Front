@@ -1,1 +1,39 @@
-<p>login works!</p>
+<div class="w-full h-screen grid md:grid-cols-2 relative">
+  <div class="bck-login bg-cover"></div>
+  <div class="hidden md:flex sm:px-10 xl:px-32 py-10 relative">
+    <div class="mt-10 lines w-full h-full"></div>
+    <p class="absolute top-14 xl:left-36 sm:left-10 text-gray">{{ fecha_actual }}</p>
+    <p class="absolute bottom-8 xl:left-32 sm:left-10 text-gray">Version 1.0.0</p>
+  </div>
+  <div class="hidden md:flex absolute w-full h-full flex justify-center">
+    <div class="separator-login w-[35px] h-screen"></div>
+  </div>
+  <div class="absolute w-full h-full flex items-center justify-center">
+    <mat-card class="w-[305px] h-[408px] lg:w-[405px] lg:h-[408px] py-5 px-5 lg:px-10">
+      <form class="text-center" [formGroup]="formLogin" (submit)="login()">
+        <img
+          src="assets/icons/logo_icon.png"
+          width="100px"
+          class="inline-block"
+        />
+        <br />
+        <mat-form-field appearance="outline" class="w-full mt-8" >
+          <mat-label>Correo Electrónico*</mat-label>
+          <input matInput placeholder="correo@example.com" formControlName="username"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mt-2" >
+          <mat-label>Contraseña*</mat-label>
+          <input matInput type="password" formControlName="password"/>
+        </mat-form-field>
+        <button
+          mat-raised-button
+          type="submit"
+          class="w-1/2 mt-5"
+          style="background-color: #72dcdc; color: white"
+        >
+          Ingresar
+        </button>
+      </form>
+    </mat-card>
+  </div>
+</div>

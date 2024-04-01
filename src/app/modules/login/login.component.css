@@ -1,0 +1,15 @@
+.bck-login{
+    background-image: url('../../../assets/images/login_bck_img.png');
+}
+
+.separator-login{
+    background-image: url('../../../assets/images/login_separator_img.png');
+    background-position: 0 0;
+    background-size: 100%;
+}
+
+.lines{
+    background-image: url('../../../assets/images/login_lines_img.png');
+    background-position: 0 0;
+    background-size: cover;
+}
