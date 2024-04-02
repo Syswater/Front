@@ -1,0 +1,28 @@
+<mat-card class="p-5" style="height: inherit">
+  <mat-card-title class="pl-5">{{ title }}</mat-card-title>
+  <mat-card-content class="mt-5 w-full overflow-auto">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full" style="box-shadow: none;">
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef>No.</th>
+        <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+      <ng-container matColumnDef="weight">
+        <th mat-header-cell *matHeaderCellDef>Weight</th>
+        <td mat-cell *matCellDef="let element">{{ element.weight }}</td>
+      </ng-container>
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef>Symbol</th>
+        <td mat-cell *matCellDef="let element">{{ element.symbol }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card-content>
+  <mat-card-footer class="text-right mt-5">
+    <button mat-raised-button style="background-color: #6DDBDA; color: white; padding: 0 50px 0 50px;">{{button_text}}</button>
+  </mat-card-footer>
+</mat-card>
