@@ -8,7 +8,8 @@ import { LoginModule } from './modules/login/login.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from  '@angular/common/http';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
-
+import { RoutesModule } from './modules/routes/routes.module';
+import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,9 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     LoginModule,
     ReactiveFormsModule,
     HttpClientModule,
-    DashboardModule
+    DashboardModule,
+    RoutesModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]

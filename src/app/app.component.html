@@ -1,1 +1,31 @@
-<router-outlet></router-outlet>
+<app-lateral-bar></app-lateral-bar>
+<div class="translate-x-12" style="width: calc(100vw - 63px)">
+    <div
+      class="h-12 bg-white"
+      style="width: calc(100vw - 63px)"
+    >
+      <button mat-icon-button><mat-icon class="text-gray">menu</mat-icon></button>
+      <span class="ml-10">
+        <mat-icon class="text-gray">search</mat-icon>
+        <input
+          style="color: #c9c9c9"
+          value="Buscar..."
+          class="translate-y-[-8px] ml-2"
+        />
+      </span>
+      <div class="float-right grid grid-cols-9">
+        <div class="col-span-7 relative">
+          <p class="absolute top-2 text-right w-full pr-3">Cristian Parada</p>
+          <p class="absolute top-5 text-right w-full pr-3" style="color: #6ddbda">
+            Prevendedor
+          </p>
+        </div>
+        <div class="col-span-2 mr-2 mt-1">
+          <img src="/assets/icons/photo.png" width="40" />
+        </div>
+      </div>
+    </div>
+  <div class="h-screen" style="width: calc(100vw - 63px)">
+    <router-outlet></router-outlet>
+  </div>
+</div>
