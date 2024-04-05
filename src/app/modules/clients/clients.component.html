@@ -1,1 +1,89 @@
-<p>clients works!</p>
+<div class="px-10 pt-2">
+  <div
+    class="mt-5 w-full bg-white flex items-center pl-5 pt-2 grid grid-cols-4 shadow-lg"
+  >
+    <p class="text-lg">
+      Ruta <span class="text-cyan font-black">Sutamarchan Lunes </span>-
+      25/03-2024
+    </p>
+    <p class="text-lg">
+      Total de clientes:
+      <span class="text-blue_1 font-black">4000</span>
+    </p>
+    <p class="text-lg">
+      Total de clientes de la ruta:
+      <span class="text-green_1 font-black">300</span>
+    </p>
+
+    <mat-form-field class="mr-5 translate-y-2">
+      <mat-select [disabled]="disableSelect.value" [value]="'option1'">
+        <mat-option value="option1">Moniquira Lunes</mat-option>
+        <mat-option value="option2">Sutamarchan Lunes</mat-option>
+        <mat-option value="option3">San Gil Lunes</mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+  </div>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-5">
+    <ng-container matColumnDef="Orden">
+      <th mat-header-cell *matHeaderCellDef>Orden</th>
+      <td mat-cell *matCellDef="let element">{{ element.order }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Cliente">
+      <th mat-header-cell *matHeaderCellDef>Cliente</th>
+      <td mat-cell *matCellDef="let element">{{ element.client }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Telefono">
+      <th mat-header-cell *matHeaderCellDef>Telefono</th>
+      <td mat-cell *matCellDef="let element">{{ element.phoneNumber }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Deudas">
+      <th mat-header-cell *matHeaderCellDef>Deudas</th>
+      <td mat-cell *matCellDef="let element">{{ element.debt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Envases prestados">
+      <th mat-header-cell *matHeaderCellDef>Envases prestados</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.borrowedPackaging }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Observaciones">
+      <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+      <td mat-cell *matCellDef="let element">
+        <ng-container
+          *ngFor="let observation of element.observations; let lastObs = last"
+        >
+          <span
+            [style.color]="observation.importance === 1 ? 'black' : '#6EB8DB'"
+            >{{ observation.text }}</span
+          >{{ !lastObs ? ", " : "" }}
+        </ng-container>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Acciones">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element" [style.width.px]="130">
+        <button
+          mat-icon-button
+          style="display: inline"
+          (click)="showDialogClient(element)"
+        >
+          <mat-icon>info</mat-icon>
+        </button>
+        <button mat-icon-button style="display: inline">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

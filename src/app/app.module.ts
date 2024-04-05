@@ -10,6 +10,7 @@ import { HttpClientModule } from  '@angular/common/http';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { RoutesModule } from './modules/routes/routes.module';
 import { SharedModule } from './modules/shared/shared.module';
+import { ClientsModule } from './modules/clients/clients.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { SharedModule } from './modules/shared/shared.module';
     HttpClientModule,
     DashboardModule,
     RoutesModule,
-    SharedModule
+    SharedModule,
+    ClientsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
