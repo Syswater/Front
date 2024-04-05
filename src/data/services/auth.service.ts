@@ -13,7 +13,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   async login(credentials: any) {
-    return await firstValueFrom(this.http.post(`${this.url}/auth/login`, { username: credentials.username, password: credentials.password }));
+    return await firstValueFrom(this.http.post<{ token: string }>(`${this.url}/auth/login`, { username: credentials.username, password: credentials.password }));
   }
 
 }

@@ -24,6 +24,7 @@ export class LoginComponent {
   async login() {
     try {
       const data = await this.authService.login(this.formLogin.value)
+      localStorage.setItem("token", data.token)
       this.router.navigate(['/dashboard'])
       showPopUp('Inicio de sesión exitoso', 'success')
     } catch (error) {
