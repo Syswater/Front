@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/data/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'FrontSysWater';
+  isLoginView = window.location.pathname == '/login'
+
+  constructor(public auth: AuthService){}
 }

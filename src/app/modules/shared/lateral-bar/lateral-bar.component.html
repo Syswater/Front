@@ -1,4 +1,21 @@
-<div class="w-12 h-screen fixed bg-blue_dark p-2">
-  <img src="assets/icons/logo_basic_icon.png" alt="" />
-  <app-icon></app-icon>
+<div class="w-[70px] h-screen fixed bg-blue_dark p-2">
+  <img src="assets/icons/logo_basic_icon.png" alt="" class="mb-8" />
+  <div
+    *ngFor="let icon of icons; index as i"
+    class="relative"
+    (click)="selected = i; redirectTo(icon.redirectTo)"
+  >
+    <app-icon
+      [iconPath]="icon.iconPath"
+      [color]="i == selected ? '#6DDBDA' : '#7E86A0'"
+      class="cursor-pointer"
+      [size]="icon.size"
+    ></app-icon>
+    <div class="h-5"></div>
+    <div
+      *ngIf="i == selected"
+      class="h-full translate-y-[-10px] translate-x-[-8px] w-1 absolute top-0"
+      [ngStyle]="{ 'background-color': i == selected ? '#6DDBDA' : '#7E86A0' }"
+    ></div>
+  </div>
 </div>

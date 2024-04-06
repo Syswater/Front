@@ -2,17 +2,23 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LateralBarComponent } from './lateral-bar/lateral-bar.component';
 import { IconComponent } from './icon/icon.component';
+import { ModalComponent } from './modal/modal.component';
+import { MaterialModule } from '../material.module';
 
 @NgModule({
   declarations: [
     LateralBarComponent,
-    IconComponent
+    IconComponent,
+    ModalComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MaterialModule
   ],
   exports: [
-    LateralBarComponent
+    LateralBarComponent,
+    ModalComponent,
+    IconComponent
   ]
 })
 export class SharedModule { }

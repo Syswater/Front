@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
@@ -15,8 +15,8 @@ export class LoginComponent {
 
   fecha_actual: string = moment().format('[Bienvenido,] DD [de] MMMM [de] YYYY')
   formLogin: FormGroup = new FormGroup({
-    username: new FormControl('', Validators.email),
-    password: new FormControl('', Validators.pattern(/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{1,8}$/))
+    username: new FormControl(''),
+    password: new FormControl('')
   })
 
   constructor(private authService: AuthService, private router: Router) { }
@@ -25,6 +25,7 @@ export class LoginComponent {
     try {
       const data = await this.authService.login(this.formLogin.value)
       localStorage.setItem("token", data.token)
+      this.authService.isLoginView = false
       this.router.navigate(['/dashboard'])
       showPopUp('Inicio de sesión exitoso', 'success')
     } catch (error) {

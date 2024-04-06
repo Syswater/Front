@@ -1,4 +1,7 @@
 <span
-  class="[&*]:stroke-{{ color }} {{ withFillColor ? '[&*]:fill-'+color.toString() : ''}} stroke-[1%]"
+  class="stroke-[1%]"
+  style="display: ruby-text;"
+  [style.stroke]="color"
+  [style.fill]="color"
   [innerHTML]="svgIcon"
 ></span>

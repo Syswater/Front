@@ -1,6 +1,6 @@
 <div class="w-full h-screen grid md:grid-cols-2 relative">
   <div class="bck-login bg-cover"></div>
-  <div class="hidden md:flex sm:px-10 xl:px-32 py-10 relative">
+  <div class="hidden md:flex sm:px-10 xl:px-32 py-10 relative bg-white">
     <div class="mt-10 lines w-full h-full"></div>
     <p class="absolute top-14 xl:left-36 sm:left-10 text-gray">{{ fecha_actual }}</p>
     <p class="absolute bottom-8 xl:left-32 sm:left-10 text-gray">Version 1.0.0</p>
@@ -18,12 +18,12 @@
         />
         <br />
         <mat-form-field appearance="outline" class="w-full mt-8" >
-          <mat-label>Correo Electrónico*</mat-label>
-          <input matInput placeholder="correo@example.com" formControlName="username"/>
+          <mat-label>Nombre de usuario*</mat-label>
+          <input matInput placeholder="Digita el nombre de usuario" formControlName="username"/>
         </mat-form-field>
         <mat-form-field appearance="outline" class="w-full mt-2" >
           <mat-label>Contraseña*</mat-label>
-          <input matInput type="password" formControlName="password"/>
+          <input matInput type="password" placeholder="Digita la contraseña" formControlName="password"/>
         </mat-form-field>
         <button
           mat-raised-button

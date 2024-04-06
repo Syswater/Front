@@ -1,6 +1,6 @@
 <div class="px-10 pt-2">
   <div
-    class="mt-5 w-full bg-white flex items-center pl-5 pt-2 grid grid-cols-4 shadow-lg"
+    class="mt-5 w-full bg-white flex items-center px-5 pt-2 grid grid-cols-5 shadow-lg"
   >
     <p class="text-lg">
       Ruta <span class="text-cyan font-black">Sutamarchan Lunes </span>-
@@ -22,7 +22,17 @@
         <mat-option value="option3">San Gil Lunes</mat-option>
       </mat-select>
     </mat-form-field>
-    
+
+    <div class="text-right">
+      <button
+        class="mt-5 w-1/2"
+        mat-raised-button
+        style="background-color: #6ddbda; color: white; padding: 0 50px 0 50px"
+        (click)="showDialogClient(null, 1)"
+      >
+        Agregar
+      </button>
+    </div>
   </div>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-5">
@@ -73,11 +83,15 @@
         <button
           mat-icon-button
           style="display: inline"
-          (click)="showDialogClient(element)"
+          (click)="showDialogClient(element, 1)"
         >
           <mat-icon>info</mat-icon>
         </button>
-        <button mat-icon-button style="display: inline">
+        <button
+          mat-icon-button
+          style="display: inline"
+          (click)="showDialogClient(element, 2)"
+        >
           <mat-icon>delete</mat-icon>
         </button>
       </td>

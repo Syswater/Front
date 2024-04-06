@@ -1,8 +1,8 @@
-<app-lateral-bar></app-lateral-bar>
-<div class="translate-x-12" style="width: calc(100vw - 48px)">
+<app-lateral-bar *ngIf="!auth.isLoginView"></app-lateral-bar>
+<div class="translate-x-[70px]" style="width: calc(100vw - 70px)" *ngIf="!auth.isLoginView">
     <div
       class="h-12 bg-white"
-      style="width: calc(100vw - 48px)"
+      style="width: calc(100vw - 70px)"
     >
       <button mat-icon-button><mat-icon class="text-gray">menu</mat-icon></button>
       <span class="ml-10">
@@ -25,7 +25,8 @@
         </div>
       </div>
     </div>
-  <div class="" style="width: calc(100vw - 48px)">
+  <div class="" style="width: calc(100vw - 70px)">
     <router-outlet></router-outlet>
   </div>
 </div>
+<router-outlet *ngIf="auth.isLoginView"></router-outlet>

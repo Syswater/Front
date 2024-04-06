@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observation } from 'src/data/models/observation';
+import { ModalService } from 'src/data/services/modal.service';
+import { ClientsFormComponent } from './components/clients-form/clients-form.component';
 
 export interface Client {
   order: number;
@@ -245,7 +247,16 @@ export class ClientsComponent {
   dataSource = ELEMENT_DATA;
   disableSelect = new FormControl(false);
 
-  showDialogClient(element: any){
+  constructor(private modalService: ModalService) { }
 
+  showDialogClient(element: any, flag: number) {
+    switch (flag) {
+      case 1:
+        this.modalService.open(ClientsFormComponent, () => { });
+        break;
+      case 2:
+        this.modalService.open(ClientsFormComponent, () => { });
+        break;
+    }
   }
 }

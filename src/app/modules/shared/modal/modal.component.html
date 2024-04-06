@@ -1,0 +1,12 @@
+<div class="block max-h-[90vh] overflow-auto min-h-32 min-w-32">
+  <div class="flex" *ngIf="modalService.showX">
+    <div class="flex-1"></div>
+    <div
+      class="cursor-pointer rounded-full bg-silver p-1 p-2"
+      (click)="close()"
+    >
+      <button mat-icon-button><mat-icon>close</mat-icon></button>
+    </div>
+  </div>
+  <ng-content></ng-content>
+</div>

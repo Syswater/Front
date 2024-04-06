@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
 
   url = environment.API_URL
+  isLoginView = window.location.pathname == '/login'
 
   constructor(private http: HttpClient) { }
 
