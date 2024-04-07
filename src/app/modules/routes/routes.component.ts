@@ -1,10 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { RouteService } from '../../../data/services/route.service';
+import { DayOfWeek, Route } from '../../../data/models/route';
+
 
 @Component({
   selector: 'app-routes',
   templateUrl: './routes.component.html',
-  styleUrls: ['./routes.component.css']
+  styleUrls: ['./routes.component.css'],
 })
-export class RoutesComponent {
+export class RoutesComponent implements OnInit {
+
+
+  routes: Route[] = [];
+  weekdays: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  rowData: { [key in DayOfWeek]: boolean }[] = [];
+
+  constructor(private routeService: RouteService) { }
+
+
+  ngOnInit(): void {
+    (async () => {
+      this.routes = await this.routeService.getRoutes()
+      console.log(this.routes);
+
+    })();
+  }
+
+  getBooleanDay(route: Route, weekday: string) {
+    return route.weekdays.find(day => day == weekday)
+  }
 
 }

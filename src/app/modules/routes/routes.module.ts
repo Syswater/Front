@@ -9,7 +9,7 @@ import { MaterialModule } from '../material.module';
   ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
   ]
 })
 export class RoutesModule { }
