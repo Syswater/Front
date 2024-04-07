@@ -27,20 +27,16 @@
 
       <div class="w-full grid grid-cols-4 gap-4">
         <div class="col-start-1 col-span-2">
-          <table mat-table [dataSource]="rowData" class="mat-elevation-z8">
+          <table mat-table [dataSource]="[route]" class="mat-elevation-z8">
             <ng-container
               *ngFor="let weekday of weekdays"
               matColumnDef="{{ weekday }}"
             >
               <th mat-header-cell *matHeaderCellDef>{{ weekday }}</th>
               <td mat-cell *matCellDef="let element">
-                <div
-                  class="bg-{{
-                    getBooleanDay(route, weekday) ? 'green_2' : 'white'
-                  }}"
-                >
-                  hola {{ element }}
-                </div>
+                <div class="
+                 h-[50px] bg-{{getBooleanDay(route, weekday) ? 'green_2': 'white'}}
+                "></div>
               </td>
             </ng-container>
 

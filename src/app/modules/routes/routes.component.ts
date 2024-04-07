@@ -13,7 +13,7 @@ export class RoutesComponent implements OnInit {
 
   routes: Route[] = [];
   weekdays: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-  rowData: { [key in DayOfWeek]: boolean }[] = [];
+  rowData: Route[] = [];
 
   constructor(private routeService: RouteService) { }
 
@@ -21,8 +21,6 @@ export class RoutesComponent implements OnInit {
   ngOnInit(): void {
     (async () => {
       this.routes = await this.routeService.getRoutes()
-      console.log(this.routes);
-
     })();
   }
 
