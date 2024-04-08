@@ -16,9 +16,9 @@ export interface Client {
 const ELEMENT_DATA: Client[] = [
   {
     order: 1,
-    client: "John Doe",
+    client: "John Dodddd asasdfasdf asdfa fe",
     phoneNumber: "555-1234",
-    debt: 200,
+    debt: 2000000000000000,
     borrowedPackaging: 5,
     observations: [
       { text: "Regular customer", importance: 1 },

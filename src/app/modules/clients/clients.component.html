@@ -67,6 +67,7 @@
         >
           <span
             [style.color]="observation.importance === 1 ? 'black' : '#6EB8DB'"
+            [style.font-weight]="observation.importance === 2 ? 'bold' : 'normal'"
             >{{ observation.text }}</span
           >{{ !lastObs ? ", " : "" }}
         </ng-container>

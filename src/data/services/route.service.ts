@@ -14,8 +14,7 @@ export class RouteService {
     constructor(private http: HttpClient) { }
 
     async getRoutes() {
-        const headers = new HttpHeaders({ 'Authorization': 'Bearer ' + localStorage.getItem("token") });
-        let routes = await firstValueFrom(this.http.get<Route[]>(`${this.url}/route/findAll`, { headers }));
+        let routes = await firstValueFrom(this.http.get<Route[]>(`${this.url}/route/findAll`));
         return routes.map(route => { return translateWeekdaysToSpanish(route) });
     }
 

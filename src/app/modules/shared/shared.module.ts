@@ -4,12 +4,14 @@ import { LateralBarComponent } from './lateral-bar/lateral-bar.component';
 import { IconComponent } from './icon/icon.component';
 import { ModalComponent } from './modal/modal.component';
 import { MaterialModule } from '../material.module';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
     LateralBarComponent,
     IconComponent,
-    ModalComponent
+    ModalComponent,
+    SpinnerComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +20,8 @@ import { MaterialModule } from '../material.module';
   exports: [
     LateralBarComponent,
     ModalComponent,
-    IconComponent
+    IconComponent,
+    SpinnerComponent
   ]
 })
 export class SharedModule { }

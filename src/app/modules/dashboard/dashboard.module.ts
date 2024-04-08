@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard.component';
 import { MaterialModule } from '../material.module';
 import { CardInfoComponent } from './components/card-info/card-info.component';
 import { CardComponent } from './components/card/card.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { CardComponent } from './components/card/card.component';
   ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    NgxChartsModule
   ]
 })
 export class DashboardModule { }

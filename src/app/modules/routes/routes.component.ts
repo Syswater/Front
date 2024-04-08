@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouteService } from '../../../data/services/route.service';
 import { DayOfWeek, Route } from '../../../data/models/route';
+import { SpinnerService } from 'src/data/services/spinner.service';
 
 
 @Component({
@@ -15,12 +16,14 @@ export class RoutesComponent implements OnInit {
   weekdays: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   rowData: Route[] = [];
 
-  constructor(private routeService: RouteService) { }
+  constructor(private routeService: RouteService, private spinnerService: SpinnerService) { }
 
 
   ngOnInit(): void {
     (async () => {
+      this.spinnerService.showSpinner(true)
       this.routes = await this.routeService.getRoutes()
+      this.spinnerService.showSpinner(false)
     })();
   }
 
