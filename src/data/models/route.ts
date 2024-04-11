@@ -26,25 +26,6 @@ export enum RouteStatus {
     WHITOUT = "Sin distribuciones"
 }
 
-export function mapWeekdaysToBooleanArray(weekdays: string[]): { [key in DayOfWeek]: boolean } {
-
-    const result: { [key in DayOfWeek]: boolean } = {
-        [DayOfWeek["Monday"]]: false,
-        [DayOfWeek["Tuesday"]]: false,
-        [DayOfWeek["Wednesday"]]: false,
-        [DayOfWeek["Thursday"]]: false,
-        [DayOfWeek["Friday"]]: false,
-        [DayOfWeek["Saturday"]]: false,
-        [DayOfWeek["Sunday"]]: false
-    };
-
-    weekdays.forEach(day => {
-        result[day as DayOfWeek] = true;
-    });
-
-    return result;
-}
-
 
 export function translateWeekdaysToSpanish(route: Route): Route {
     const translatedWeekdays = route.weekdays.map(day => {

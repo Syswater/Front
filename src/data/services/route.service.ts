@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Route, mapWeekdaysToBooleanArray, translateWeekdaysToSpanish } from '../models/route';
+import { Route, translateWeekdaysToSpanish } from '../models/route';
 
 @Injectable({
     providedIn: 'root'
@@ -26,10 +26,6 @@ export class RouteService {
             params = params.set(name, param);
         }
         return params;
-    }
-
-    getBooleaDays(days: string[]) {
-        return mapWeekdaysToBooleanArray(days);
     }
 
     private getToken(): HttpHeaders {

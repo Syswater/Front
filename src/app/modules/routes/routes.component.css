@@ -1,3 +1,9 @@
 .mat-mdc-cell{
     padding: 0;
+    min-width: 100px; 
+    max-width: 100px;
+}
+
+.color-div {
+    min-height: 50px; 
 }
