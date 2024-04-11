@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import 'moment/locale/es';
 import { showPopUp } from 'src/app/utils/SwalPopUp';
 import { AuthService } from 'src/data/services/auth.service';
+import { SpinnerService } from 'src/data/services/spinner.service';
 
 @Component({
   selector: 'app-login',
@@ -19,11 +20,13 @@ export class LoginComponent {
     password: new FormControl('')
   })
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private spinnerService: SpinnerService) { }
 
   async login() {
     try {
+      this.spinnerService.showSpinner(true)
       const data = await this.authService.login(this.formLogin.value)
+      this.spinnerService.showSpinner(false)
       localStorage.setItem("token", data.token)
       this.authService.isLoginView = false
       this.router.navigate(['/dashboard'])

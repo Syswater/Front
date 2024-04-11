@@ -6,11 +6,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './modules/material.module';
 import { LoginModule } from './modules/login/login.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { RoutesModule } from './modules/routes/routes.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { ClientsModule } from './modules/clients/clients.module';
+import { AuthInterceptor } from 'src/data/interceptors/auth.interceptor';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -28,8 +30,11 @@ import { ClientsModule } from './modules/clients/clients.module';
     RoutesModule,
     SharedModule,
     ClientsModule,
+    NgxChartsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
