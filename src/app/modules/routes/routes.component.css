@@ -7,3 +7,20 @@
 .color-div {
     min-height: 50px; 
 }
+
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.centered-container p{
+    margin-bottom: 15px;
+}
+
+.mdc-button{
+    margin: 0px;
+    margin-bottom: 5px;
+}
+
+

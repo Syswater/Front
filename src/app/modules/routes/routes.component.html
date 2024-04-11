@@ -53,7 +53,10 @@
           </table>
         </div>
 
-        <div class="col-start-3 rounded" [ngSwitch]="route.status">
+        <div
+          class="col-start-3 rounded centered-container"
+          [ngSwitch]="route.status"
+        >
           <p>
             Estado:
             <span *ngSwitchCase="'PREORDER'" class="text-blue_1"
@@ -70,6 +73,35 @@
               >Sin distribuciones</span
             >
           </p>
+          <button
+            mat-raised-button
+            type="button"
+            class="w-1/2 mt-5 bg-blue_1 text-white button-status"
+            style="background-color: #404452; color: white"
+          >
+            {{
+              route.status
+                ? route.status.toString() === "PREORDER"
+                  ? "Ir a la preventa"
+                  : route.status.toString() === "OPENED"
+                  ? "Ir a la distribución"
+                  : route.status.toString() === "CLOSE_REQUEST"
+                  ? "Ir a la distribución"
+                  : route.status.toString() === "CLOSED"
+                  ? "Ver último reporte"
+                  : "Iniciar Distribución"
+                : "Iniciar Distribución"
+            }}
+          </button>
+          <button
+            mat-raised-button
+            type="button"
+            class="w-1/2 mt-5 bg-blue_1 text-white button-status"
+            style="background-color: #6fdb90; color: white"
+            *ngIf="route.status ? route.status.toString() === 'CLOSED' : false"
+          >
+            Iniciar Distribución
+          </button>
         </div>
       </div>
     </mat-expansion-panel>
