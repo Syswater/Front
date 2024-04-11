@@ -27,22 +27,50 @@
 
       <div class="w-full grid grid-cols-4 gap-4">
         <div class="col-start-1 col-span-2">
-          <table mat-table [dataSource]="[route]" class="mat-elevation-z8">
+          <table
+            aria-describedby="weekdays"
+            mat-table
+            [dataSource]="[route]"
+            class="mat-elevation-z8"
+          >
             <ng-container
               *ngFor="let weekday of weekdays"
               matColumnDef="{{ weekday }}"
             >
               <th mat-header-cell *matHeaderCellDef>{{ weekday }}</th>
               <td mat-cell *matCellDef="let element">
-                <div class="
-                 h-[50px] bg-{{getBooleanDay(route, weekday) ? 'green_2': 'white'}}
-                "></div>
+                <div
+                  class="
+                 h-[50px] bg-{{
+                    getBooleanDay(route, weekday) ? 'green_2' : 'white'
+                  }}
+                "
+                ></div>
               </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="weekdays"></tr>
             <tr mat-row *matRowDef="let row; columns: weekdays"></tr>
           </table>
+        </div>
+
+        <div class="col-start-4 rounded" [ngSwitch]="route.status">
+          <p>
+            Estado:
+            <span *ngSwitchCase="'PREORDER'" class="text-blue_1"
+              >En preventa</span
+            >
+            <span *ngSwitchCase="'OPENED'" class="text-blue_1"
+              >En Distribución</span
+            >
+            <span *ngSwitchCase="'CLOSE_REQUEST'" class="text-blue_1"
+              >Solicitud de cierre</span
+            >
+            <span *ngSwitchCase="'CLOSED'" class="text-blue_1">Cerrada</span>
+            <span *ngSwitchCase="'WHITOUT'" class="text-blue_1"
+              >Sin distribuciones</span
+            >
+          </p>
         </div>
       </div>
     </mat-expansion-panel>

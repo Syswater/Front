@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -13,16 +13,26 @@ export class RouteService {
 
     constructor(private http: HttpClient) { }
 
-    async getRoutes() {
-        const headers = new HttpHeaders({ 'Authorization': 'Bearer ' + localStorage.getItem("token") });
-        let routes = await firstValueFrom(this.http.get<Route[]>(`${this.url}/route/findAll`, { headers }));
+    async getRoutes(options?: { filter?: string, whit_status?: string }) {
+        let params = new HttpParams();
+        params = this.addParam('filter', options?.filter, params);
+        params = this.addParam('whit_status', options?.whit_status, params);
+        let routes = await firstValueFrom(this.http.get<Route[]>(`${this.url}/route/findAll`, { headers: this.getToken(), params }));
         return routes.map(route => { return translateWeekdaysToSpanish(route) });
+    }
+
+    private addParam(name: string, param: string | undefined, params: HttpParams) {
+        if (param) {
+            params = params.set(name, param);
+        }
+        return params;
     }
 
     getBooleaDays(days: string[]) {
         return mapWeekdaysToBooleanArray(days);
     }
 
-
-
+    private getToken(): HttpHeaders {
+        return new HttpHeaders({ 'Authorization': 'Bearer ' + localStorage.getItem("token") });
+    }
 }

@@ -3,7 +3,8 @@ export interface Route {
     name: string,
     location: string,
     weekdays: string[],
-    price: number
+    price: number,
+    status?: RouteStatus
 }
 
 export enum DayOfWeek {
@@ -14,6 +15,15 @@ export enum DayOfWeek {
     Friday = "Viernes",
     Saturday = "Sábado",
     Sunday = "Domingo"
+}
+
+
+export enum RouteStatus {
+    PREORDER = "Preventa",
+    OPENED = "Abierta",
+    CLOSE_REQUEST = "Solicitud de cierre",
+    CLOSED = "Cerrada",
+    WHITOUT = "Sin distribuciones"
 }
 
 export function mapWeekdaysToBooleanArray(weekdays: string[]): { [key in DayOfWeek]: boolean } {
