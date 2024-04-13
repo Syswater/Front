@@ -9,7 +9,6 @@ import { SpinnerService } from 'src/data/services/spinner.service';
 })
 export class AppComponent {
   title = 'FrontSysWater';
-  isLoginView = window.location.pathname == '/login'
 
   constructor(public auth: AuthService, public spinner: SpinnerService){}
 }

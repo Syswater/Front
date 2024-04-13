@@ -1,0 +1,5 @@
+<app-confirmation (confirmate)="deleteClient()">
+    <p class="text-center">
+        ¿Estas seguro de eliminar el cliente<span class="text-blue_3 font-black">{{clientStorage.actualClient?.name ? ' '+clientStorage.actualClient?.name: '' }}</span>?. Recuerda que esta acción no se puede revertir.
+    </p>
+</app-confirmation>

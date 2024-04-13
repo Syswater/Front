@@ -1,19 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientsComponent } from './clients.component';
-import { MaterialModule } from '../material.module';
+import { MaterialModule } from '../material/material.module';
 import { ClientsFormComponent } from './components/clients-form/clients-form.component';
 import { SharedModule } from '../shared/shared.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 
 @NgModule({
   declarations: [
     ClientsComponent,
-    ClientsFormComponent
+    ClientsFormComponent,
+    DeleteModalComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ]
 })
 export class ClientsModule { }
