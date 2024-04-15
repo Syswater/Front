@@ -1,0 +1,37 @@
+<app-modal>
+  <div class="px-5 max-w-[400px]">
+    <h1 class="text-blue_1 font-black text-2xl text-center mb-5">
+      <app-icon
+        iconPath="assets/icons/svg/alert_icon.svg"
+        color="#6EB8DB"
+        class="inline-block mr-2"
+        size="1.4rem"
+      ></app-icon
+      >Alerta
+    </h1>
+
+    <ng-content></ng-content>
+    <div class="grid grid-cols-2 gap-5 w-full px-5 mb-5">
+      <div class="text-right">
+        <button
+          mat-raised-button
+          type="button"
+          class="w-full mt-5 bg-blue_1 text-white button-status"
+          style="background-color: #000000; color: white"
+          (click)="close()"
+        >
+          {{ cancel }}
+        </button>
+      </div>
+      <button
+        mat-raised-button
+        type="button"
+        class="w-full mt-5 bg-blue_1 text-white button-status"
+        style="background-color: #6eb9db; color: white"
+        (click)="confirmateOk()"
+      >
+        {{ ok }}
+      </button>
+    </div>
+  </div>
+</app-modal>
