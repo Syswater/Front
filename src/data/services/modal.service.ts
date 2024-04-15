@@ -16,4 +16,11 @@ export class ModalService {
     firstValueFrom(ref.afterClosed()).then(onClose);
     return () => ref.close();
   }
+
+  close() {
+    const dialogRef = this.matDialog.openDialogs.pop();
+    if (dialogRef) {
+      dialogRef.close();
+    }
+  }
 }
