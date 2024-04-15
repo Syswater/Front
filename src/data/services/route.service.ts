@@ -21,6 +21,12 @@ export class RouteService {
         return routes.map(route => { return translateWeekdaysToSpanish(route) });
     }
 
+    async addRoute(name: string, location: string, price: number, weekdays: string[]) {
+        const route = { name, location, price, weekdays }
+        let newRoute = await firstValueFrom(this.http.post<Route>(`${this.url}/route/create`, route));
+        return translateWeekdaysToSpanish(newRoute);
+    }
+
     private addParam(name: string, param: string | undefined, params: HttpParams) {
         if (param) {
             params = params.set(name, param);

@@ -18,6 +18,10 @@ export class RoutesComponent implements OnInit {
   constructor(private routeService: RouteService, private spinnerService: SpinnerService, private modalService: ModalService) { }
 
   async ngOnInit() {
+    await this.loadRoutes();
+  }
+
+  async loadRoutes() {
     this.spinnerService.showSpinner(true);
     this.routes = await this.routeService.getRoutes({ whit_status: "true" });
     this.spinnerService.showSpinner(false);
