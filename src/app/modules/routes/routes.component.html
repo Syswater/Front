@@ -1,11 +1,22 @@
 <div class="m-4">
+  <div class="text-right">
+    <button
+      class="mt-5 w-1/8 m-4"
+      mat-raised-button
+      style="background-color: #6ddbda; color: white; padding: 0 50px 0 50px"
+      (click)="showDialogRoute(null, 1)"
+    >
+      Agregar
+    </button>
+  </div>
+
   <mat-accordion>
     <mat-expansion-panel *ngFor="let route of routes">
       <mat-expansion-panel-header>
         <div class="w-full grid grid-cols-3 gap-32">
           <div class="col-start-1 rounded">
             <p>
-              Ruta: <span class="text-blue_1">{{ route.name }}</span>
+              Ruta: <span class="text-blue_3">{{ route.name }}</span>
             </p>
           </div>
 
@@ -59,24 +70,24 @@
         >
           <p>
             Estado:
-            <span *ngSwitchCase="'PREORDER'" class="text-blue_1"
+            <span *ngSwitchCase="'PREORDER'" class="text-blue_3"
               >En preventa</span
             >
-            <span *ngSwitchCase="'OPENED'" class="text-blue_1"
+            <span *ngSwitchCase="'OPENED'" class="text-blue_3"
               >En Distribución</span
             >
-            <span *ngSwitchCase="'CLOSE_REQUEST'" class="text-blue_1"
+            <span *ngSwitchCase="'CLOSE_REQUEST'" class="text-blue_3"
               >Solicitud de cierre</span
             >
-            <span *ngSwitchCase="'CLOSED'" class="text-blue_1">Cerrada</span>
-            <span *ngSwitchCase="'WHITOUT'" class="text-blue_1"
+            <span *ngSwitchCase="'CLOSED'" class="text-blue_3">Cerrada</span>
+            <span *ngSwitchCase="'WHITOUT'" class="text-blue_3"
               >Sin distribuciones</span
             >
           </p>
           <button
             mat-raised-button
             type="button"
-            class="w-1/2 mt-5 bg-blue_1 text-white button-status"
+            class="w-1/2 mt-5 bg-blue_3 text-white button-status"
             style="background-color: #404452; color: white"
           >
             {{
@@ -96,7 +107,7 @@
           <button
             mat-raised-button
             type="button"
-            class="w-1/2 mt-5 bg-blue_1 text-white button-status"
+            class="w-1/2 mt-5 bg-blue_3 text-white button-status"
             style="background-color: #6fdb90; color: white"
             *ngIf="route.status ? route.status.toString() === 'CLOSED' : false"
           >

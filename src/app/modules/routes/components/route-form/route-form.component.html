@@ -1,0 +1,69 @@
+<app-modal>
+  <div class="md:grid md:grid-cols-12 md:gap-x-5 md:w-[95%] lg:w-[95%] mx-auto">
+    <div class="col-span-12 px-4">
+      <h1 class="font-black text-2xl mb-4">Crear Ruta</h1>
+      <div class="sm:mx-4 md:mx-4">
+        <form class="grid grid-cols-12 gap-5" [formGroup]="form">
+          <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
+            <mat-label>Nombre de la Ruta</mat-label>
+            <input matInput placeholder="Digite el nombre de la ruta" />
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
+            <mat-label>Lugar</mat-label>
+            <input matInput placeholder="Digite el lugar de la Ruta" />
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
+            <mat-label>Dirección</mat-label>
+            <input matInput placeholder="Digite su dirección" />
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
+            <mat-label>Barrio</mat-label>
+            <input matInput placeholder="Digite su barrio" />
+          </mat-form-field>
+          <!-- Días de distribución -->
+          <div class="col-span-10">
+            <mat-label>Días de distribución</mat-label>
+            <div class="flex md:flex-row flex-col">
+              <mat-checkbox formControlName="monday">Monday</mat-checkbox>
+              <mat-checkbox formControlName="tuesday">Tuesday</mat-checkbox>
+              <mat-checkbox formControlName="wednesday">Wednesday</mat-checkbox>
+              <mat-checkbox formControlName="thursday">Thursday</mat-checkbox>
+              <mat-checkbox formControlName="friday">Friday</mat-checkbox>
+              <mat-checkbox formControlName="saturday">Saturday</mat-checkbox>
+              <mat-checkbox formControlName="sunday">Sunday</mat-checkbox>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="md:grid md:grid-cols-2 md:gap-x-5 md:w-[90%] lg:w-[90%] mx-auto flex flex-row"
+  >
+    <button
+      mat-raised-button
+      class="block md:inline-block col-span-1"
+      style="
+        background-color: #404452;
+        color: white;
+        padding: 0 50px;
+        margin: 15px auto;
+      "
+    >
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      class="block md:inline-block col-span-1"
+      style="
+        background-color: #6ddbda;
+        color: white;
+        padding: 0 50px;
+        margin: 15px auto;
+      "
+    >
+      Agregar
+    </button>
+  </div>
+</app-modal>
