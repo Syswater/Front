@@ -13,7 +13,7 @@
   <mat-accordion>
     <mat-expansion-panel *ngFor="let route of routes">
       <mat-expansion-panel-header>
-        <div class="w-full grid grid-cols-3 gap-32">
+        <div class="w-full grid grid-cols-3">
           <div class="col-start-1 rounded">
             <p>
               Ruta: <span class="text-blue_3">{{ route.name }}</span>
@@ -36,7 +36,7 @@
         </div>
       </mat-expansion-panel-header>
 
-      <div class="w-full grid grid-cols-3 gap-4">
+      <div class="grid grid-cols-3">
         <div class="col-start-1 col-span-2">
           <table
             aria-describedby="weekdays"

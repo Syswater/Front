@@ -1,0 +1,15 @@
+/* Estilo predeterminado del botón */
+.mdc-button {
+    background-color: #41b9b7;
+    color: white;
+    padding: 0 50px;
+    margin: 15px auto;
+  }
+  
+  /* Estilo del botón cuando está deshabilitado */
+.mdc-button[disabled] {
+    background-color: #ccc; 
+    color: #999; 
+    cursor: not-allowed;
+  }
+  

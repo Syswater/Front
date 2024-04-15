@@ -6,32 +6,62 @@
         <form class="grid grid-cols-12 gap-5" [formGroup]="form">
           <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
             <mat-label>Nombre de la Ruta</mat-label>
-            <input matInput placeholder="Digite el nombre de la ruta" />
+            <input
+              matInput
+              formControlName="name"
+              placeholder="Digite el nombre de la ruta"
+            />
+            <mat-error *ngIf="form.get('name')?.hasError('required')"
+              >Nombre de la Ruta es requerido</mat-error
+            >
           </mat-form-field>
           <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
             <mat-label>Lugar</mat-label>
-            <input matInput placeholder="Digite el lugar de la Ruta" />
+            <input
+              matInput
+              formControlName="location"
+              placeholder="Digite el lugar de la Ruta"
+            />
+            <mat-error *ngIf="form.get('location')?.hasError('required')"
+              >Lugar es requerido</mat-error
+            >
           </mat-form-field>
           <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
-            <mat-label>Dirección</mat-label>
-            <input matInput placeholder="Digite su dirección" />
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
-            <mat-label>Barrio</mat-label>
-            <input matInput placeholder="Digite su barrio" />
+            <mat-label>Precio de venta</mat-label>
+            <span class="absolute" *ngIf="input.value">$</span>
+            <input
+              placeholder="Digite el lugar de la Ruta"
+              formControlName="price"
+              class="translate-x-3"
+              type="number"
+              min="0"
+              value="0"
+              step="500"
+              matInput
+              #input
+            />
+            <mat-error *ngIf="form.get('price')?.hasError('required')"
+              >Precio de Venta es requerido</mat-error
+            >
+            <mat-error *ngIf="form.get('price')?.hasError('min')"
+              >El precio mínimo es de 1000</mat-error
+            >
           </mat-form-field>
           <!-- Días de distribución -->
           <div class="col-span-10">
             <mat-label>Días de distribución</mat-label>
             <div class="flex md:flex-row flex-col">
-              <mat-checkbox formControlName="monday">Monday</mat-checkbox>
-              <mat-checkbox formControlName="tuesday">Tuesday</mat-checkbox>
-              <mat-checkbox formControlName="wednesday">Wednesday</mat-checkbox>
-              <mat-checkbox formControlName="thursday">Thursday</mat-checkbox>
-              <mat-checkbox formControlName="friday">Friday</mat-checkbox>
-              <mat-checkbox formControlName="saturday">Saturday</mat-checkbox>
-              <mat-checkbox formControlName="sunday">Sunday</mat-checkbox>
+              <mat-checkbox formControlName="monday">Lunes</mat-checkbox>
+              <mat-checkbox formControlName="tuesday">Martes</mat-checkbox>
+              <mat-checkbox formControlName="wednesday">Miércoles</mat-checkbox>
+              <mat-checkbox formControlName="thursday">Jueves</mat-checkbox>
+              <mat-checkbox formControlName="friday">Viernes</mat-checkbox>
+              <mat-checkbox formControlName="saturday">Sábado</mat-checkbox>
+              <mat-checkbox formControlName="sunday">Domingo</mat-checkbox>
             </div>
+            <mat-error *ngIf="!atLeastOneCheckboxSelected()"
+              >Debe seleccionar al menos un día</mat-error
+            >
           </div>
         </form>
       </div>
@@ -50,18 +80,15 @@
         padding: 0 50px;
         margin: 15px auto;
       "
+      (click)="close()"
     >
       Cancelar
     </button>
     <button
       mat-raised-button
       class="block md:inline-block col-span-1"
-      style="
-        background-color: #6ddbda;
-        color: white;
-        padding: 0 50px;
-        margin: 15px auto;
-      "
+      [disabled]="!isFormValid"
+      (click)="agregarRuta()"
     >
       Agregar
     </button>

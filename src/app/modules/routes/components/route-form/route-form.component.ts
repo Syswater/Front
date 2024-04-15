@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ModalService } from '../../../../../data/services/modal.service';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-route-form',
@@ -10,25 +10,44 @@ import { FormBuilder, FormsModule } from '@angular/forms';
 })
 export class RouteFormComponent {
 
-  selectedDays = {
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-    sunday: false
-  };
+  fields = {
+    name: ['', Validators.required],
+    location: ['', Validators.required],
+    price: [0, [Validators.required, Validators.min(1000)]],
+    monday: [false],
+    tuesday: [false],
+    wednesday: [false],
+    thursday: [false],
+    friday: [false],
+    saturday: [false],
+    sunday: [false]
+  }
 
-  form = this.formBuilder.group(this.selectedDays)
+  form = this.formBuilder.group(this.fields)
 
 
-  constructor(private dialogRef: MatDialogRef<RouteFormComponent>,
+  constructor(
     private modalService: ModalService,
     private formBuilder: FormBuilder) { }
 
-  showDelete(element: any) {
-    this.modalService.open(RouteFormComponent, () => { });
+  get isFormValid(): boolean {
+    return this.form.valid && this.atLeastOneCheckboxSelected();
+  }
+
+  agregarRuta() {
+    if (this.form.valid && this.atLeastOneCheckboxSelected()) {
+      console.log('Ruta agregada:', this.form.value);
+    }
+  }
+
+  atLeastOneCheckboxSelected(): boolean {
+    const checkboxes = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    return checkboxes.some(checkbox => this.form.get(checkbox)?.value);
+  }
+
+
+  close() {
+    this.modalService.close();
   }
 
 }
