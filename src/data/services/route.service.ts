@@ -27,6 +27,10 @@ export class RouteService {
         return translateWeekdaysToSpanish(newRoute);
     }
 
+    async delete(id: number) {
+        throw new Error('Method not implemented.');
+    }
+
     private addParam(name: string, param: string | undefined, params: HttpParams) {
         if (param) {
             params = params.set(name, param);

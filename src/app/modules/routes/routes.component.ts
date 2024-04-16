@@ -4,6 +4,8 @@ import { Route } from '../../../data/models/route';
 import { SpinnerService } from 'src/data/services/spinner.service';
 import { ModalService } from '../../../data/services/modal.service';
 import { RouteFormComponent } from './components/route-form/route-form.component';
+import { RouteStorage } from './route.storage';
+import { DeleteRouteModalComponent } from './components/delete-route-modal/delete-route-modal.component';
 
 @Component({
   selector: 'app-routes',
@@ -15,7 +17,11 @@ export class RoutesComponent implements OnInit {
   routes: Route[] = [];
   weekdays: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-  constructor(private routeService: RouteService, private spinnerService: SpinnerService, private modalService: ModalService) { }
+  constructor(
+    private routeService: RouteService,
+    private spinnerService: SpinnerService,
+    private routeStorage: RouteStorage,
+    private modalService: ModalService) { }
 
   async ngOnInit() {
     await this.loadRoutes();
@@ -32,12 +38,13 @@ export class RoutesComponent implements OnInit {
   }
 
   showDialogRoute(element: any, flag: number) {
+    this.routeStorage.actualRoute = element;
     switch (flag) {
       case 1:
-        this.modalService.open(RouteFormComponent, () => { });
+        this.modalService.open(RouteFormComponent, () => { this.loadRoutes().then() });
         break;
       case 2:
-        this.modalService.open(RouteFormComponent, () => { });
+        this.modalService.open(DeleteRouteModalComponent, () => { this.loadRoutes().then() });
         break;
     }
   }

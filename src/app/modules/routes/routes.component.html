@@ -13,7 +13,7 @@
   <mat-accordion>
     <mat-expansion-panel *ngFor="let route of routes">
       <mat-expansion-panel-header>
-        <div class="w-full grid grid-cols-3">
+        <div class="w-full h-full grid grid-cols-4 items-center">
           <div class="col-start-1 rounded">
             <p>
               Ruta: <span class="text-blue_3">{{ route.name }}</span>
@@ -32,6 +32,14 @@
               Días de Reparto:
               <span class="text-green_1">{{ route.weekdays }}</span>
             </p>
+          </div>
+          <div class="col-start-4">
+            <button mat-icon-button (click)="showDialogRoute(route, 1)">
+              <mat-icon>info</mat-icon>
+            </button>
+            <button mat-icon-button (click)="showDialogRoute(route, 2)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </div>
       </mat-expansion-panel-header>

@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { RouteService } from '../../../../../data/services/route.service';
 import { SpinnerService } from '../../../../../data/services/spinner.service';
 import { showPopUp } from '../../../../utils/SwalPopUp';
+import { RouteStorage } from '../../route.storage';
 
 @Component({
   selector: 'app-route-form',
@@ -25,6 +26,7 @@ export class RouteFormComponent {
     sunday: [false]
   }
 
+  route = this.routeStorage.actualRoute;
   form = this.formBuilder.group(this.fields)
 
 
@@ -32,6 +34,7 @@ export class RouteFormComponent {
     private modalService: ModalService,
     private formBuilder: FormBuilder,
     private routeService: RouteService,
+    private routeStorage: RouteStorage,
     private spinnerService: SpinnerService
   ) { }
 
