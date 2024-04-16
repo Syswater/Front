@@ -6,6 +6,6 @@ import { Route } from "src/data/models/route";
     providedIn: 'root'
 })
 export class ClientStorage {
-    actualClient: Client | null = null
-    actualRoute: Route | null = null
+    actualClient?: Client | null = null
+    actualRoute?: Route | null = null
 }

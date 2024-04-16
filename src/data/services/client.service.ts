@@ -13,7 +13,8 @@ export class ClientService {
 
   constructor(private http: HttpClient) { }
 
-  async getListClients(route_id: number, filter?: string, with_notes?: boolean) {
+  async getListClients(options: {route_id: number, filter?: string, with_notes?: boolean}) {
+    const {route_id, filter, with_notes} = options
     const params = new HttpParams()
     .set('filter', filter ?? '')
     .set('with_notes', with_notes ?? false)
@@ -25,4 +26,11 @@ export class ClientService {
     return firstValueFrom(this.http.delete(`${this.url}/customer/delete`, { body: { id } }));
   }
 
+  async createNote(noteToInsert: any) {
+    return firstValueFrom(this.http.post(`${this.url}/note/create`, { ...noteToInsert }));
+  }
+
+  async updateNote(noteToPut: any) {
+    return firstValueFrom(this.http.put(`${this.url}/note/update`, { ...noteToPut }));
+  }
 }

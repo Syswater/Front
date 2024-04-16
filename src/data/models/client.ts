@@ -10,5 +10,7 @@ export interface Client {
     name: string | null;
     cellphone: string | null;
     route_id: number;
+    totalDebt: number;
+    borrowedContainers: number;
     note: Observation[];
   }
