@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { ModalService } from 'src/data/services/modal.service';
@@ -12,6 +12,8 @@ import { MatSelectChange } from '@angular/material/select';
 import { Observation } from 'src/data/models/observation';
 import { ClientService } from 'src/data/services/client.service';
 import { showPopUp } from 'src/app/utils/SwalPopUp';
+import { Client } from 'src/data/models/client';
+import { Observable, Subscription } from 'rxjs';
 
 const abonos_data = [
   {
@@ -96,7 +98,7 @@ const ventas_data = [
   templateUrl: './clients-form.component.html',
   styleUrls: ['./clients-form.component.css'],
 })
-export class ClientsFormComponent implements OnInit {
+export class ClientsFormComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['Observación', 'Prioridad', 'Acciones'];
   displayedColumnsAbonos: string[] = [
     'Fecha',
@@ -120,18 +122,22 @@ export class ClientsFormComponent implements OnInit {
   dataSourceVentas = ventas_data;
   client = this.clientStorage.actualClient;
   formClient = this.formBuilder.group({
-    name: this.client?.name,
-    cellphone: this.client?.cellphone,
-    envases: this.client?.borrowedContainers, // pendiente
     address: this.client?.address,
     neighborhood: this.client?.neighborhood,
-    tape_preference: this.client?.tape_preference,
-    deuda: this.client?.tape_preference, // pendiente
-    route_id: this.client?.route_id,
+    route_order: this.client?.route_order ? this.client.route_order : this.clientStorage.lastClient ? this.clientStorage.lastClient.route_order + 1 : 0,
+    tape_preference: this.client ? this.client.tape_preference : this.tape_preference[0],
+    is_contactable: [true],
+    name: this.client?.name,
+    cellphone: this.client?.cellphone,
+    borrowedContainers: this.client?.borrowedContainers,
+    totalDebt: this.client?.totalDebt,
+    route_id: this.client ? this.client.route_id : this.clientStorage.actualRoute?.id,
   });
   routes: Route[] = [];
   temporalId: number = -1;
   temporalPostUpdateNote!: [any, 'POST' | 'UPDATE'];
+  updateClientFields: any = {}
+  $subscription!: Subscription
 
   constructor(
     private formBuilder: FormBuilder,
@@ -143,6 +149,10 @@ export class ClientsFormComponent implements OnInit {
     private clientService: ClientService
   ) { }
 
+  ngOnDestroy(): void {
+    this.$subscription.unsubscribe()
+  }
+
   async ngOnInit() {
     this.spinnerService.showSpinner(true);
     this.routes = await this.routeService.getRoutes();
@@ -152,6 +162,12 @@ export class ClientsFormComponent implements OnInit {
         : []
     ).map((note) => ({ editable: false, ...note }));
     this.spinnerService.showSpinner(false);
+    this.initUpdateObserver();
+  }
+  initUpdateObserver() {
+    this.$subscription = this.formClient.valueChanges.subscribe(value => {
+      console.log(value)
+    })
   }
 
   showDelete(element: any) {
@@ -168,8 +184,6 @@ export class ClientsFormComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
-
-  createOrUpdate() { }
 
   addNote() {
     this.dataSource.data.push({
@@ -241,5 +255,30 @@ export class ClientsFormComponent implements OnInit {
       }
     }
     this.spinnerService.showSpinner(false)
+  }
+
+  async createClient() {
+    try {
+      this.spinnerService.showSpinner(true)
+      const { borrowedContainers, totalDebt, ...client } = this.formClient.value
+      //Campos opcionales
+      if (!client.neighborhood) delete client.neighborhood
+      if (!client.cellphone) delete client.cellphone
+      if (!client.name) delete client.name
+
+      if (client.cellphone) client.cellphone = `${client.cellphone}`
+      console.log(client)
+      await this.clientService.createClient(client)
+      showPopUp('Cliente creado con éxito', 'success')
+    } catch (error) {
+      showPopUp('Error al crear el cliente', 'error')
+    }
+    this.spinnerService.showSpinner(false)
+    this.dialogRef.close()
+    //TODO actualizar tabla
+  }
+
+  updateClient() {
+    throw new Error('Method not implemented.');
   }
 }

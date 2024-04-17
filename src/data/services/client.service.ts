@@ -8,6 +8,7 @@ import { Client } from '../models/client';
   providedIn: 'root'
 })
 export class ClientService {
+ 
 
   url = environment.API_URL
 
@@ -32,5 +33,9 @@ export class ClientService {
 
   async updateNote(noteToPut: any) {
     return firstValueFrom(this.http.put(`${this.url}/note/update`, { ...noteToPut }));
+  }
+  
+  async createClient(client: { address?: string | null | undefined; neighborhood?: string | null | undefined; route_order?: number | null | undefined; tape_preference?: string | null | undefined; is_contactable?: boolean | null | undefined; name?: string | null | undefined; cellphone?: string | null | undefined; route_id?: number | null | undefined; }) {
+    return firstValueFrom(this.http.post(`${this.url}/customer/create`, { ...client }));
   }
 }

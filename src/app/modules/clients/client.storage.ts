@@ -8,4 +8,5 @@ import { Route } from "src/data/models/route";
 export class ClientStorage {
     actualClient?: Client | null = null
     actualRoute?: Route | null = null
+    lastClient?:Client | null = null
 }

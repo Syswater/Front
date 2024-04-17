@@ -63,6 +63,7 @@ export class ClientsComponent implements OnInit {
       with_notes: true,
     });
     this.spinner.showSpinner(false);
+    this.clientStorage.lastClient = this.dataSource[this.dataSource.length - 1]
   }
 
   async getRoutes() {
@@ -101,10 +102,11 @@ export class ClientsComponent implements OnInit {
       await this.getClientsByRoute(this.clientStorage.actualRoute)
     }
   }
-  
+
   async clearFilter(input: HTMLInputElement) {
     this.filter = undefined
     await this.getClientsByRoute(this.clientStorage.actualRoute)
     input.value = ''
   }
+
 }

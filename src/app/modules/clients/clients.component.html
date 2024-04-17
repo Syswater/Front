@@ -37,9 +37,11 @@
     </div>
   </div>
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-5">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-5"
+    matSort matSortActive="Orden" matSortDisableClear matSortDirection="desc"
+  >
     <ng-container matColumnDef="Orden">
-      <th mat-header-cell *matHeaderCellDef>Orden</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Orden</th>
       <td mat-cell *matCellDef="let element">{{ element.route_order }}</td>
     </ng-container>
 

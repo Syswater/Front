@@ -2,9 +2,10 @@
   <div class="px-5 pb-5 grid grid-cols-12 gap-x-5 w-[1200px]">
     <img src="assets/images/user_image.png" class="w-64 col-span-3" />
     <div class="col-span-9">
-      <h1 class="font-black text-2xl">
+      <h1 class="font-black text-2xl" [formGroup]="formClient">
         Detalle del cliente:
-        <span class="text-blue_3">{{ clientStorage.actualClient?.name }}</span>
+        <span class="text-blue_3">{{ clientStorage.actualClient ? clientStorage.actualClient.name : nameInput.value }}</span>
+        <mat-checkbox class="float-right" labelPosition="before" color="primary" che formControlName="is_contactable">Contactable</mat-checkbox>
       </h1>
       <form class="grid grid-cols-4 gap-5 mt-10" [formGroup]="formClient">
         <mat-form-field appearance="fill" class="col-span-2">
@@ -13,9 +14,10 @@
             matInput
             placeholder="Digite su nombre"
             formControlName="name"
+            #nameInput
           />
         </mat-form-field>
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" *ngIf="clientStorage.actualClient">
           <mat-label>Celular</mat-label>
           <input
             matInput
@@ -23,22 +25,44 @@
             formControlName="cellphone"
           />
         </mat-form-field>
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" *ngIf="clientStorage.actualClient">
           <mat-label>Envases prestados</mat-label>
           <input
             type="number"
             min="0"
             value="0"
             matInput
-            formControlName="envases"
+            formControlName="borrowedContainers"
           />
         </mat-form-field>
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" *ngIf="clientStorage.actualClient">
           <mat-label>Dirección</mat-label>
           <input
             matInput
             placeholder="Digite su dirección"
             formControlName="address"
+          />
+        </mat-form-field>
+        <mat-form-field
+          appearance="fill"
+          *ngIf="!clientStorage.actualClient"
+          class="col-span-2"
+        >
+          <mat-label>Dirección</mat-label>
+          <input
+            matInput
+            placeholder="Digite su dirección"
+            formControlName="address"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="fill" *ngIf="!clientStorage.actualClient">
+          <mat-label>Celular</mat-label>
+          <input
+            matInput
+            placeholder="Digite su celular"
+            formControlName="cellphone"
+            type="number"
+            class="cellphone"
           />
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -51,20 +75,30 @@
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Preferencia de tapa</mat-label>
-          <mat-select value="NORMAL">
+          <mat-select formControlName="tape_preference">
             <mat-option *ngFor="let tape of tape_preference" [value]="tape">{{
               tape == "NORMAL" ? "Normal" : "Servifacil"
             }}</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" class="relative">
+
+        <mat-form-field appearance="fill" *ngIf="!clientStorage.actualClient">
+          <mat-label>Orden</mat-label>
+          <input type="number" min="0" formControlName="route_order" matInput />
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="fill"
+          class="relative"
+          *ngIf="clientStorage.actualClient"
+        >
           <mat-label>Total deuda</mat-label>
           <span class="absolute" *ngIf="input.value">$</span>
           <input
             class="translate-x-3"
             type="number"
             min="0"
-            value="0"
+            formControlName="totalDebt"
             matInput
             #input
           />
@@ -72,8 +106,11 @@
       </form>
     </div>
   </div>
-  <div class="px-5 w-full grid grid-cols-2 gap-x-5">
-    <mat-card class="py-5">
+  <div
+    class="px-5 w-full grid grid-cols-2 gap-x-5"
+    *ngIf="clientStorage.actualClient"
+  >
+    <mat-card class="py-5" [formGroup]="formClient">
       <div class="px-5">
         <p class="font-black">
           Información Cliente-Ruta
@@ -91,11 +128,11 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="fill">
-            <mat-label>Envases prestados</mat-label>
+            <mat-label>Orden</mat-label>
             <input
               type="number"
               min="0"
-              [value]="clientStorage.actualClient?.borrowedContainers"
+              formControlName="route_order"
               matInput
             />
           </mat-form-field>
@@ -104,7 +141,7 @@
         <p class="font-black">
           Observaciones del cliente
           <span class="text-green_2">{{
-            clientStorage.actualClient?.note?.length
+            clientStorage.actualClient.note.length
           }}</span>
         </p>
       </div>
@@ -112,11 +149,9 @@
         <ng-container matColumnDef="Observación">
           <th mat-header-cell *matHeaderCellDef>Observación</th>
           <td mat-cell *matCellDef="let element">
-            <span *ngIf="!element.editable">{{
-              element.description
-            }}</span>
+            <span *ngIf="!element.editable">{{ element.description }}</span>
             <mat-form-field appearance="fill" *ngIf="element.editable">
-              <input matInput type="text" [value]="element.description" >
+              <input matInput type="text" [value]="element.description" />
             </mat-form-field>
           </td>
         </ng-container>
@@ -364,7 +399,7 @@
       type="button"
       class="w-1/2 mt-5 bg-blue_1 text-white button-status"
       style="background-color: #6fdb90; color: white"
-      (click)="createOrUpdate()"
+      (click)="clientStorage.actualClient ? updateClient() : createClient()"
     >
       {{ clientStorage.actualClient ? "Actualizar" : "Crear" }}
     </button>

@@ -1,0 +1,8 @@
+.cellphone[type="number"]::-webkit-inner-spin-button,
+.cellphone[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.cellphone[type="number"] {
+  -moz-appearance: textfield;
+}
