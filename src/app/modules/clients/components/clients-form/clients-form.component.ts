@@ -57,13 +57,6 @@ const envases_data = [
     type: 'Devolución',
     total: 3,
   },
-  {
-    index: 2,
-    date: moment().format('DD/MM/YYYY'),
-    quanty: 1,
-    type: 'Devolución',
-    total: 3,
-  },
 ];
 
 const ventas_data = [
@@ -122,6 +115,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   dataSourceVentas = ventas_data;
   client = this.clientStorage.actualClient;
   formClient = this.formBuilder.group({
+    id: this.client?.id,
     address: this.client?.address,
     neighborhood: this.client?.neighborhood,
     route_order: this.client?.route_order ? this.client.route_order : this.clientStorage.lastClient ? this.clientStorage.lastClient.route_order + 1 : 0,
@@ -129,8 +123,8 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     is_contactable: [true],
     name: this.client?.name,
     cellphone: this.client?.cellphone,
-    borrowedContainers: this.client?.borrowedContainers,
-    totalDebt: this.client?.totalDebt,
+    borrowedContainers: this.client?.borrowedContainers ?? 0,
+    totalDebt: this.client?.totalDebt ?? 0,
     route_id: this.client ? this.client.route_id : this.clientStorage.actualRoute?.id,
   });
   routes: Route[] = [];
@@ -164,6 +158,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     this.spinnerService.showSpinner(false);
     this.initUpdateObserver();
   }
+
   initUpdateObserver() {
     this.$subscription = this.formClient.valueChanges.subscribe(value => {
       console.log(value)
@@ -186,24 +181,38 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   }
 
   addNote() {
-    this.dataSource.data.push({
+    const temporalNote = {
       editable: true,
-      id: -1,
-      description: 'Nueva observación',
-      distribution_id: this.clientStorage.actualRoute
-        ? this.clientStorage.actualRoute.id
-        : null,
-      customer_id: this.clientStorage.actualClient?.id,
-    });
-    this.clientStorage.actualClient?.note.push({
       id: this.temporalId--,
       description: 'Nueva observación',
       distribution_id: this.clientStorage.actualRoute
         ? this.clientStorage.actualRoute.id
         : null,
-      customer_id: this.clientStorage.actualClient.id,
-    });
+      customer_id: this.clientStorage.actualClient?.id,
+    }
+    this.dataSource.data.push(temporalNote);
+    this.clientStorage.actualClient?.note.push(temporalNote as Observation);
+    this.temporalPostUpdateNote = [temporalNote, 'POST']
     this.dataSource.data = [...this.dataSource.data];
+  }
+
+  changeDescriptionNote(event: Event, element: any) {
+    if (this.clientStorage.actualClient && this.clientStorage.actualRoute) {
+      const value = (event.target as HTMLInputElement).value
+      
+      const index = this.clientStorage.actualClient.note.findIndex( (note) => note.id == element.id );
+      if (this.clientStorage.actualClient.note[index]) this.clientStorage.actualClient.note[index].description = value
+      
+      const indexData = this.dataSource.data.findIndex( (note) => note.id == element.id );
+      if ( this.dataSource.data[indexData] ) this.dataSource.data[indexData].description = value
+
+      this.dataSource.data = [...this.dataSource.data];
+
+      this.temporalPostUpdateNote =
+      !this.temporalPostUpdateNote && this.dataSource.data[indexData].id < 0
+          ? [this.dataSource.data[indexData], 'POST']
+          : [this.dataSource.data[indexData], 'UPDATE'];
+    }
   }
 
   selectNoteType($event: MatSelectChange, element: any) {
@@ -229,7 +238,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       this.dataSource.data = [...this.dataSource.data];
 
       this.temporalPostUpdateNote =
-        this.dataSource.data[indexData].id < 0
+        !this.temporalPostUpdateNote && this.dataSource.data[indexData].id < 0
           ? [this.dataSource.data[indexData], 'POST']
           : [this.dataSource.data[indexData], 'UPDATE'];
     }
@@ -237,6 +246,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
 
   async createOrUpdateNote() {
     this.spinnerService.showSpinner(true)
+    console.log(this.temporalPostUpdateNote)
     delete this.temporalPostUpdateNote[0].editable
     if (this.temporalPostUpdateNote[1] == 'POST') {
       try {
@@ -267,7 +277,6 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       if (!client.name) delete client.name
 
       if (client.cellphone) client.cellphone = `${client.cellphone}`
-      console.log(client)
       await this.clientService.createClient(client)
       showPopUp('Cliente creado con éxito', 'success')
     } catch (error) {
@@ -275,10 +284,18 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     }
     this.spinnerService.showSpinner(false)
     this.dialogRef.close()
-    //TODO actualizar tabla
   }
 
-  updateClient() {
-    throw new Error('Method not implemented.');
+  async updateClient() {
+    try {
+      this.spinnerService.showSpinner(true)
+      const { borrowedContainers, totalDebt, ...client } = this.formClient.value
+      await this.clientService.updateClient(client)
+      showPopUp('Cliente actualizado con éxito', 'success')
+    } catch (error) {
+      showPopUp('Error al actualizar el cliente', 'error')
+    }
+    this.spinnerService.showSpinner(false)
+    this.dialogRef.close()
   }
 }

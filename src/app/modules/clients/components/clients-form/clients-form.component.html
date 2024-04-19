@@ -151,7 +151,7 @@
           <td mat-cell *matCellDef="let element">
             <span *ngIf="!element.editable">{{ element.description }}</span>
             <mat-form-field appearance="fill" *ngIf="element.editable">
-              <input matInput type="text" [value]="element.description" />
+              <input matInput type="text" [value]="element.description" (input)="changeDescriptionNote($event, element)" />
             </mat-form-field>
           </td>
         </ng-container>
