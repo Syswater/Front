@@ -27,8 +27,14 @@ export class RouteService {
         return translateWeekdaysToSpanish(newRoute);
     }
 
+    async updateRoute(id: number, name: string, location: string, price: number, weekdays: string[]) {
+        const route = { id, name, location, price, weekdays }
+        let newRoute = await firstValueFrom(this.http.put<Route>(`${this.url}/route/update`, route));
+        return translateWeekdaysToSpanish(newRoute);
+    }
+
     async delete(id: number) {
-        throw new Error('Method not implemented.');
+        return firstValueFrom(this.http.delete<Route>(`${this.url}/route/delete`, { body: { id } }));
     }
 
     private addParam(name: string, param: string | undefined, params: HttpParams) {

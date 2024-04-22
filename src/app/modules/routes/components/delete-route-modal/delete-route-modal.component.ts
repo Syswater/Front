@@ -22,6 +22,8 @@ export class DeleteRouteModalComponent {
       if (this.routeStorage.actualRoute?.id) await this.routeService.delete(this.routeStorage.actualRoute?.id);
       showPopUp('Cliente eliminado exitosamente', 'success')
     } catch (error) {
+      console.log("el error", error);
+
       showPopUp('Error al eliminar el cliente', 'error')
     }
     this.spinnerService.showSpinner(false)

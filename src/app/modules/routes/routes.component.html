@@ -1,45 +1,77 @@
 <div class="m-4">
-  <div class="text-right">
-    <button
-      class="mt-5 w-1/8 m-4"
-      mat-raised-button
-      style="background-color: #6ddbda; color: white; padding: 0 50px 0 50px"
-      (click)="showDialogRoute(null, 1)"
-    >
-      Agregar
-    </button>
+  <div class="grid grid-cols-12 items-center">
+    <div class="col-span-1">
+      <p class="text-lg">
+        # Rutas:
+        <span class="text-blue_3 font-black">{{ routes.length }}</span>
+      </p>
+    </div>
+
+    <mat-form-field class="mr-5 translate-y-2 col-span-9">
+      <mat-label>Buscar Ruta</mat-label>
+      <input
+        matInput
+        placeholder="Nombre, número de telefono o dirección..."
+        #input
+        (keydown)="filterClients($event)"
+      />
+      <button
+        mat-icon-button
+        style="position: absolute; right: 0; top: 5px"
+        (click)="filterClients(input.value)"
+      >
+        <mat-icon matSuffix class="cursor-pointer">search</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        style="position: absolute; right: 50px; top: 5px"
+        (click)="clearFilter(input)"
+      >
+        <mat-icon matSuffix class="cursor-pointer">close</mat-icon>
+      </button>
+    </mat-form-field>
+    <div class="text-right">
+      <button
+        class="mt-5 w-1/8 m-4"
+        mat-raised-button
+        style="background-color: #6ddbda; color: white; padding: 0 50px 0 50px"
+        (click)="showDialogRoute(null, 1)"
+      >
+        Agregar
+      </button>
+    </div>
   </div>
 
   <mat-accordion>
     <mat-expansion-panel *ngFor="let route of routes">
       <mat-expansion-panel-header>
-        <div class="w-full h-full grid grid-cols-4 items-center">
-          <div class="col-start-1 rounded">
+        <div class="w-full h-full grid grid-cols-12 items-center">
+          <div class="col-start-1 col-span-2">
+            <button mat-icon-button (click)="showDialogRoute(route, 1)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="showDialogRoute(route, 2)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <div class="col-start-3 col-span-3 rounded">
             <p>
               Ruta: <span class="text-blue_3">{{ route.name }}</span>
             </p>
           </div>
 
-          <div class="col-start-2 rounded">
+          <div class="col-start-6 col-span-3 rounded">
             <p>
               Lugar de Reparto:
               <span class="text-blue_2">{{ route.location }}</span>
             </p>
           </div>
 
-          <div class="col-start-3 rounded">
+          <div class="col-start-9 col-span-4 rounded">
             <p>
               Días de Reparto:
               <span class="text-green_1">{{ route.weekdays }}</span>
             </p>
-          </div>
-          <div class="col-start-4">
-            <button mat-icon-button (click)="showDialogRoute(route, 1)">
-              <mat-icon>info</mat-icon>
-            </button>
-            <button mat-icon-button (click)="showDialogRoute(route, 2)">
-              <mat-icon>delete</mat-icon>
-            </button>
           </div>
         </div>
       </mat-expansion-panel-header>

@@ -1,10 +1,18 @@
 <app-modal>
   <div class="md:grid md:grid-cols-12 md:gap-x-5 md:w-[95%] lg:w-[95%] mx-auto">
     <div class="col-span-12 px-4">
-      <h1 class="font-black text-2xl mb-4">Crear Ruta</h1>
+      <h1 class="font-black text-2xl mb-4">
+        Detalle de la Ruta: <span class="text-blue_3">{{ route?.name }}</span>
+      </h1>
       <div class="sm:mx-4 md:mx-4">
         <form class="grid grid-cols-12 gap-5" [formGroup]="form">
-          <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
+          <img
+            src="assets/images/route_image.png"
+            class="w-80 col-span-3 row-span-3"
+            alt="imagen de ruta"
+          />
+
+          <mat-form-field appearance="fill" class="col-span-12 md:col-span-9">
             <mat-label>Nombre de la Ruta</mat-label>
             <input
               matInput
@@ -26,7 +34,7 @@
               >Lugar es requerido</mat-error
             >
           </mat-form-field>
-          <mat-form-field appearance="fill" class="col-span-12 md:col-span-6">
+          <mat-form-field appearance="fill" class="col-span-12 md:col-span-3">
             <mat-label>Precio de venta</mat-label>
             <span class="absolute" *ngIf="input.value">$</span>
             <input
@@ -44,20 +52,35 @@
               >Precio de Venta es requerido</mat-error
             >
             <mat-error *ngIf="form.get('price')?.hasError('min')"
-              >El precio mínimo es de 1000</mat-error
+              >El precio mínimo es de $ 1.000</mat-error
             >
           </mat-form-field>
+
           <!-- Días de distribución -->
-          <div class="col-span-10">
+          <div class="col-span-12 md:col-span-9">
             <mat-label>Días de distribución</mat-label>
             <div class="flex md:flex-row flex-col">
-              <mat-checkbox formControlName="monday">Lunes</mat-checkbox>
-              <mat-checkbox formControlName="tuesday">Martes</mat-checkbox>
-              <mat-checkbox formControlName="wednesday">Miércoles</mat-checkbox>
-              <mat-checkbox formControlName="thursday">Jueves</mat-checkbox>
-              <mat-checkbox formControlName="friday">Viernes</mat-checkbox>
-              <mat-checkbox formControlName="saturday">Sábado</mat-checkbox>
-              <mat-checkbox formControlName="sunday">Domingo</mat-checkbox>
+              <mat-checkbox formControlName="monday" color="primary"
+                >Lunes</mat-checkbox
+              >
+              <mat-checkbox formControlName="tuesday" color="primary"
+                >Martes</mat-checkbox
+              >
+              <mat-checkbox formControlName="wednesday" color="primary"
+                >Miércoles</mat-checkbox
+              >
+              <mat-checkbox formControlName="thursday" color="primary"
+                >Jueves</mat-checkbox
+              >
+              <mat-checkbox formControlName="friday" color="primary"
+                >Viernes</mat-checkbox
+              >
+              <mat-checkbox formControlName="saturday" color="primary"
+                >Sábado</mat-checkbox
+              >
+              <mat-checkbox formControlName="sunday" color="primary"
+                >Domingo</mat-checkbox
+              >
             </div>
             <mat-error *ngIf="!atLeastOneCheckboxSelected()"
               >Debe seleccionar al menos un día</mat-error
@@ -73,7 +96,7 @@
   >
     <button
       mat-raised-button
-      class="block md:inline-block col-span-1"
+      class="block md:inline-block w-full"
       style="
         background-color: #404452;
         color: white;
@@ -86,11 +109,11 @@
     </button>
     <button
       mat-raised-button
-      class="block md:inline-block col-span-1"
+      class="block md:inline-block w-full"
       [disabled]="!isFormValid"
-      (click)="agregarRuta()"
+      (click)="route ? updateRoute() : createRoute()"
     >
-      Agregar
+      Guardar
     </button>
   </div>
 </app-modal>
