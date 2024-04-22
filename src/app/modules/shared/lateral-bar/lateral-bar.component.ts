@@ -28,7 +28,7 @@ export class LateralBarComponent {
     {
       iconPath: 'assets/icons/svg/clients_icon.svg',
       size: '1.8rem',
-      redirectTo: '/clients'
+      redirectTo: 'preseller/clients'
     },
     {
       iconPath: 'assets/icons/svg/reports_icon.svg',

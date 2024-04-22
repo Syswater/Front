@@ -1,0 +1,8 @@
+<app-confirmation (confirmate)="deleteNote()">
+  <p class="text-center">
+    ¿Estas seguro de eliminar la observación <span class="text-blue_3 font-black">{{
+      clientStorage.deleteNote?.description
+    }}</span
+    >de tipo <span class="text-green_1 font-black">{{clientStorage.deleteNote?.distribution_id == null ? 'Fija' : 'Normal'}}</span> ?. Recuerda que esta acción no se puede revertir.
+  </p>
+</app-confirmation>

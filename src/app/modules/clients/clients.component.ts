@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Observation } from 'src/data/models/observation';
 import { ModalService } from 'src/data/services/modal.service';
@@ -10,14 +10,14 @@ import { Route } from 'src/data/models/route';
 import { RouteService } from 'src/data/services/route.service';
 import { SpinnerService } from 'src/data/services/spinner.service';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
-import { Observable, of } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 
 @Component({
   selector: 'app-clients',
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.css'],
 })
-export class ClientsComponent implements OnInit {
+export class ClientsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'Orden',
     'Cliente',
@@ -30,6 +30,7 @@ export class ClientsComponent implements OnInit {
   dataSource: Client[] = [];
   routes: Route[] = [];
   filter?: string;
+  reloadClients!: Subscription
 
   constructor(
     private spinner: SpinnerService,
@@ -39,7 +40,14 @@ export class ClientsComponent implements OnInit {
     private routeService: RouteService
   ) { }
 
+  ngOnDestroy(): void {
+    this.reloadClients.unsubscribe()
+    this.clientStorage.actualRoute = null
+    this.clientStorage.actualClient = null
+  }
+
   async ngOnInit() {
+    this.reloadClients = this.clientStorage.getObservable('reloadClients').subscribe(v => this.reload() );
     await this.reload();
   }
 

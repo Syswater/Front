@@ -1,0 +1,15 @@
+<app-modal class="text-center px-5">
+  <form class="px-5 w-80 h-[200px]" [formGroup]="formRoles" (submit)="enterSystem()">
+    <p>Antes de continuar, porfavor selecciona con que <span class="text-blue_2 font-black">rol</span> quieres entrar</p>
+    <mat-form-field class="mt-5">
+      <mat-label>Selecciona tu rol</mat-label>
+      <mat-select formControlName="role">
+        <mat-option *ngFor="let role of roles" [value]="role">{{
+            role == 'ADMIN' ? 'Administrador' : 
+            role == 'PRE_SELLER' ? 'Prevendedor' : 'Distribuidor'
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button style="background-color: #72dcdc; color: white" type="submit">Continuar</button>
+  </form>
+</app-modal>

@@ -7,6 +7,9 @@ import { showPopUp } from 'src/app/utils/SwalPopUp';
 import { AuthService } from 'src/data/services/auth.service';
 import { SpinnerService } from 'src/data/services/spinner.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { ModalService } from 'src/data/services/modal.service';
+import { RoleComponent } from './components/role/role.component';
+import { LoginStore } from './login.store';
 
 
 @Component({
@@ -22,7 +25,14 @@ export class LoginComponent implements OnInit {
     password: new FormControl('')
   })
 
-  constructor(private authService: AuthService, private router: Router, private spinnerService: SpinnerService, private jwtHelper: JwtHelperService) { }
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private spinnerService: SpinnerService, 
+    private jwtHelper: JwtHelperService,
+    private modalService: ModalService,
+    private loginStore: LoginStore
+  ) {}
   
   ngOnInit(): void {
     const token = localStorage.getItem('token')
@@ -33,10 +43,13 @@ export class LoginComponent implements OnInit {
     try {
       this.spinnerService.showSpinner(true)
       const data = await this.authService.login(this.formLogin.value)
+      const tokenData = this.jwtHelper.decodeToken(data.token)
+      const roles = tokenData.user.roles.split(',')
       localStorage.setItem("token", data.token)
-      this.authService.isLoginView = false
-      this.router.navigate(['/dashboard'])
-      showPopUp('Inicio de sesión exitoso', 'success')
+      if(roles.length > 1){
+        this.loginStore.roles = roles
+        this.modalService.open(RoleComponent)
+      }
     } catch (error) {
       showPopUp('Usuario y/o contraseña incorrectos', 'error')
     }

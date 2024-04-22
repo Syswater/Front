@@ -13,7 +13,6 @@ export class AuthService {
   isLoginView = window.location.pathname == '/login' || window.location.pathname == '/'
 
   constructor(private http: HttpClient, private router: Router) {
-    console.log(window.location.pathname)
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         if (event.navigationTrigger === 'popstate') {
