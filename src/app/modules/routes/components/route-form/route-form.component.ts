@@ -13,20 +13,22 @@ import { RouteStorage } from '../../route.storage';
 })
 export class RouteFormComponent {
 
+  route = this.routeStorage.actualRoute;
+
   fields = {
-    name: ['', Validators.required],
-    location: ['', Validators.required],
-    price: [0, [Validators.required, Validators.min(1000)]],
-    monday: [false],
-    tuesday: [false],
-    wednesday: [false],
-    thursday: [false],
-    friday: [false],
-    saturday: [false],
-    sunday: [false]
+    name: [this.route?.name ?? '', Validators.required],
+    location: [this.route?.location ?? '', Validators.required],
+    price: [this.route?.price ?? 0, [Validators.required, Validators.min(1000)]],
+    monday: [this.route?.weekdays.find(day => day === "Lunes")],
+    tuesday: [this.route?.weekdays.find(day => day === "Martes")],
+    wednesday: [this.route?.weekdays.find(day => day === "Miércoles")],
+    thursday: [this.route?.weekdays.find(day => day === "Jueves")],
+    friday: [this.route?.weekdays.find(day => day === "Viernes")],
+    saturday: [this.route?.weekdays.find(day => day === "Sábado")],
+    sunday: [this.route?.weekdays.find(day => day === "Domingo")]
   }
 
-  route = this.routeStorage.actualRoute;
+
   form = this.formBuilder.group(this.fields)
 
 
@@ -38,11 +40,12 @@ export class RouteFormComponent {
     private spinnerService: SpinnerService
   ) { }
 
+
   get isFormValid(): boolean {
     return this.form.valid && this.atLeastOneCheckboxSelected();
   }
 
-  async agregarRuta() {
+  async createRoute() {
     try {
       if (this.form.valid && this.atLeastOneCheckboxSelected()) {
         const weekdays = this.getSelectedDays();
@@ -53,16 +56,32 @@ export class RouteFormComponent {
         this.close();
         this.spinnerService.showSpinner(true);
         await this.routeService.addRoute(name, location, price, weekdays);
-        this.spinnerService.showSpinner(false);
-
         showPopUp('La ruta se ha creado exitosamente', 'success');
       }
     } catch (error) {
-      console.log('error');
-      console.log(error);
-      this.spinnerService.showSpinner(false);
       showPopUp('Ha ocurrido un error al crear la ruta, vuelve a intentarlo', 'error');
     }
+    this.spinnerService.showSpinner(false);
+  }
+
+  async updateRoute() {
+    try {
+      if (this.form.valid && this.atLeastOneCheckboxSelected()) {
+        const id = this.route?.id ?? -1
+        const weekdays = this.getSelectedDays();
+        const name: string = this.form.get('name')?.value ?? '';
+        const location: string = this.form.get('location')?.value ?? '';
+        const price: number = this.form.get('price')?.value ?? 0;
+
+        this.close();
+        this.spinnerService.showSpinner(true);
+        await this.routeService.updateRoute(id, name, location, price, weekdays);
+        showPopUp('La ruta se ha actualizado exitosamente', 'success');
+      }
+    } catch (error) {
+      showPopUp('Ha ocurrido un error al actualizar la ruta, vuelve a intentarlo', 'error');
+    }
+    this.spinnerService.showSpinner(false);
   }
 
   atLeastOneCheckboxSelected(): boolean {
