@@ -13,10 +13,11 @@ export class RouteService {
 
     constructor(private http: HttpClient) { }
 
-    async getRoutes(options?: { filter?: string, whit_status?: string }) {
+    async getRoutes(options?: { filter?: string, whit_status?: string, status?: string }) {
         let params = new HttpParams();
         params = this.addParam('filter', options?.filter, params);
         params = this.addParam('whit_status', options?.whit_status, params);
+        params = this.addParam('status', options?.status, params);
         let routes = await firstValueFrom(this.http.get<Route[]>(`${this.url}/route/findAll`, { headers: this.getToken(), params }));
         return routes.map(route => { return translateWeekdaysToSpanish(route) });
     }

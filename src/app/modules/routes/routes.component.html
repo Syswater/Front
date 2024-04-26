@@ -1,46 +1,48 @@
-<div class="m-4">
-  <div class="grid grid-cols-12 items-center">
-    <div class="col-span-1">
-      <p class="text-lg">
-        # Rutas:
-        <span class="text-blue_3 font-black">{{ routes.length }}</span>
-      </p>
+<div class="px-10 pt-2 pb-10">
+  <mat-card class="px-5 mb-5 mt-5">
+    <div class="grid grid-cols-12 items-center">
+      <div class="col-span-1">
+        <p class="text-lg">
+          # Rutas:
+          <span class="text-blue_3 font-black">{{ routes.length }}</span>
+        </p>
+      </div>
+  
+      <mat-form-field class="mr-5 translate-y-2 col-span-9">
+        <mat-label>Buscar Ruta</mat-label>
+        <input
+          matInput
+          placeholder="Nombre, número de telefono o dirección..."
+          #input
+          (keydown)="filterClients($event)"
+        />
+        <button
+          mat-icon-button
+          style="position: absolute; right: 0; top: 5px"
+          (click)="filterClients(input.value)"
+        >
+          <mat-icon matSuffix class="cursor-pointer">search</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          style="position: absolute; right: 50px; top: 5px"
+          (click)="clearFilter(input)"
+        >
+          <mat-icon matSuffix class="cursor-pointer">close</mat-icon>
+        </button>
+      </mat-form-field>
+      <div class="text-right">
+        <button
+          class="mt-5 w-1/8 m-4"
+          mat-raised-button
+          style="background-color: #6ddbda; color: white; padding: 0 50px 0 50px"
+          (click)="showDialogRoute(null, 1)"
+        >
+          Agregar
+        </button>
+      </div>
     </div>
-
-    <mat-form-field class="mr-5 translate-y-2 col-span-9">
-      <mat-label>Buscar Ruta</mat-label>
-      <input
-        matInput
-        placeholder="Nombre, número de telefono o dirección..."
-        #input
-        (keydown)="filterClients($event)"
-      />
-      <button
-        mat-icon-button
-        style="position: absolute; right: 0; top: 5px"
-        (click)="filterClients(input.value)"
-      >
-        <mat-icon matSuffix class="cursor-pointer">search</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        style="position: absolute; right: 50px; top: 5px"
-        (click)="clearFilter(input)"
-      >
-        <mat-icon matSuffix class="cursor-pointer">close</mat-icon>
-      </button>
-    </mat-form-field>
-    <div class="text-right">
-      <button
-        class="mt-5 w-1/8 m-4"
-        mat-raised-button
-        style="background-color: #6ddbda; color: white; padding: 0 50px 0 50px"
-        (click)="showDialogRoute(null, 1)"
-      >
-        Agregar
-      </button>
-    </div>
-  </div>
+  </mat-card>
 
   <mat-accordion>
     <mat-expansion-panel *ngFor="let route of routes">

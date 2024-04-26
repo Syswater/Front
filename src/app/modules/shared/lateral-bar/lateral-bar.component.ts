@@ -13,17 +13,17 @@ export class LateralBarComponent {
     {
       iconPath: 'assets/icons/svg/dashboard_icon.svg',
       size: '1.8rem',
-      redirectTo: '/dashboard'
+      redirectTo: 'preseller/dashboard'
     },
     {
       iconPath: 'assets/icons/svg/routes_icon.svg',
       size: '1.8rem',
-      redirectTo: '/routes'
+      redirectTo: 'preseller/routes'
     },
     {
       iconPath: 'assets/icons/svg/presales_icon.svg',
       size: '1.8rem',
-      redirectTo: '/presales'
+      redirectTo: 'preseller/presales'
     },
     {
       iconPath: 'assets/icons/svg/clients_icon.svg',
@@ -33,7 +33,7 @@ export class LateralBarComponent {
     {
       iconPath: 'assets/icons/svg/reports_icon.svg',
       size: '1.8rem',
-      redirectTo: '/reports'
+      redirectTo: 'preseller/reports'
     },
   ]
 

@@ -5,7 +5,7 @@
       <h1 class="font-black text-2xl" [formGroup]="formClient">
         Detalle del cliente:
         <span class="text-blue_3">{{ clientStorage.actualClient ? clientStorage.actualClient.name : nameInput.value }}</span>
-        <mat-checkbox class="float-right" labelPosition="before" color="primary" che formControlName="is_contactable">Contactable</mat-checkbox>
+        <mat-checkbox class="float-right" labelPosition="before" color="primary" formControlName="is_contactable">Contactable</mat-checkbox>
       </h1>
       <form class="grid grid-cols-4 gap-5 mt-10" [formGroup]="formClient">
         <mat-form-field appearance="fill" class="col-span-2">
@@ -119,7 +119,7 @@
         <div class="grid grid-cols-2 gap-5">
           <mat-form-field appearance="fill">
             <mat-label>Ruta</mat-label>
-            <mat-select [value]="clientStorage.actualRoute?.id">
+            <mat-select formControlName="route_id">
               <mat-option
                 *ngFor="let route of routes; index as i"
                 [value]="route.id"

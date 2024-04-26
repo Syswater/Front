@@ -1,16 +1,26 @@
 <div class="h-full w-full">
   <div class="px-10 pt-2">
     <div
-      class="mt-5 w-full h-12 bg-white flex items-center pl-5 pt-2 shadow-lg"
+      class="mt-5 w-full h-20 bg-white flex items-center pl-5 pt-2 shadow-lg"
     >
       <p class="text-lg">
         Hola <span class="text-teal-400">Cristian</span>, Bienvenido de vuelta
       </p>
+      <mat-form-field class="mr-5 translate-y-2 absolute right-10">
+        <mat-select
+          [value]="dashboardStorage.actualRoute?.id"
+          (selectionChange)="changeRoute($event)"
+        >
+          <mat-option *ngFor="let route of routes" [value]="route.id">{{
+            route.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="mt-5 w-full grid grid-cols-4 gap-10">
       <app-card
         title="Rutas en curso"
-        footer="Moniquira Lunes"
+        [footer]="dashboardStorage.actualRoute?.name || ''"
         color="blue_1"
         [height]="32"
         img_path="/assets/icons/icon1.png"

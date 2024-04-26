@@ -120,7 +120,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     neighborhood: this.client?.neighborhood,
     route_order: this.client?.route_order ? this.client.route_order : this.clientStorage.lastClient ? this.clientStorage.lastClient.route_order + 1 : 0,
     tape_preference: this.client ? this.client.tape_preference : this.tape_preference[0],
-    is_contactable: [true],
+    is_contactable: [this.client ? this.client.is_contactable : this.clientStorage.actualClient?.is_contactable],
     name: this.client?.name,
     cellphone: this.client?.cellphone,
     borrowedContainers: this.client?.borrowedContainers ?? 0,
@@ -252,12 +252,14 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     try {
       this.spinnerService.showSpinner(true)
       const temporalNote = this.temporalPostUpdateNote.find(temp => temp.id == id) || []
+      const indexTmp = this.dataSource.data.findIndex(note => note.id == id)
       delete temporalNote.editable
       delete temporalNote.id
-      await this.clientService.createNote(temporalNote);
+      const note = await this.clientService.createNote(temporalNote);
+      this.dataSource.data[indexTmp].id = note.id
+      this.clientStorage.actualClient?.note.push(note as Observation)
       showPopUp('Observación creada con éxito', 'success')
       this.clientStorage.setObservableValue(true, 'reloadClients')
-      this.dialogRef.close()
     } catch (error) {
       showPopUp('Error al crear la observación', 'error')
     }
@@ -272,7 +274,6 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       await this.clientService.updateNote(note);
       showPopUp('Observación actualizada con éxito', 'success')
       this.clientStorage.setObservableValue(true, 'reloadClients')
-      this.dialogRef.close()
     } catch (error) {
       showPopUp('Error al actualizar la observación', 'error')
     }
