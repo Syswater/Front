@@ -5,11 +5,13 @@ import { MaterialModule } from '../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RoleComponent } from './components/role/role.component';
 import { SharedModule } from '../shared/shared.module';
+import { LogoutModalComponent } from './components/logout-modal/logout-modal.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
-    RoleComponent
+    RoleComponent,
+    LogoutModalComponent
   ],
   imports: [
     CommonModule,

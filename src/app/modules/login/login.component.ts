@@ -10,6 +10,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { ModalService } from 'src/data/services/modal.service';
 import { RoleComponent } from './components/role/role.component';
 import { LoginStore } from './login.store';
+import { AppStorage } from 'src/app/app.storage';
 
 
 @Component({
@@ -26,17 +27,31 @@ export class LoginComponent implements OnInit {
   })
 
   constructor(
-    private authService: AuthService, 
-    private router: Router, 
-    private spinnerService: SpinnerService, 
+    private authService: AuthService,
+    private router: Router,
+    private spinnerService: SpinnerService,
     private jwtHelper: JwtHelperService,
     private modalService: ModalService,
-    private loginStore: LoginStore
-  ) {}
-  
+    private loginStore: LoginStore,
+    private appStorage: AppStorage
+  ) { }
+
   ngOnInit(): void {
     const token = localStorage.getItem('token')
-    if( token && !this.jwtHelper.isTokenExpired(token) ) this.router.navigate(['/dashboard']);
+    if (token && !this.jwtHelper.isTokenExpired(token)) {
+      const role = localStorage.getItem('roleActual')
+      switch (role) {
+        case 'Prevendedor':
+          this.router.navigate(['preseller/dashboard']);
+          break;
+        case 'Administrador':
+          this.router.navigate(['admin/dashboard']);
+          break;
+        case 'Distribuidor':
+          this.router.navigate(['distributor/dashboard']);
+          break;
+      }
+    }
   }
 
   async login() {
@@ -44,9 +59,10 @@ export class LoginComponent implements OnInit {
       this.spinnerService.showSpinner(true)
       const data = await this.authService.login(this.formLogin.value)
       const tokenData = this.jwtHelper.decodeToken(data.token)
+      this.appStorage.username = tokenData.user.name
       const roles = tokenData.user.roles.split(',')
       localStorage.setItem("token", data.token)
-      if(roles.length > 1){
+      if (roles.length > 1) {
         this.loginStore.roles = roles
         this.modalService.open(RoleComponent)
       }

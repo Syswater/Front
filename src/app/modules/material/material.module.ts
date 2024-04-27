@@ -14,6 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatProgressSpinnerModule,
     MatCheckboxModule,
     DragDropModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatMenuModule
   ],
   exports: [
     MatFormFieldModule,
@@ -47,7 +49,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatProgressSpinnerModule,
     MatCheckboxModule,
     DragDropModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatMenuModule
   ]
 })
 export class MaterialModule { }
