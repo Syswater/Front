@@ -5,13 +5,15 @@ import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../material/material.module';
 import { PresalesFormComponent } from './components/presales-form/presales-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DeleteOrderComponent } from './components/delete-order/delete-order.component';
 
 
 
 @NgModule({
   declarations: [
     PresalesComponent,
-    PresalesFormComponent
+    PresalesFormComponent,
+    DeleteOrderComponent
   ],
   imports: [
     CommonModule,

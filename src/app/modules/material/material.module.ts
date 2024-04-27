@@ -13,6 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatTabsModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
-    DragDropModule
+    DragDropModule,
+    MatDatepickerModule
   ],
   exports: [
     MatFormFieldModule,
@@ -44,7 +46,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatTabsModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
-    DragDropModule
+    DragDropModule,
+    MatDatepickerModule
   ]
 })
 export class MaterialModule { }

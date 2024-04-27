@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { ModalService } from 'src/data/services/modal.service';
+import { PresalesStorage } from '../../presales.storage';
 
 const observations_data = [
   { index: 0, text: 'Tocar segundo piso', importance: 2, editable: false },
@@ -42,7 +43,7 @@ export class PresalesFormComponent {
   dataSourceEnvases = envases_data;
   dataSourceVentas = ventas_data;
 
-  constructor(private dialogRef: MatDialogRef<PresalesFormComponent>, private modalService: ModalService) { }
+  constructor(private dialogRef: MatDialogRef<PresalesFormComponent>, private modalService: ModalService, public presaleStorage: PresalesStorage) { }
 
   showDelete(element: any) {
     this.modalService.open(PresalesFormComponent, () => { });

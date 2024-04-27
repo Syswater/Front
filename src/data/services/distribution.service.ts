@@ -8,6 +8,7 @@ import { Distribution } from '../models/distribution';
   providedIn: 'root'
 })
 export class DistributionService {
+  
 
   url = environment.API_URL;
 
@@ -19,6 +20,10 @@ export class DistributionService {
       .set('with_route', with_route ?? '')
       .set('status', status ?? '')
       return await firstValueFrom(this.http.get<Distribution[]>(`${this.url}/distribution/findAll`, { params }));
+    }
+    
+    async createDistribution(options: { date: string; route_id: number; }) {
+      return await firstValueFrom(this.http.post(`${this.url}/distribution/initDistribution`, { ...options }));
     }
 
 }

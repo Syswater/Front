@@ -257,7 +257,6 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       delete temporalNote.id
       const note = await this.clientService.createNote(temporalNote);
       this.dataSource.data[indexTmp].id = note.id
-      this.clientStorage.actualClient?.note.push(note as Observation)
       showPopUp('Observación creada con éxito', 'success')
       this.clientStorage.setObservableValue(true, 'reloadClients')
     } catch (error) {
@@ -277,6 +276,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     } catch (error) {
       showPopUp('Error al actualizar la observación', 'error')
     }
+    this.spinnerService.showSpinner(false)
   }
 
   async createClient() {

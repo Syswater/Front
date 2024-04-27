@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
+import { Client } from "src/data/models/client";
 import { Distribution } from "src/data/models/distribution";
 
 @Injectable({
@@ -7,6 +8,7 @@ import { Distribution } from "src/data/models/distribution";
 })
 export class PresalesStorage {
     actualDistribution?: Distribution | null = null
+    actualClient?: Client | null = null
 
     //OBSERVABLES
     private observables : any = {

@@ -1,3 +1,3 @@
-<button class="rounded-full border border-gray" [style.background-color]="color" [style.width.px]="size" [style.height.px]="size">
+<button class="rounded-full border border-gray" [disabled]="disabled" [style.background-color]="!disabled ? color : colorDisabled" [style.width.px]="size" [style.height.px]="size">
     {{text}}
 </button>

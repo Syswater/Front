@@ -1,4 +1,5 @@
 import { Observation } from "./observation";
+import { Order } from "./order";
 
 export interface Client {
     id: number;
@@ -13,4 +14,5 @@ export interface Client {
     totalDebt: number;
     borrowedContainers: number;
     note: Observation[];
+    order?: Order;
   }

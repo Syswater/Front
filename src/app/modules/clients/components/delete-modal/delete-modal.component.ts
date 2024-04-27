@@ -23,6 +23,7 @@ export class DeleteModalComponent {
       this.spinnerService.showSpinner(true)
       await this.clientService.deleteClient(this.clientStorage.actualClient?.id);
       showPopUp('Cliente eliminado exitosamente', 'success')
+      this.clientStorage.setObservableValue(true, 'reloadClients')
     } catch (error) {
       showPopUp('Error al eliminar el cliente', 'error')
     }

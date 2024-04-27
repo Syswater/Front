@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { RouteService } from '../../../data/services/route.service';
 import { Route } from '../../../data/models/route';
 import { SpinnerService } from 'src/data/services/spinner.service';
@@ -6,26 +6,45 @@ import { ModalService } from '../../../data/services/modal.service';
 import { RouteFormComponent } from './components/route-form/route-form.component';
 import { RouteStorage } from './route.storage';
 import { DeleteRouteModalComponent } from './components/delete-route-modal/delete-route-modal.component';
-
+import { DistributionService } from 'src/data/services/distribution.service';
+import { getCurrentDate } from 'src/app/utils/DateUtils';
+import { showPopUp } from 'src/app/utils/SwalPopUp';
+import { Router } from '@angular/router';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDatepickerIntl } from '@angular/material/datepicker';
+import { FormBuilder, Validators } from '@angular/forms';
+import * as moment from 'moment';
 @Component({
   selector: 'app-routes',
   templateUrl: './routes.component.html',
   styleUrls: ['./routes.component.css'],
 })
 export class RoutesComponent implements OnInit {
-
   routes: Route[] = [];
   weekdays: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   filter?: string;
+  formDate = this.fb.group({
+    date: ['', Validators.required]
+  })
+  minDate: Date = moment().add(1, 'day').toDate();
 
   constructor(
     private routeService: RouteService,
     private spinnerService: SpinnerService,
     private routeStorage: RouteStorage,
-    private modalService: ModalService) { }
+    private modalService: ModalService,
+    private distributionService: DistributionService,
+    private router: Router,
+    private _adapter: DateAdapter<any>,
+    private _intl: MatDatepickerIntl,
+    private fb: FormBuilder,
+    @Inject(MAT_DATE_LOCALE) private _locale: string,
+  ) { }
 
   async ngOnInit() {
     await this.loadRoutes();
+    this._locale = 'es';
+    this._adapter.setLocale(this._locale);
   }
 
   async loadRoutes() {
@@ -72,5 +91,19 @@ export class RoutesComponent implements OnInit {
     this.filter = undefined
     await this.loadRoutes();
     input.value = ''
+  }
+
+  async managementRoute(route: Route, flag: boolean) {
+    if (route.status?.toString() == 'WHITOUT' || route.status?.toString() == 'CLOSED' && flag) {
+      try {
+        this.spinnerService.showSpinner(true)
+        await this.distributionService.createDistribution({ date: getCurrentDate('ISO'), route_id: route.id });
+        showPopUp('Distribución creada con exito', 'success');
+        this.router.navigate(['/preseller/presales']);
+      } catch (error) {
+        showPopUp('Error al crear la distribución', 'error');
+      }
+      this.spinnerService.showSpinner(false)
+    }
   }
 }

@@ -15,6 +15,7 @@ import { AuthInterceptor } from 'src/data/interceptors/auth.interceptor';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { JwtModule } from '@auth0/angular-jwt';
 import { PresalesModule } from './modules/presales/presales.module';
+import { MatNativeDateModule } from '@angular/material/core';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -41,7 +42,8 @@ export function tokenGetter() {
       config: {
         tokenGetter: tokenGetter
       }
-    })
+    }),
+    MatNativeDateModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

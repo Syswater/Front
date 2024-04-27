@@ -87,9 +87,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
         this.modalService.open(ClientsFormComponent, () => { });
         break;
       case 2:
-        this.modalService.open(DeleteModalComponent, () => {
-          this.reload().then();
-        });
+        this.modalService.open(DeleteModalComponent, () => { });
         break;
     }
   }

@@ -7,7 +7,7 @@
           <span class="text-blue_3 font-black">{{ routes.length }}</span>
         </p>
       </div>
-  
+
       <mat-form-field class="mr-5 translate-y-2 col-span-9">
         <mat-label>Buscar Ruta</mat-label>
         <input
@@ -35,7 +35,11 @@
         <button
           class="mt-5 w-1/8 m-4"
           mat-raised-button
-          style="background-color: #6ddbda; color: white; padding: 0 50px 0 50px"
+          style="
+            background-color: #6ddbda;
+            color: white;
+            padding: 0 50px 0 50px;
+          "
           (click)="showDialogRoute(null, 1)"
         >
           Agregar
@@ -48,7 +52,7 @@
     <mat-expansion-panel *ngFor="let route of routes">
       <mat-expansion-panel-header>
         <div class="w-full h-full grid grid-cols-12 items-center">
-          <div class="col-start-1 col-span-2">
+          <div class="col-span-2">
             <button mat-icon-button (click)="showDialogRoute(route, 1)">
               <mat-icon>edit</mat-icon>
             </button>
@@ -56,23 +60,45 @@
               <mat-icon>delete</mat-icon>
             </button>
           </div>
-          <div class="col-start-3 col-span-3 rounded">
+          <div class="col-span-2 rounded">
             <p>
               Ruta: <span class="text-blue_3">{{ route.name }}</span>
             </p>
           </div>
 
-          <div class="col-start-6 col-span-3 rounded">
+          <div class="col-span-2 rounded">
             <p>
               Lugar de Reparto:
               <span class="text-blue_2">{{ route.location }}</span>
             </p>
           </div>
 
-          <div class="col-start-9 col-span-4 rounded">
+          <div class="col-span-4 rounded">
             <p>
               Días de Reparto:
               <span class="text-green_1">{{ route.weekdays }}</span>
+            </p>
+          </div>
+
+          <div
+            class="col-span-2"
+            [ngSwitch]="route.status"
+          >
+            <p>
+              Estado:
+              <span *ngSwitchCase="'PREORDER'" class="text-blue_3"
+                >En preventa</span
+              >
+              <span *ngSwitchCase="'OPENED'" class="text-blue_3"
+                >En Distribución</span
+              >
+              <span *ngSwitchCase="'CLOSE_REQUEST'" class="text-blue_3"
+                >Solicitud de cierre</span
+              >
+              <span *ngSwitchCase="'CLOSED'" class="text-blue_3">Cerrada</span>
+              <span *ngSwitchCase="'WHITOUT'" class="text-blue_3"
+                >Sin distribuciones</span
+              >
             </p>
           </div>
         </div>
@@ -121,16 +147,63 @@
             <span *ngSwitchCase="'CLOSE_REQUEST'" class="text-blue_3"
               >Solicitud de cierre</span
             >
-            <span *ngSwitchCase="'CLOSED'" class="text-blue_3">Cerrada</span>
-            <span *ngSwitchCase="'WHITOUT'" class="text-blue_3"
-              >Sin distribuciones</span
+            <span *ngSwitchCase="'CLOSED'" class="" [formGroup]="formDate">
+            
+              <span class="text-blue_3">Cerrada</span> <br><br>
+              
+              <mat-form-field class="example-form-field">
+                <mat-label>Fecha de distribución</mat-label>
+                <input matInput [matDatepicker]="datepicker" formControlName="date" [min]="minDate">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+
+            </span>
+            <span *ngSwitchCase="'WHITOUT'" class="" [formGroup]="formDate"
+              >
+              
+              <span class="text-blue_3">Sin distribuciones</span> <br><br>
+              
+              <mat-form-field class="example-form-field">
+                <mat-label>Fecha de distribución</mat-label>
+                <input matInput [matDatepicker]="datepicker" formControlName="date" [min]="minDate">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+
+              </span
             >
           </p>
           <button
             mat-raised-button
             type="button"
             class="w-1/2 mt-5 bg-blue_3 text-white button-status"
-            style="background-color: #404452; color: white"
+            [style]="formDate.invalid ? 'background-color: #E3E3E3; color: white' : 'background-color: #6fdb90; color: white'"
+            *ngIf="route.status ? route.status.toString() === 'CLOSED' : false"
+            (click)="managementRoute(route, true)"
+            [disabled]="formDate.invalid"
+          >
+            Iniciar Distribución
+          </button>
+          <button
+            mat-raised-button
+            type="button"
+            class="w-1/2 mt-5 bg-blue_3 text-white button-status"
+            [style]="route.status?.toString() === 'WHITOUT' ? formDate.invalid ? 'background-color: #E3E3E3; color: white' : 'background-color: #404452; color: white' : 'background-color: #404452; color: white'"
+            (click)="managementRoute(route, route.status?.toString() !== 'CLOSED')"
+            [disabled]="route.status?.toString() === 'WHITOUT' ? formDate.invalid : false"
           >
             {{
               route.status
@@ -145,15 +218,6 @@
                   : "Iniciar Distribución"
                 : "Iniciar Distribución"
             }}
-          </button>
-          <button
-            mat-raised-button
-            type="button"
-            class="w-1/2 mt-5 bg-blue_3 text-white button-status"
-            style="background-color: #6fdb90; color: white"
-            *ngIf="route.status ? route.status.toString() === 'CLOSED' : false"
-          >
-            Iniciar Distribución
           </button>
         </div>
       </div>
