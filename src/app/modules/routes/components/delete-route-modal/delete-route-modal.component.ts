@@ -16,15 +16,19 @@ export class DeleteRouteModalComponent {
     private routeService: RouteService
   ) { }
 
-  async deleteClient() {
+  async deleteRoute() {
     try {
       this.spinnerService.showSpinner(true)
       if (this.routeStorage.actualRoute?.id) await this.routeService.delete(this.routeStorage.actualRoute?.id);
-      showPopUp('Cliente eliminado exitosamente', 'success')
-    } catch (error) {
-      console.log("el error", error);
+      showPopUp('Ruta eliminada exitosamente', 'success')
+    } catch (e: any) {
+      if ('NON_DELETABLE_ROUTE' === e.error.message) {
+        showPopUp('No se puede eliminar una ruta que no esté cerrada', 'error')
+      }
+      else {
+        showPopUp('Error al eliminar la ruta', 'error')
+      }
 
-      showPopUp('Error al eliminar el cliente', 'error')
     }
     this.spinnerService.showSpinner(false)
   }
