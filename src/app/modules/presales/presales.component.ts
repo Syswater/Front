@@ -141,7 +141,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
   async createOrder(element: any) {
     try {
       this.spinner.showSpinner(true);
-      await this.orderService.createOrder({ amount: element.quantity == '-' ? 0 : element.quantity, customer_id: element.id, date: getCurrentDate('ISO'), distribution_id: this.preSaleStorage.actualDistribution!.id, tape_type: element.tape_preference });
+      await this.orderService.createOrder({ amount: element.quantity == '-' ? 0 : element.quantity, customer_id: element.id, date: getCurrentDate(), distribution_id: this.preSaleStorage.actualDistribution!.id, tape_type: element.tape_preference });
       showPopUp('Orden creada con exito', 'success')
       this.getClientsByRoute(this.preSaleStorage.actualDistribution?.route)
     } catch (error) {

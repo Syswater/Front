@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppStorage } from 'src/app/app.storage';
 
 @Component({
   selector: 'app-lateral-bar',
@@ -13,31 +14,36 @@ export class LateralBarComponent {
     {
       iconPath: 'assets/icons/svg/dashboard_icon.svg',
       size: '1.8rem',
-      redirectTo: 'preseller/dashboard'
+      redirectTo: 'preseller/dashboard',
+      text: 'Dashboard'
     },
     {
       iconPath: 'assets/icons/svg/routes_icon.svg',
       size: '1.8rem',
-      redirectTo: 'preseller/routes'
+      redirectTo: 'preseller/routes',
+      text: 'Preventas'
     },
     {
       iconPath: 'assets/icons/svg/presales_icon.svg',
       size: '1.8rem',
-      redirectTo: 'preseller/presales'
+      redirectTo: 'preseller/presales',
+      text: 'Rutas'
     },
     {
       iconPath: 'assets/icons/svg/clients_icon.svg',
       size: '1.8rem',
-      redirectTo: 'preseller/clients'
+      redirectTo: 'preseller/clients',
+      text: 'Clientes'
     },
     {
       iconPath: 'assets/icons/svg/reports_icon.svg',
       size: '1.8rem',
-      redirectTo: 'preseller/reports'
+      redirectTo: 'preseller/reports',
+      text: 'Reportes'
     },
   ]
 
-  constructor(private router: Router){}
+  constructor(private router: Router, public appStorage: AppStorage){}
 
   redirectTo(path: string){
     this.router.navigate([path])

@@ -7,6 +7,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 export class AppStorage {
     username: string = localStorage.getItem('token') ? this.jwtHelper.decodeToken(`${localStorage.getItem('token')}`).user.name : '';
     actualRol: string = `${localStorage.getItem('roleActual')}`;
+    lateralMenuExpansion = false
 
     constructor(private jwtHelper: JwtHelperService){}
 }

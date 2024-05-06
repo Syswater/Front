@@ -25,6 +25,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class CardInfoComponent {
   @Input() title: string = 'Titulo'
   @Input() button_text: string = 'Ver más'
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;
+  @Input() displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  @Input() dataSource = ELEMENT_DATA;
 }

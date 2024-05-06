@@ -1,11 +1,29 @@
 <app-lateral-bar *ngIf="!auth.isLoginView"></app-lateral-bar>
 <div
-  class="translate-x-[70px]"
-  style="width: calc(100vw - 70px)"
+  [style]="
+    appStorage.lateralMenuExpansion
+      ? 'width: calc(100vw - 150px); transform: translateX(150px);'
+      : 'width: calc(100vw - 70px); transform: translateX(70px);'
+  "
   *ngIf="!auth.isLoginView"
+  style="transition: ease-in-out 200ms;"
 >
-  <div class="h-12 bg-white" style="width: calc(100vw - 70px)">
-    <button mat-icon-button><mat-icon class="text-gray">menu</mat-icon></button>
+  <div
+    class="h-15 bg-white"
+    [style]="
+      appStorage.lateralMenuExpansion
+        ? 'width: calc(100vw - 150px)'
+        : 'width: calc(100vw - 70px)'
+    "
+  >
+    <button
+      mat-icon-button
+      (click)="
+        appStorage.lateralMenuExpansion = !appStorage.lateralMenuExpansion
+      "
+    >
+      <mat-icon class="text-gray">menu</mat-icon>
+    </button>
     <div
       class="float-right grid grid-cols-9 mr-2 cursor-pointer"
       [matMenuTriggerFor]="menu"
@@ -23,7 +41,14 @@
       </div>
     </div>
   </div>
-  <div class="" style="width: calc(100vw - 70px)">
+  <div
+    class=""
+    [style]="
+      appStorage.lateralMenuExpansion
+        ? 'width: calc(100vw - 150px)'
+        : 'width: calc(100vw - 70px)'
+    "
+  >
     <router-outlet></router-outlet>
   </div>
 </div>

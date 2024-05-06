@@ -5,21 +5,26 @@ import { SpinnerService } from 'src/data/services/spinner.service';
 import { DashboardStorage } from './dashboard.storage';
 import { Route } from 'src/data/models/route';
 import { RouteService } from 'src/data/services/route.service';
+import { ClientService } from 'src/data/services/client.service';
+import { DistributionService } from 'src/data/services/distribution.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { Distribution } from 'src/data/models/distribution';
+import { getCurrentDate } from 'src/app/utils/DateUtils';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
   single: any[] = [
     {
-      "name": "Normal",
-      "value": 1000
+      name: 'Normal',
+      value: 1000,
     },
     {
-      "name": "Servifacil",
-      "value": 500
+      name: 'Servifacil',
+      value: 500,
     },
   ];
   view: [number, number] = [700, 200];
@@ -35,63 +40,166 @@ export class DashboardComponent implements OnInit {
     domain: ['#6FDB90', '#6E96DB'],
     group: ScaleType.Ordinal,
     name: 'SysWaterColors',
-    selectable: true
+    selectable: true,
   };
-  
-  
+
   ////////////
-  
+
   singlePie: any[] = [
     {
-      "name": "Germany",
-      "value": 8940000
+      name: 'Germany',
+      value: 8940000,
     },
     {
-      "name": "USA",
-      "value": 5000000
-    }
+      name: 'USA',
+      value: 5000000,
+    },
   ];
   viewPie: [number, number] = [273, 200];
-  
+
   // options
   showLabels: boolean = false;
   isDoughnut: boolean = false;
   legendPosition: LegendPosition = LegendPosition.Below;
-  
+
   colorSchemePie: Color = {
     domain: ['#6EB8DB', '#6EDAB6'],
     group: ScaleType.Ordinal,
     name: 'SysWaterColors',
-    selectable: true
+    selectable: true,
   };
 
-  routes: Route[] = []
+  distributionRoutes: Distribution[] = [];
+  dataSourcePresales = new MatTableDataSource<any>([]);
+  displayedColumnsPresales: string[] = ['Orden', 'Cliente', 'Cantidad', 'Observaciones']
 
-  constructor(private routesService: RouteService, private authService: AuthService, private spinner: SpinnerService, public dashboardStorage: DashboardStorage){}
-  
+  dataSourceClients = new MatTableDataSource<any>([]);
+  displayedColumnsClients: string[] = ['Nombres', 'Dirección', 'Barrio', 'Contacto', 'Ruta']
+
+  constructor(
+    private routesService: RouteService,
+    private authService: AuthService,
+    private spinner: SpinnerService,
+    public dashboardStorage: DashboardStorage,
+    private clientService: ClientService,
+    private distributionService: DistributionService
+  ) { }
+
   async ngOnInit() {
-    this.authService.isLoginView = false
-    await this.getRoutes();
-    await this.getClientsByRoute(this.dashboardStorage.actualRoute);
-  }
-  
-  async getClientsByRoute(route: Route | undefined | null) {
+    this.authService.isLoginView = false;
     this.spinner.showSpinner(true);
-    this.dashboardStorage.actualRoute = route
+    await this.getRoutes();
+    await this.updateRoute(this.dashboardStorage.actualRoute);
+    await this.getDashboardClientsInfo();
+    await this.getDistributions();
+    await this.getClientsByRoute(this.dashboardStorage.actualDistribution?.route);
+    this.updateGraphics()
     this.spinner.showSpinner(false);
+  }
+
+  updateGraphics() {
+    let { orderNormal, orderServifacil } = this.getTotalSelledProductsByType();
+    this.single = [
+      {
+        name: 'Normal',
+        value: orderNormal,
+      },
+      {
+        name: 'Servifacil',
+        value: orderServifacil,
+      },
+    ]
+    this.singlePie = [
+      {
+        name: 'Contestaron',
+        value: this.getTotalClientsAnswered().totalAnswered,
+      },
+      {
+        name: 'No Contestaron',
+        value: this.getTotalClientsAnswered().totalNoAnswered,
+      },
+    ];
+  }
+
+  getTotalSelledProductsByType() {
+    let orderServifacil = 0, orderNormal = 0;
+    for (const client of this.dataSourcePresales.data) {
+      if (client.order) {
+        if (client.order.tape_type == 'SERVIFACIL') orderServifacil += client.order.amount;
+        if (client.order.tape_type == 'NORMAL') orderNormal += client.order.amount;
+      }
+    }
+    return { orderNormal, orderServifacil };
+  }
+
+  async getDistributions() {
+    this.distributionRoutes = await this.distributionService.getDistributions({ status: 'PREORDER', with_route: true })
+    this.dashboardStorage.actualDistribution = this.distributionRoutes[0]
+  }
+
+  async getClientsByRoute(route: Route | undefined | null) {
+    this.dataSourcePresales.data = (await this.clientService.getListClients({
+      route_id: route!.id,
+      distribution_id: this.dashboardStorage.actualDistribution?.id,
+      with_notes: true,
+      with_order: true
+    })).map(d => ({ ...d, quantity: '-' }));
+  }
+
+  async getDashboardClientsInfo() {
+    this.dataSourceClients.data = await this.clientService.getListClients({});
+  }
+
+  async updateRoute(route: Route | undefined | null) {
+    this.dashboardStorage.actualRoute = route;
   }
 
   async getRoutes() {
+    this.distributionRoutes = await this.distributionService.getDistributions({ status: 'PREORDER', with_route: true })
+    this.dashboardStorage.actualRoute = this.distributionRoutes[0].route;
+  }
+
+  async changeRoute(event: any) {
     this.spinner.showSpinner(true);
-    this.routes = await this.routesService.getRoutes({
-      status: 'PREORDER',
-    });
-    this.dashboardStorage.actualRoute = this.routes[0];
+    this.updateRoute(this.distributionRoutes.find((r) => r.route_id == event.value)?.route);
+    await this.getClientsByRoute(this.dashboardStorage.actualRoute);
+    this.updateGraphics()
+    this.dataSourcePresales.data = [...this.dataSourcePresales.data]
     this.spinner.showSpinner(false);
   }
 
-  changeRoute(event: any) {
-    this.getClientsByRoute(this.routes.find((r) => r.id == event.value));
+  getTotalProductsSelled() {
+    let total = 0
+    for (const client of this.dataSourcePresales.data) {
+      total += client.order ? client.order.amount : client.quantity != '-' ? client.quantity : 0
+    }
+    return total
+  }
+
+  getTotalClientsAnswered() {
+    let totalAnswered = 0
+    let totalNoAnswered = 0
+    for (const client of this.dataSourcePresales.data) {
+      if (client.order) {
+        totalAnswered += 1
+      } else {
+        totalNoAnswered += 1
+      }
+    }
+    return { totalAnswered, totalNoAnswered }
+  }
+
+  getTotalDebtAndEnvases() {
+    let totalDebt = 0, totalEnvases = 0
+    for (const client of this.dataSourcePresales.data) {
+      totalDebt += client.totalDebt ?? 0
+      totalEnvases += client.borrowedContainers ?? 0
+    }
+    return `$. ${totalDebt} / ${totalEnvases} u`
+  }
+
+  getDate() {
+    return getCurrentDate('DD [de] MMMM [de] YYYY');
   }
 
 }

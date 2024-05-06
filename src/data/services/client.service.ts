@@ -13,14 +13,14 @@ export class ClientService {
 
   constructor(private http: HttpClient) { }
 
-  async getListClients(options: { route_id: number, distribution_id?: number, filter?: string, with_notes?: boolean, with_order?: boolean }) {
+  async getListClients(options: { route_id?: number, distribution_id?: number, filter?: string, with_notes?: boolean, with_order?: boolean }) {
     const { route_id, filter, with_notes, with_order, distribution_id } = options
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('filter', filter ?? '')
       .set('with_notes', with_notes ?? false)
-      .set('route_id', route_id)
       .set('with_order', with_order ?? false)
       .set('distribution_id', distribution_id ?? 0);
+    if(route_id) params = params.set('route_id', route_id)
     return firstValueFrom(this.http.get<Client[]>(`${this.url}/customer/findAll`, { params }));
   }
 

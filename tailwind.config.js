@@ -12,7 +12,8 @@ module.exports = {
         blue_2: '#6DDBDA',
         blue_3: '#6E96DB',
         green_1: '#6EDAB6',
-        green_2: '#6FDB90'
+        green_2: '#6FDB90',
+        gray_dark: '#7E86A0'
       }
     },
   },

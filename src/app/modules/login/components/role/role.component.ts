@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginStore } from '../../login.store';
 import { Router } from '@angular/router';
 import { showPopUp } from 'src/app/utils/SwalPopUp';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from 'src/data/services/auth.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AppStorage } from 'src/app/app.storage';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-role',
@@ -21,14 +21,15 @@ export class RoleComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<RoleComponent>,
     private authService: AuthService,
-    private loginStore: LoginStore,
     private router: Router,
     private fb: FormBuilder,
-    private appStorage: AppStorage
+    private appStorage: AppStorage,
+    private jwtHelper: JwtHelperService,
   ) { }
 
   ngOnInit(): void {
-    this.roles = this.loginStore.roles;
+    const tokenData = this.jwtHelper.decodeToken(`${localStorage.getItem('token')}`);
+    this.roles = tokenData.user.roles.split(',');
   }
 
   enterSystem() {
@@ -49,8 +50,8 @@ export class RoleComponent implements OnInit {
         this.router.navigate(['distributor/dashboard']);
         break;
     }
+    showPopUp(this.authService.isLoginView ? 'Inicio de sesión exitoso' : 'Cambio de rol exitoso', 'success');
     this.authService.isLoginView = false;
-    showPopUp('Inicio de sesión exitoso', 'success');
     this.dialogRef.close();
   }
 }

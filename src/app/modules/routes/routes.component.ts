@@ -97,7 +97,7 @@ export class RoutesComponent implements OnInit {
     if (route.status?.toString() == 'WHITOUT' || route.status?.toString() == 'CLOSED' && flag) {
       try {
         this.spinnerService.showSpinner(true)
-        await this.distributionService.createDistribution({ date: getCurrentDate('ISO'), route_id: route.id });
+        await this.distributionService.createDistribution({ date: getCurrentDate(), route_id: route.id });
         showPopUp('Distribución creada con exito', 'success');
         this.router.navigate(['/preseller/presales']);
       } catch (error) {

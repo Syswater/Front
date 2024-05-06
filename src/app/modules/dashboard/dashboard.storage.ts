@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
+import { Distribution } from "src/data/models/distribution";
 import { Route } from "src/data/models/route";
 
 @Injectable({
@@ -7,6 +8,7 @@ import { Route } from "src/data/models/route";
 })
 export class DashboardStorage {
     actualRoute?: Route | null = null
+    actualDistribution: Distribution | null = null;
 
     //OBSERVABLES
     private observables : any = {
