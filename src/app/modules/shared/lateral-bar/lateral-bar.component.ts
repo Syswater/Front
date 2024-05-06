@@ -9,7 +9,7 @@ import { AppStorage } from 'src/app/app.storage';
 })
 export class LateralBarComponent {
   disabled_color = '#7E86A0'
-  selected = 0;
+  selected = this.appStorage.selectionMenu;
   icons = [
     {
       iconPath: 'assets/icons/svg/dashboard_icon.svg',
@@ -21,25 +21,19 @@ export class LateralBarComponent {
       iconPath: 'assets/icons/svg/routes_icon.svg',
       size: '1.8rem',
       redirectTo: 'preseller/routes',
-      text: 'Preventas'
+      text: 'Rutas'
     },
     {
       iconPath: 'assets/icons/svg/presales_icon.svg',
       size: '1.8rem',
       redirectTo: 'preseller/presales',
-      text: 'Rutas'
+      text: 'Preventas'
     },
     {
       iconPath: 'assets/icons/svg/clients_icon.svg',
       size: '1.8rem',
       redirectTo: 'preseller/clients',
       text: 'Clientes'
-    },
-    {
-      iconPath: 'assets/icons/svg/reports_icon.svg',
-      size: '1.8rem',
-      redirectTo: 'preseller/reports',
-      text: 'Reportes'
     },
   ]
 

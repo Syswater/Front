@@ -13,21 +13,21 @@
     <div
       *ngFor="let icon of icons; index as i"
       class="relative"
-      (click)="selected = i; redirectTo(icon.redirectTo)"
+      (click)="appStorage.selectionMenu = i; redirectTo(icon.redirectTo)"
       style="transition: ease-in-out 200ms"
     >
       <app-icon
         [iconPath]="icon.iconPath"
-        [color]="i == selected ? '#6DDBDA' : '#7E86A0'"
+        [color]="i == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'"
         class="cursor-pointer"
         [size]="icon.size"
       ></app-icon>
       <div class="h-5"></div>
       <div
-        *ngIf="i == selected"
+        *ngIf="i == appStorage.selectionMenu"
         class="h-full translate-y-[-10px] translate-x-[-8px] w-1 absolute top-0"
         [ngStyle]="{
-          'background-color': i == selected ? '#6DDBDA' : '#7E86A0'
+          'background-color': i == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'
         }"
       ></div>
     </div>
@@ -44,25 +44,25 @@
     <div
       *ngFor="let icon of icons; index as i"
       class="relative cursor-pointer"
-      (click)="selected = i; redirectTo(icon.redirectTo)"
+      (click)="appStorage.selectionMenu = i; redirectTo(icon.redirectTo)"
     >
       <app-icon
         [iconPath]="icon.iconPath"
-        [color]="i == selected ? '#6DDBDA' : '#7E86A0'"
+        [color]="i == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'"
         class="text-left translate-x-[10px] inline-block"
         [size]="icon.size"
       ></app-icon>
       <span
-        [style]="i == selected ? 'color: #6DDBDA' : 'color: #7E86A0'"
+        [style]="i == appStorage.selectionMenu ? 'color: #6DDBDA' : 'color: #7E86A0'"
         class="absolute left-12 top-1.5 font-bold text-sm"
         >{{ icon.text }}</span
       >
       <div class="h-5"></div>
       <div
-        *ngIf="i == selected"
+        *ngIf="i == appStorage.selectionMenu"
         class="h-full translate-y-[-10px] translate-x-[-8px] w-1 absolute top-0"
         [ngStyle]="{
-          'background-color': i == selected ? '#6DDBDA' : '#7E86A0'
+          'background-color': i == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'
         }"
       ></div>
     </div>

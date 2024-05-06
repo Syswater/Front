@@ -29,7 +29,7 @@ export class RoleComponent implements OnInit {
 
   ngOnInit(): void {
     const tokenData = this.jwtHelper.decodeToken(`${localStorage.getItem('token')}`);
-    this.roles = tokenData.user.roles.split(',');
+    this.roles = tokenData.user.roles.split(',').filter((r: string) => r);
   }
 
   enterSystem() {

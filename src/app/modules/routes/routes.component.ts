@@ -27,6 +27,7 @@ export class RoutesComponent implements OnInit {
     date: ['', Validators.required]
   })
   minDate: Date = moment().add(1, 'day').toDate();
+  roleActual = ''
 
   constructor(
     private routeService: RouteService,
@@ -42,6 +43,7 @@ export class RoutesComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.roleActual = `${localStorage.getItem('roleActual')}`
     await this.loadRoutes();
     this._locale = 'es';
     this._adapter.setLocale(this._locale);

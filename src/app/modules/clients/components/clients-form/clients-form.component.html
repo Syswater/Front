@@ -4,8 +4,18 @@
     <div class="col-span-9">
       <h1 class="font-black text-2xl" [formGroup]="formClient">
         Detalle del cliente:
-        <span class="text-blue_3">{{ clientStorage.actualClient ? clientStorage.actualClient.name : nameInput.value }}</span>
-        <mat-checkbox class="float-right" labelPosition="before" color="primary" formControlName="is_contactable">Contactable</mat-checkbox>
+        <span class="text-blue_3">{{
+          clientStorage.actualClient
+            ? clientStorage.actualClient.name
+            : nameInput.value
+        }}</span>
+        <mat-checkbox
+          class="float-right"
+          labelPosition="before"
+          color="primary"
+          formControlName="is_contactable"
+          >Contactable</mat-checkbox
+        >
       </h1>
       <form class="grid grid-cols-4 gap-5 mt-10" [formGroup]="formClient">
         <mat-form-field appearance="fill" class="col-span-2">
@@ -151,7 +161,12 @@
           <td mat-cell *matCellDef="let element">
             <span *ngIf="!element.editable">{{ element.description }}</span>
             <mat-form-field appearance="fill" *ngIf="element.editable">
-              <input matInput type="text" [value]="element.description" (input)="changeDescriptionNote($event, element)" />
+              <input
+                matInput
+                type="text"
+                [value]="element.description"
+                (input)="changeDescriptionNote($event, element)"
+              />
             </mat-form-field>
           </td>
         </ng-container>
@@ -226,7 +241,11 @@
     </mat-card>
     <mat-card>
       <mat-tab-group animationDuration="0ms">
-        <mat-tab label="Abonos/deudas" class="">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon matPrefix class="mr-2">payment</mat-icon>
+            Abonos/Deudas
+          </ng-template>
           <div class="h-[340px] relative">
             <table
               mat-table
@@ -277,7 +296,11 @@
             </div>
           </div>
         </mat-tab>
-        <mat-tab label="Préstamos/devoluciones">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon matPrefix class="mr-2">local_drink</mat-icon>
+            Préstamos/Devoluciones
+          </ng-template>
           <div class="h-[340px] relative">
             <table
               mat-table
@@ -327,7 +350,11 @@
             </div>
           </div>
         </mat-tab>
-        <mat-tab label="Ventas">
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon matPrefix class="mr-2">attach_money</mat-icon>
+            Ventas
+          </ng-template>
           <div class="h-[340px] relative">
             <table
               mat-table

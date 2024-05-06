@@ -4,6 +4,6 @@
     <ng-content></ng-content>
   </mat-card-content>
   <mat-card-footer class="text-right mt-5">
-    <button mat-raised-button style="background-color: #6DDBDA; color: white; padding: 0 50px 0 50px;">{{button_text}}</button>
+    <button mat-raised-button (click)="redirect()" style="background-color: #6DDBDA; color: white; padding: 0 50px 0 50px;">{{button_text}}</button>
   </mat-card-footer>
 </mat-card>

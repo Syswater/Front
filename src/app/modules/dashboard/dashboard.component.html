@@ -29,7 +29,12 @@
       ></app-card>
       <app-card
         title="Deuda / Envases Prestados"
-        [footer]="getTotalDebtAndEnvases()"
+        [footer]="
+          '$. ' +
+          getTotalDebtAndEnvases().totalDebt +
+          ' / ' +
+          getTotalDebtAndEnvases().totalEnvases
+        "
         color="blue_2"
         [height]="32"
         img_path="/assets/icons/icon2.png"
@@ -37,7 +42,11 @@
       <app-card
         title="Clientes Totales"
         subtitle="Contestó / No Contestó"
-        [footer]="getTotalClientsAnswered().totalAnswered + ' / ' + getTotalClientsAnswered().totalNoAnswered"
+        [footer]="
+          getTotalClientsAnswered().totalAnswered +
+          ' / ' +
+          getTotalClientsAnswered().totalNoAnswered
+        "
         [subfooter]="this.dataSourcePresales.data.length + ' Clientes'"
         color="green_1"
         [height]="32"
@@ -52,7 +61,138 @@
       ></app-card>
     </div>
     <div class="mt-5 grid grid-cols-2 gap-10">
-      <app-card-info class="h-[600px]" title="Preventa Actual">
+      <mat-card class="p-5">
+        <div class="grid grid-cols-12 h-36">
+          <div
+            class="w-36 h-36 col-span-2 rounded-full border border-cyan border-8 flex items-center justify-center"
+          >
+            <span class="text-cyan font-black text-2xl">{{
+              getTotalProductsSelled()
+            }}</span>
+          </div>
+          <div class="col-span-10 pl-5">
+            <p class="font-black text-2xl">Total de productos vendidos</p>
+            <p class="mt-5">
+              En la fecha
+              <span class="text-green_2 font-black">{{ getDate() }}</span>
+              se reportó la venta de
+              <span class="text-cyan font-black">{{
+                getTotalProductsSelled()
+              }}</span>
+              productos
+            </p>
+          </div>
+        </div>
+        <p class="font-black text-2xl mt-5">
+          Total de productos vendidos por tipo de tapa
+        </p>
+        <p class="mt-5">
+          Se han vendido
+          <span class="text-green_2 font-black">{{
+            getTotalSelledProductsByType().orderNormal
+          }}</span>
+          productos con tapa normal y
+          <span class="text-blue_3 font-black">{{
+            getTotalSelledProductsByType().orderServifacil
+          }}</span>
+          con tapa servifacil
+        </p>
+
+        <ngx-charts-bar-horizontal
+          class="mt-10"
+          [view]="view"
+          [scheme]="colorScheme"
+          [results]="single"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+        >
+        </ngx-charts-bar-horizontal>
+      </mat-card>
+      <div>
+        <mat-card class="p-5 h-[250px] mb-5">
+          <div class="grid grid-cols-12 h-36">
+            <div class="col-span-4">
+              <ngx-charts-pie-chart
+                [view]="viewPie"
+                [scheme]="colorScheme"
+                [results]="singlePie"
+                [gradient]="gradient"
+                [legend]="showLegend"
+                [legendPosition]="legendPosition"
+                [labels]="showLabels"
+                [doughnut]="isDoughnut"
+              >
+              </ngx-charts-pie-chart>
+            </div>
+            <div class="col-span-8 pl-5 text-right">
+              <p class="font-black text-2xl">Total de clientes ruta</p>
+              <p class="font-bold text-xl">Contestaron / No contestaron</p>
+              <p class="mt-5 text-justify">
+                En la fecha
+                <span class="text-green_2 font-black">{{ getDate() }}</span>
+                se reportó que
+                <span class="font-black text-cyan">{{
+                  getTotalClientsAnswered().totalAnswered
+                }}</span>
+                clientes contestaron y
+                <span class="font-black text-blue_1">{{
+                  getTotalClientsAnswered().totalNoAnswered
+                }}</span>
+                no han contestado
+              </p>
+            </div>
+          </div>
+        </mat-card>
+        <mat-card class="p-5 h-[250px]">
+          <div class="grid grid-cols-12 h-36">
+            <div class="col-span-5 grid grid-cols-2 gap-5">
+              <div
+                class="rounded-full border border-cyan border-8 flex items-center justify-center h-40 w-40 translate-y-6"
+              >
+                <span class="text-cyan font-black text-2xl"
+                  >$. {{ getTotalDebtAndEnvases().totalDebt }}</span
+                >
+              </div>
+              <div
+                class="rounded-full border border-green_1 border-8 flex items-center justify-center h-40 w-40 translate-y-6"
+              >
+                <span class="text-green_1 font-black text-2xl"
+                  >{{ getTotalDebtAndEnvases().totalEnvases }} u</span
+                >
+              </div>
+            </div>
+            <div class="col-span-7 pl-5 text-right">
+              <p class="font-black text-2xl">
+                Total de deuda y envases prestados
+              </p>
+              <p class="mt-5 text-justify">
+                En la fecha
+                <span class="text-green_2 font-black">{{ getDate() }}</span>
+                se reportó una deuda de
+                <span class="font-black text-cyan"
+                  >$. {{ getTotalDebtAndEnvases().totalDebt }}</span
+                >
+                y un total de envases prestados de
+                <span class="font-black text-green_1"
+                  >{{ getTotalDebtAndEnvases().totalEnvases }} unidades</span
+                >
+              </p>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <app-card-info
+        class="h-[600px] mb-10"
+        title="Preventa Actual"
+        href="/preseller/presales"
+        [menuSelection]="2"
+      >
         <table
           mat-table
           [dataSource]="dataSourcePresales"
@@ -102,10 +242,15 @@
           ></tr>
         </table>
       </app-card-info>
-      <app-card-info class="h-[600px]" title="Clientes Totales Registrados">
+      <app-card-info
+        class="h-[600px] mb-10"
+        title="Clientes Totales Registrados"
+        href="/preseller/clients"
+        [menuSelection]="3"
+      >
         <table
           mat-table
-          [dataSource]="dataSourceClients"
+          [dataSource]="dataSourcePresales"
           class="mat-elevation-z8 mt-5"
           matSort
           matSortActive="Orden"
@@ -113,7 +258,6 @@
           matSortDirection="desc"
           style="box-shadow: none"
         >
-
           <ng-container matColumnDef="Nombres">
             <th mat-header-cell *matHeaderCellDef>Nombres</th>
             <td mat-cell *matCellDef="let element">{{ element.name }}</td>
@@ -126,7 +270,9 @@
 
           <ng-container matColumnDef="Barrio">
             <th mat-header-cell *matHeaderCellDef>Barrio</th>
-            <td mat-cell *matCellDef="let element">{{ element.neighborhood }}</td>
+            <td mat-cell *matCellDef="let element">
+              {{ element.neighborhood }}
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="Contacto">
@@ -138,88 +284,20 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="Ruta">
-            <th mat-header-cell *matHeaderCellDef>Ruta</th>
+          <ng-container matColumnDef="Deuda">
+            <th mat-header-cell *matHeaderCellDef>Deuda</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.route_id }}
+              $. {{ element.totalDebt ?? 0 }}
             </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumnsClients"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumnsClients"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumnsClients"
+          ></tr>
         </table>
       </app-card-info>
-      <mat-card class="p-5 mb-10">
-        <div class="grid grid-cols-12 h-36">
-          <div
-            class="col-span-2 rounded-full border border-cyan border-8 flex items-center justify-center"
-          >
-            <span class="text-cyan font-black text-2xl">{{getTotalProductsSelled()}}</span>
-          </div>
-          <div class="col-span-10 pl-5">
-            <p class="font-black text-2xl">Total de productos vendidos</p>
-            <p class="mt-5">
-              En la fecha
-              <span class="text-green_2 font-black">{{getDate()}}</span>
-              se reportó la venta de
-              <span class="text-cyan font-black">{{getTotalProductsSelled()}}</span> productos
-            </p>
-          </div>
-        </div>
-        <p class="font-black text-2xl mt-5">
-          Total de productos vendidos por tipo de tapa
-        </p>
-        <p class="mt-5">
-          Se han vendido
-          <span class="text-green_2 font-black">{{getTotalSelledProductsByType().orderNormal}}</span> productos con tapa
-          normal y <span class="text-blue_3 font-black">{{getTotalSelledProductsByType().orderServifacil}}</span> con tapa
-          servifacil
-        </p>
-
-        <ngx-charts-bar-horizontal
-          class="mt-10"
-          [view]="view"
-          [scheme]="colorScheme"
-          [results]="single"
-          [gradient]="gradient"
-          [xAxis]="showXAxis"
-          [yAxis]="showYAxis"
-          [legend]="showLegend"
-          [showXAxisLabel]="showXAxisLabel"
-          [showYAxisLabel]="showYAxisLabel"
-          [xAxisLabel]="xAxisLabel"
-          [yAxisLabel]="yAxisLabel"
-        >
-        </ngx-charts-bar-horizontal>
-      </mat-card>
-      <mat-card class="p-5 mb-10 h-[250px]">
-        <div class="grid grid-cols-12 h-36">
-          <div class="col-span-4">
-            <ngx-charts-pie-chart
-              [view]="viewPie"
-              [scheme]="colorScheme"
-              [results]="singlePie"
-              [gradient]="gradient"
-              [legend]="showLegend"
-              [legendPosition]="legendPosition"
-              [labels]="showLabels"
-              [doughnut]="isDoughnut"
-            >
-            </ngx-charts-pie-chart>
-          </div>
-          <div class="col-span-8 pl-5 text-right">
-            <p class="font-black text-2xl">Total de clientes ruta</p>
-            <p class="font-bold text-xl">Contestaron / No contestaron</p>
-            <p class="mt-5 text-justify">
-              En la fecha
-              <span class="text-green_2 font-black">{{getDate()}}</span>
-              se reportó que
-              <span class="font-black text-cyan">{{getTotalClientsAnswered().totalAnswered}}</span> clientes contestaron
-              y <span class="font-black text-blue_1">{{getTotalClientsAnswered().totalNoAnswered}}</span> no han contestado
-            </p>
-          </div>
-        </div>
-      </mat-card>
     </div>
   </div>
 </div>

@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
   displayedColumnsPresales: string[] = ['Orden', 'Cliente', 'Cantidad', 'Observaciones']
 
   dataSourceClients = new MatTableDataSource<any>([]);
-  displayedColumnsClients: string[] = ['Nombres', 'Dirección', 'Barrio', 'Contacto', 'Ruta']
+  displayedColumnsClients: string[] = ['Nombres', 'Dirección', 'Barrio', 'Contacto', 'Deuda']
 
   constructor(
     private routesService: RouteService,
@@ -195,7 +195,7 @@ export class DashboardComponent implements OnInit {
       totalDebt += client.totalDebt ?? 0
       totalEnvases += client.borrowedContainers ?? 0
     }
-    return `$. ${totalDebt} / ${totalEnvases} u`
+    return { totalDebt, totalEnvases}
   }
 
   getDate() {

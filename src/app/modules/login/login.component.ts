@@ -60,11 +60,31 @@ export class LoginComponent implements OnInit {
       const data = await this.authService.login(this.formLogin.value)
       const tokenData = this.jwtHelper.decodeToken(data.token)
       this.appStorage.username = tokenData.user.name
-      const roles = tokenData.user.roles.split(',')
+      const roles = tokenData.user.roles.split(',').filter((r: string) => r)
       localStorage.setItem("token", data.token)
       if (roles.length > 1) {
         this.loginStore.roles = roles
         this.modalService.open(RoleComponent)
+      }else{
+        switch (roles[0]) {
+          case 'ADMIN':
+            localStorage.setItem('roleActual', 'Administrador');
+            this.appStorage.actualRol = 'Administrador';
+            this.router.navigate(['admin/dashboard']);
+            break;
+          case 'PRE_SELLER':
+            localStorage.setItem('roleActual', 'Prevendedor');
+            this.appStorage.actualRol = 'Prevendedor';
+            this.router.navigate(['preseller/dashboard']);
+            break;
+          case 'DISTRIBUTOR':
+            localStorage.setItem('roleActual', 'Distribuidor');
+            this.appStorage.actualRol = 'Distribuidor';
+            this.router.navigate(['distributor/dashboard']);
+            break;
+        }
+        showPopUp(this.authService.isLoginView ? 'Inicio de sesión exitoso' : 'Cambio de rol exitoso', 'success');
+        this.authService.isLoginView = false;
       }
     } catch (error) {
       showPopUp('Usuario y/o contraseña incorrectos', 'error')
