@@ -5,3 +5,11 @@ const tz = 'America/Bogota'
 export function getCurrentDate(format?: string){
     return moment.utc().tz(tz).format(format)
 }
+
+export function formatDate(date:string, format?:string){
+    return moment.utc(date).format(format)
+}
+
+export function getStartDayCurrent(){
+    return moment().tz(tz).startOf('day');
+}

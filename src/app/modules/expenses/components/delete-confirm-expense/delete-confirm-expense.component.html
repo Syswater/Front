@@ -1,0 +1,5 @@
+<app-confirmation (confirmate)="deleteExpense()">
+    <p class="text-center">
+        ¿Estas seguro de eliminar el gasto <span class="text-blue_3 font-black">{{expenseStorage.actualExpense?.expense_category }}</span> / <span class="text-blue_1 font-black">{{expenseStorage.actualExpense?.description}}</span>?. Recuerda que esta acción no se puede revertir.
+    </p>
+</app-confirmation>

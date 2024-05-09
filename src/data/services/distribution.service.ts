@@ -8,22 +8,23 @@ import { Distribution } from '../models/distribution';
   providedIn: 'root'
 })
 export class DistributionService {
-  
+
 
   url = environment.API_URL;
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-    async getDistributions(options: { with_route?: boolean, status?: string }) {
-      const { with_route, status } = options
-      const params = new HttpParams()
+  async getDistributions(options: { with_route?: boolean, status?: string, distributor_id?: number }) {
+    const { with_route, status, distributor_id } = options
+    let params = new HttpParams()
       .set('with_route', with_route ?? '')
       .set('status', status ?? '')
-      return await firstValueFrom(this.http.get<Distribution[]>(`${this.url}/distribution/findAll`, { params }));
-    }
-    
-    async createDistribution(options: { date: string; route_id: number; }) {
-      return await firstValueFrom(this.http.post(`${this.url}/distribution/initDistribution`, { ...options }));
-    }
+    if (distributor_id) params = params.set('distributor_id', distributor_id);
+    return await firstValueFrom(this.http.get<Distribution[]>(`${this.url}/distribution/findAll`, { params }));
+  }
+
+  async createDistribution(options: { date: string; route_id: number; }) {
+    return await firstValueFrom(this.http.post(`${this.url}/distribution/initDistribution`, { ...options }));
+  }
 
 }

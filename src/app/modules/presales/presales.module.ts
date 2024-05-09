@@ -4,22 +4,27 @@ import { PresalesComponent } from './presales.component';
 import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../material/material.module';
 import { PresalesFormComponent } from './components/presales-form/presales-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DeleteOrderComponent } from './components/delete-order/delete-order.component';
-
-
+import { QuantyInputModalComponent } from './components/quanty-input-modal/quanty-input-modal.component';
+import { ExpenseComponent } from './components/expense/expense.component';
+import { ValuePaidModalComponent } from './components/value-paid-modal/value-paid-modal.component';
 
 @NgModule({
   declarations: [
     PresalesComponent,
     PresalesFormComponent,
-    DeleteOrderComponent
+    DeleteOrderComponent,
+    QuantyInputModalComponent,
+    ExpenseComponent,
+    ValuePaidModalComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class PresalesModule { }

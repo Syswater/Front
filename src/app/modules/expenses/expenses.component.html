@@ -1,0 +1,169 @@
+<div class="px-10 pt-2 pb-10">
+  <div
+    class="mt-5 w-full bg-white flex items-center px-5 pt-2 grid grid-cols-12 shadow-lg gap-x-5 gap-y-2"
+    *ngIf="distributions.length > 0"
+  >
+    <p class="text-lg col-span-4 2xl:col-span-3">
+      Ruta
+      <span class="text-cyan font-black">{{
+        expensesStorage.actualDistribution?.route?.name
+      }}</span>
+      - {{ expensesStorage.actualDistribution?.route?.location }}
+    </p>
+
+    <p class="text-lg col-span-2 hidden 2xl:inline-block">
+      Gastos totales
+      <span class="text-blue_3 font-black"
+        >{{ dataSource.data.length }} gastos</span
+      >
+    </p>
+
+    <div class="text-right col-span-3 2xl:col-span-2">
+      <span class="h-full translate-y-[-5px] inline-block"
+        >Filtro por categoria</span
+      >
+      <button mat-icon-button class="inline" (click)="clearFilter(); select.value = ''"><mat-icon>close</mat-icon></button>
+    </div>
+
+    <mat-form-field class="translate-y-2 col-span-3">
+      <mat-label>Selecciona un filtro</mat-label>
+      <mat-select (selectionChange)="filterExpenses($event)" #select>
+        <mat-option *ngFor="let category of categories" [value]="category.id">{{
+          category.type
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="translate-y-2 col-span-2">
+      <mat-select
+        [value]="expensesStorage.actualDistribution?.route_id"
+        (selectionChange)="changeRoute($event)"
+      >
+        <mat-option
+          *ngFor="let distribution of distributions"
+          [value]="distribution.route_id"
+          >{{ distribution.route.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <p class="text-lg mb-5 col-span-4 inline-block 2xl:hidden">
+      Cantidad de gastos:
+      <span class="text-blue_3 font-black"
+        >{{ dataSource.data.length }} gastos</span
+      >
+    </p>
+
+    <div class="w-full col-span-8 2xl:col-span-12 text-right">
+      <button
+        class="inline-block w-[161px]"
+        (click)="openDialog(1, null)"
+        style="
+          background-color: #72dcdc;
+          color: white;
+          transform: translateY(-10px);
+        "
+        mat-raised-button
+      >
+        Registrar gasto
+      </button>
+    </div>
+  </div>
+
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="mat-elevation-z8 mt-5"
+    *ngIf="distributions.length > 0"
+  >
+    <ng-container matColumnDef="Fecha">
+      <th mat-header-cell *matHeaderCellDef>Fecha</th>
+      <td mat-cell *matCellDef="let element">{{ formatDate(element.date) }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Descripcion">
+      <th mat-header-cell *matHeaderCellDef>Descripcion</th>
+      <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Valor">
+      <th mat-header-cell *matHeaderCellDef>Valor</th>
+      <td mat-cell *matCellDef="let element">$. {{ element.value | formatNumber }}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="Categoria">
+      <th mat-header-cell *matHeaderCellDef>Categoria</th>
+      <td mat-cell *matCellDef="let element">{{ element.expense_category }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Acciones">
+      <th mat-header-cell *matHeaderCellDef style="padding-left: 0"></th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        style="width: 112px; padding-left: 0"
+      >
+        <button
+          mat-icon-button
+          style="display: inline"
+          (click)="openDialog(2, element)"
+        >
+          <mat-icon>info</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          style="display: inline"
+          (click)="openDialog(3, element)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr
+      mat-header-row
+      *matHeaderRowDef="
+        role == 'Prevendedor' ? displayedColumns : displayedColumns
+      "
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="
+        let row;
+        columns: role == 'Prevendedor'
+          ? displayedColumns
+          : displayedColumns
+      "
+    ></tr>
+  </table>
+  <div
+    class="bg-white text-center"
+    *ngIf="dataSource.data.length == 0 && distributions.length > 0"
+  >
+    <img
+      src="assets/images/no_data_image.jpg"
+      class="inline-block"
+      alt=""
+      width="300"
+    />
+    <p class="text-2xl text-blue_3">
+      No se encuentran resultados o no hay gastos en esta ruta
+    </p>
+    <div class="h-10"></div>
+  </div>
+
+  <div
+    class="mt-5 w-full bg-white px-5 pt-2 shadow-lg p-10 text-center"
+    *ngIf="distributions.length == 0"
+  >
+    <img
+      src="assets/images/no_data_image.jpg"
+      class="inline-block"
+      alt=""
+      width="500"
+    />
+    <p class="text-4xl text-blue_3">
+      Oops! No te encontramos distribuciones registradas en curso
+    </p>
+  </div>
+</div>

@@ -10,6 +10,7 @@ import { DistributionService } from 'src/data/services/distribution.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Distribution } from 'src/data/models/distribution';
 import { getCurrentDate } from 'src/app/utils/DateUtils';
+import { AppStorage } from 'src/app/app.storage';
 
 @Component({
   selector: 'app-dashboard',
@@ -82,7 +83,8 @@ export class DashboardComponent implements OnInit {
     private spinner: SpinnerService,
     public dashboardStorage: DashboardStorage,
     private clientService: ClientService,
-    private distributionService: DistributionService
+    private distributionService: DistributionService,
+    public appStorage: AppStorage
   ) { }
 
   async ngOnInit() {

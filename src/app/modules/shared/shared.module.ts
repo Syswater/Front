@@ -7,6 +7,7 @@ import { MaterialModule } from '../material/material.module';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { CircleButtonComponent } from './circle-button/circle-button.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
+import { FormatNumberPipe } from './pipes/format-number.pipe';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
     ModalComponent,
     SpinnerComponent,
     CircleButtonComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    FormatNumberPipe
   ],
   imports: [
     CommonModule,
@@ -27,7 +29,8 @@ import { ConfirmationComponent } from './confirmation/confirmation.component';
     IconComponent,
     SpinnerComponent,
     CircleButtonComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    FormatNumberPipe
   ]
 })
 export class SharedModule { }

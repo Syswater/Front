@@ -9,6 +9,7 @@ import { Distribution } from "src/data/models/distribution";
 export class PresalesStorage {
     actualDistribution?: Distribution | null = null
     actualClient?: Client | null = null
+    actualClientDistribution?: any = null
 
     //OBSERVABLES
     private observables : any = {

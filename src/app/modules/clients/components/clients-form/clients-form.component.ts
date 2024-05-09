@@ -14,6 +14,8 @@ import { ClientService } from 'src/data/services/client.service';
 import { showPopUp } from 'src/app/utils/SwalPopUp';
 import { Subscription } from 'rxjs';
 import { DeleteNoteComponent } from './components/delete-note/delete-note.component';
+import { AppStorage } from 'src/app/app.storage';
+import { PresalesStorage } from 'src/app/modules/presales/presales.storage';
 
 const abonos_data = [
   {
@@ -118,20 +120,33 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     id: this.client?.id,
     address: this.client?.address,
     neighborhood: this.client?.neighborhood,
-    route_order: this.client?.route_order ? this.client.route_order : this.clientStorage.lastClient ? this.clientStorage.lastClient.route_order + 1 : 0,
-    tape_preference: this.client ? this.client.tape_preference : this.tape_preference[0],
-    is_contactable: [this.client ? this.client.is_contactable : this.clientStorage.actualClient?.is_contactable],
+    route_order: this.client?.route_order
+      ? this.client.route_order
+      : this.clientStorage.lastClient
+      ? this.clientStorage.lastClient.route_order + 1
+      : 0,
+    tape_preference: this.client
+      ? this.client.tape_preference
+      : this.tape_preference[0],
+    is_contactable: [
+      this.client
+        ? this.client.is_contactable
+        : this.clientStorage.actualClient?.is_contactable,
+    ],
     name: this.client?.name,
     cellphone: this.client?.cellphone,
     borrowedContainers: this.client?.borrowedContainers ?? 0,
     totalDebt: this.client?.totalDebt ?? 0,
-    route_id: this.client ? this.client.route_id : this.clientStorage.actualRoute?.id,
+    route_id: this.client
+      ? this.client.route_id
+      : this.clientStorage.actualRoute?.id,
   });
   routes: Route[] = [];
   temporalId: number = -1;
   temporalPostUpdateNote: any[] = [];
-  updateClientFields: any = {}
-  $subscription!: Subscription
+  updateClientFields: any = {};
+  $subscription!: Subscription;
+  actualPath = window.location.pathname.split('/')[2];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -140,11 +155,12 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     public clientStorage: ClientStorage,
     private routeService: RouteService,
     private spinnerService: SpinnerService,
-    private clientService: ClientService
-  ) { }
+    private clientService: ClientService,
+    private preSaleStorage: PresalesStorage
+  ) {}
 
   ngOnDestroy(): void {
-    this.$subscription.unsubscribe()
+    this.$subscription.unsubscribe();
   }
 
   async ngOnInit() {
@@ -160,15 +176,15 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   }
 
   initUpdateObserver() {
-    this.$subscription = this.formClient.valueChanges.subscribe(value => {
-      console.log(value)
-    })
+    this.$subscription = this.formClient.valueChanges.subscribe((value) => {
+      console.log(value);
+    });
   }
 
   showDelete(element: Observation) {
-    this.clientStorage.deleteNote = element
-    this.modalService.open(DeleteNoteComponent, ()=> {
-      this.dialogRef.close()
+    this.clientStorage.deleteNote = element;
+    this.modalService.open(DeleteNoteComponent, () => {
+      this.dialogRef.close();
     });
   }
 
@@ -177,8 +193,8 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     this.dataSource.data[index].editable =
       !this.dataSource.data[index].editable;
     if (clickCheck && id < 0) {
-      this.createNote(id)
-    } else if(clickCheck && id > 0) {
+      this.createNote(id);
+    } else if (clickCheck && id > 0) {
       this.updateNote(id);
     }
   }
@@ -192,124 +208,141 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       editable: true,
       id: this.temporalId--,
       description: 'Nueva observación',
-      distribution_id: this.clientStorage.actualRoute
-        ? this.clientStorage.actualRoute.id
-        : null,
+      distribution_id:
+        this.actualPath == 'clients'
+          ? null
+          : this.preSaleStorage.actualDistribution
+          ? this.preSaleStorage.actualDistribution.id
+          : null,
       customer_id: this.clientStorage.actualClient?.id,
-    }
+    };
     this.dataSource.data.push(temporalNote);
     this.clientStorage.actualClient?.note.push(temporalNote as Observation);
-    this.temporalPostUpdateNote.push(temporalNote)
+    this.temporalPostUpdateNote.push(temporalNote);
     this.dataSource.data = [...this.dataSource.data];
   }
 
   changeDescriptionNote(event: Event, element: any) {
     if (this.clientStorage.actualClient && this.clientStorage.actualRoute) {
-      const value = (event.target as HTMLInputElement).value
+      const value = (event.target as HTMLInputElement).value;
 
-      const index = this.clientStorage.actualClient.note.findIndex((note) => note.id == element.id);
-      if (this.clientStorage.actualClient.note[index]) this.clientStorage.actualClient.note[index].description = value
+      const index = this.clientStorage.actualClient.note.findIndex(
+        (note) => note.id == element.id
+      );
+      if (this.clientStorage.actualClient.note[index])
+        this.clientStorage.actualClient.note[index].description = value;
 
-      const indexData = this.dataSource.data.findIndex((note) => note.id == element.id);
-      if (this.dataSource.data[indexData]) this.dataSource.data[indexData].description = value
+      const indexData = this.dataSource.data.findIndex(
+        (note) => note.id == element.id
+      );
+      if (this.dataSource.data[indexData])
+        this.dataSource.data[indexData].description = value;
 
       this.dataSource.data = [...this.dataSource.data];
 
-      const indexTemporal = this.temporalPostUpdateNote.findIndex((temp) => temp.id == element.id);
-      if (this.temporalPostUpdateNote[indexTemporal]) this.temporalPostUpdateNote[indexTemporal].description = value
-
+      const indexTemporal = this.temporalPostUpdateNote.findIndex(
+        (temp) => temp.id == element.id
+      );
+      if (this.temporalPostUpdateNote[indexTemporal])
+        this.temporalPostUpdateNote[indexTemporal].description = value;
     }
   }
 
   selectNoteType($event: MatSelectChange, element: any) {
     if (this.clientStorage.actualClient && this.clientStorage.actualRoute) {
+      
       const index = this.clientStorage.actualClient.note.findIndex(
         (note) => note.id == element.id
       );
       if (
-        this.clientStorage.actualClient.note[index] &&
-        this.clientStorage.actualClient.note[index].distribution_id
+        this.clientStorage.actualClient.note[index]
       )
         this.clientStorage.actualClient.note[index].distribution_id =
-          $event.value == '2' ? null : this.clientStorage.actualRoute.id;
+          $event.value == '2' ? null : this.preSaleStorage.actualDistribution!.id;
       const indexData = this.dataSource.data.findIndex(
         (note) => note.id == element.id
       );
       if (
-        this.dataSource.data[indexData] &&
-        this.dataSource.data[indexData].distribution_id
+        this.dataSource.data[indexData]
       )
         this.dataSource.data[indexData].distribution_id =
-          $event.value == '2' ? null : this.clientStorage.actualRoute.id;
+          $event.value == '2' ? null : this.preSaleStorage.actualDistribution!.id;
       this.dataSource.data = [...this.dataSource.data];
 
-      const indexTemporal = this.temporalPostUpdateNote.findIndex((temp) => temp.id == element.id);
-      if (this.temporalPostUpdateNote[indexTemporal]) this.temporalPostUpdateNote[indexTemporal].distribution_id = $event.value == '2' ? null : this.clientStorage.actualRoute.id
+      const indexTemporal = this.temporalPostUpdateNote.findIndex(
+        (temp) => temp.id == element.id
+      );
+      if (this.temporalPostUpdateNote[indexTemporal])
+        this.temporalPostUpdateNote[indexTemporal].distribution_id =
+          $event.value == '2' ? null : this.preSaleStorage.actualDistribution!.id;
     }
   }
 
   async createNote(id: number) {
     try {
-      this.spinnerService.showSpinner(true)
-      const temporalNote = this.temporalPostUpdateNote.find(temp => temp.id == id) || []
-      const indexTmp = this.dataSource.data.findIndex(note => note.id == id)
-      delete temporalNote.editable
-      delete temporalNote.id
+      this.spinnerService.showSpinner(true);
+      const temporalNote =
+        this.temporalPostUpdateNote.find((temp) => temp.id == id) || [];
+      const indexTmp = this.dataSource.data.findIndex((note) => note.id == id);
+      delete temporalNote.editable;
+      delete temporalNote.id;
       const note = await this.clientService.createNote(temporalNote);
-      this.dataSource.data[indexTmp].id = note.id
-      showPopUp('Observación creada con éxito', 'success')
-      this.clientStorage.setObservableValue(true, 'reloadClients')
+      this.dataSource.data[indexTmp].id = note.id;
+      showPopUp('Observación creada con éxito', 'success');
+      this.clientStorage.setObservableValue(true, 'reloadClients');
     } catch (error) {
-      showPopUp('Error al crear la observación', 'error')
+      showPopUp('Error al crear la observación', 'error');
     }
-    this.spinnerService.showSpinner(false)
+    this.spinnerService.showSpinner(false);
   }
 
   async updateNote(id: number) {
     try {
-      this.spinnerService.showSpinner(true)
-      const note = this.dataSource.data.find(data => data.id == id)
-      delete note.editable
+      this.spinnerService.showSpinner(true);
+      const note = this.dataSource.data.find((data) => data.id == id);
+      delete note.editable;
       await this.clientService.updateNote(note);
-      showPopUp('Observación actualizada con éxito', 'success')
-      this.clientStorage.setObservableValue(true, 'reloadClients')
+      showPopUp('Observación actualizada con éxito', 'success');
+      this.clientStorage.setObservableValue(true, 'reloadClients');
     } catch (error) {
-      showPopUp('Error al actualizar la observación', 'error')
+      showPopUp('Error al actualizar la observación', 'error');
     }
-    this.spinnerService.showSpinner(false)
+    this.spinnerService.showSpinner(false);
   }
 
   async createClient() {
     try {
-      this.spinnerService.showSpinner(true)
-      const { borrowedContainers, totalDebt, id, ...client } = this.formClient.value
+      this.spinnerService.showSpinner(true);
+      const { borrowedContainers, totalDebt, id, ...client } =
+        this.formClient.value;
       //Campos opcionales
-      if (!client.neighborhood) delete client.neighborhood
-      if (!client.cellphone) delete client.cellphone
-      if (!client.name) delete client.name
+      if (!client.neighborhood) delete client.neighborhood;
+      if (!client.cellphone) delete client.cellphone;
+      if (!client.name) delete client.name;
 
-      if (client.cellphone) client.cellphone = `${client.cellphone}`
-      await this.clientService.createClient(client)
-      showPopUp('Cliente creado con éxito', 'success')
-      this.clientStorage.setObservableValue(true, 'reloadClients')
+      if (client.cellphone) client.cellphone = `${client.cellphone}`;
+      await this.clientService.createClient(client);
+      showPopUp('Cliente creado con éxito', 'success');
+      this.clientStorage.setObservableValue(true, 'reloadClients');
     } catch (error) {
-      showPopUp('Error al crear el cliente', 'error')
+      showPopUp('Error al crear el cliente', 'error');
     }
-    this.spinnerService.showSpinner(false)
-    this.dialogRef.close()
+    this.spinnerService.showSpinner(false);
+    this.dialogRef.close();
   }
 
   async updateClient() {
     try {
-      this.spinnerService.showSpinner(true)
-      const { borrowedContainers, totalDebt, ...client } = this.formClient.value
-      await this.clientService.updateClient(client)
-      showPopUp('Cliente actualizado con éxito', 'success')
-      this.clientStorage.setObservableValue(true, 'reloadClients')
+      this.spinnerService.showSpinner(true);
+      const { borrowedContainers, totalDebt, ...client } =
+        this.formClient.value;
+      await this.clientService.updateClient(client);
+      showPopUp('Cliente actualizado con éxito', 'success');
+      this.clientStorage.setObservableValue(true, 'reloadClients');
     } catch (error) {
-      showPopUp('Error al actualizar el cliente', 'error')
+      showPopUp('Error al actualizar el cliente', 'error');
     }
-    this.spinnerService.showSpinner(false)
-    this.dialogRef.close()
+    this.spinnerService.showSpinner(false);
+    this.dialogRef.close();
   }
 }

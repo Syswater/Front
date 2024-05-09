@@ -4,6 +4,8 @@ import { environment } from 'environments/environment';
 import { firstValueFrom } from 'rxjs';
 import { Client } from '../models/client';
 import { Observation } from '../models/observation';
+import { SpinnerService } from './spinner.service';
+import { showPopUp } from 'src/app/utils/SwalPopUp';
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +13,17 @@ import { Observation } from '../models/observation';
 export class ClientService {
   url = environment.API_URL
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private spinner: SpinnerService) { }
 
-  async getListClients(options: { route_id?: number, distribution_id?: number, filter?: string, with_notes?: boolean, with_order?: boolean }) {
-    const { route_id, filter, with_notes, with_order, distribution_id } = options
+  async getListClients(options: { route_id?: number, distribution_id?: number, filter?: string, with_notes?: boolean, with_order?: boolean, with_sale?: boolean }) {
+    const { route_id, filter, with_notes, with_order, distribution_id, with_sale } = options
     let params = new HttpParams()
-      .set('filter', filter ?? '')
-      .set('with_notes', with_notes ?? false)
-      .set('with_order', with_order ?? false)
-      .set('distribution_id', distribution_id ?? 0);
-    if(route_id) params = params.set('route_id', route_id)
+    if (filter) params = params.set('filter', filter)
+    if (with_notes) params = params.set('with_notes', with_notes)
+    if (with_order) params = params.set('with_order', with_order)
+    if (distribution_id) params = params.set('distribution_id', distribution_id)
+    if (route_id) params = params.set('route_id', route_id)
+    if (with_sale) params = params.set('with_sale', with_sale)
     return firstValueFrom(this.http.get<Client[]>(`${this.url}/customer/findAll`, { params }));
   }
 

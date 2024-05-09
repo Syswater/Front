@@ -4,7 +4,7 @@
       class="mt-5 w-full h-20 bg-white flex items-center pl-5 pt-2 shadow-lg"
     >
       <p class="text-lg">
-        Hola <span class="text-teal-400">Cristian</span>, Bienvenido de vuelta
+        Hola <span class="text-teal-400">{{appStorage.user.name}}</span>, Bienvenido de vuelta
       </p>
       <mat-form-field class="mr-5 translate-y-2 absolute right-10">
         <mat-select
@@ -19,7 +19,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mt-5 w-full grid grid-cols-4 gap-10">
+    <div class="mt-5 w-full grid md:grid-cols-2 2xl:grid-cols-4 gap-x-10 gap-y-5">
       <app-card
         title="Ruta en curso"
         [footer]="dashboardStorage.actualRoute?.name || ''"
@@ -53,7 +53,7 @@
         img_path="/assets/icons/icon3.png"
       ></app-card>
       <app-card
-        title="Productos vendidos"
+        title="Productos prevendidos"
         [footer]="getTotalProductsSelled() + ' Productos'"
         color="green_2"
         [height]="32"
@@ -71,7 +71,7 @@
             }}</span>
           </div>
           <div class="col-span-10 pl-5">
-            <p class="font-black text-2xl">Total de productos vendidos</p>
+            <p class="font-black text-2xl">Total de productos prevendidos</p>
             <p class="mt-5">
               En la fecha
               <span class="text-green_2 font-black">{{ getDate() }}</span>
@@ -84,7 +84,7 @@
           </div>
         </div>
         <p class="font-black text-2xl mt-5">
-          Total de productos vendidos por tipo de tapa
+          Total de productos prevendidos por tipo de tapa
         </p>
         <p class="mt-5">
           Se han vendido

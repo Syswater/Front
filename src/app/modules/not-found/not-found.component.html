@@ -1,0 +1,19 @@
+<div class="grid grid-cols-2 fixed top-0 left-[-70px] bg-white_dark w-screen h-screen p-20">
+    <div class="flex flex-col justify-center">
+        <p class="text-9xl text-cyan mb-5">Oops!</p>
+        <p class="text-5xl mb-10 text-blue_1">No pudimos encontrar la página que solicitaste</p>
+        <img src="assets/icons/logo-oneline.png" alt="" style="width: 350px;">
+    </div>
+    <div class="text-center">
+        <img src="assets/images/404_image.png" alt="">
+        <button
+          mat-raised-button
+          type="submit"
+          class="w-1/2 mt-5"
+          style="background-color: #09C1F2; color: white"
+          (click)="goToLogin()"
+        >
+          Volver al inicio
+        </button>
+    </div>
+</div>

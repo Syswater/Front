@@ -16,6 +16,10 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     CommonModule,
     MaterialModule,
     NgxChartsModule
+  ],
+  exports: [
+    CardComponent,
+    CardInfoComponent
   ]
 })
 export class DashboardModule { }

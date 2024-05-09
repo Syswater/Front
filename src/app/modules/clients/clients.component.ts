@@ -1,6 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { Observation } from 'src/data/models/observation';
 import { ModalService } from 'src/data/services/modal.service';
 import { ClientsFormComponent } from './components/clients-form/clients-form.component';
 import { ClientService } from 'src/data/services/client.service';
@@ -10,7 +8,8 @@ import { Route } from 'src/data/models/route';
 import { RouteService } from 'src/data/services/route.service';
 import { SpinnerService } from 'src/data/services/spinner.service';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
-import { Observable, Subscription, of } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { AppStorage } from 'src/app/app.storage';
 
 @Component({
   selector: 'app-clients',
@@ -37,7 +36,8 @@ export class ClientsComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private clientService: ClientService,
     public clientStorage: ClientStorage,
-    private routeService: RouteService
+    private routeService: RouteService,
+    public appStorage: AppStorage
   ) { }
 
   ngOnDestroy(): void {

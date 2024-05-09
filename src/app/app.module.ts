@@ -16,13 +16,17 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { JwtModule } from '@auth0/angular-jwt';
 import { PresalesModule } from './modules/presales/presales.module';
 import { MatNativeDateModule } from '@angular/material/core';
+import { NotFoundComponent } from './modules/not-found/not-found.component';
+import { DashboardDistributorModule } from './modules/dashboard-distributor/dashboard-distributor.module';
+import { ExpensesModule } from './modules/expenses/expenses.module';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,6 +42,8 @@ export function tokenGetter() {
     PresalesModule,
     ClientsModule,
     NgxChartsModule,
+    DashboardDistributorModule,
+    ExpensesModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter

@@ -15,6 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatCheckboxModule,
     DragDropModule,
     MatDatepickerModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTooltipModule
   ],
   exports: [
     MatFormFieldModule,
@@ -50,7 +52,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatCheckboxModule,
     DragDropModule,
     MatDatepickerModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTooltipModule
   ]
 })
 export class MaterialModule { }

@@ -1,0 +1,73 @@
+<app-modal>
+  <div class="px-10" [formGroup]="formExpense">
+    <h1 class="text-2xl font-black text-center">
+      Registrar gasto de ruta <br /><span class="text-green_1">{{
+        preSaleStorage.actualDistribution?.route?.name
+      }}</span>
+    </h1>
+    <div class="h-8"></div>
+
+    <div class="grid grid-cols-2 gap-x-5">
+      <p class="text-xl">Categoria del gasto</p>
+      <p class="text-xl">Valor del gasto ($)</p>
+
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Selecciona la categoria</mat-label>
+        <mat-select formControlName="expense_category_id">
+          <mat-option
+            [value]="category.id"
+            *ngFor="let category of expensesCategories"
+            >{{ category.type }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Ingresa el valor</mat-label>
+        <input matInput type="number" formControlName="value" />
+      </mat-form-field>
+    </div>
+
+    <p class="text-xl mt-5">Descripción del gasto</p>
+    <mat-form-field class="w-full" appearance="fill">
+      <mat-label>Ingresa la descripción</mat-label>
+      <textarea
+        matInput
+        placeholder="Ex. Desayuno en San Gil..."
+        style="height: 150px"
+        formControlName="description"
+      ></textarea>
+    </mat-form-field>
+
+    <div class="grid grid-cols-2 gap-5 w-full mb-5">
+      <div class="text-right">
+        <button
+          mat-raised-button
+          type="button"
+          class="w-[150px] mt-5 bg-blue_1 text-white button-status"
+          style="background-color: #000000; color: white"
+        >
+          Cancelar
+        </button>
+      </div>
+      <button
+        mat-raised-button
+        type="button"
+        class="w-[150px] mt-5 bg-blue_1 text-white button-status"
+        [style]="
+          formExpense.invalid
+            ? 'background-color: #999; color: white'
+            : 'background-color: #6fdb90; color: white'
+        "
+        [disabled]="formExpense.invalid"
+        (click)="
+          expensesStorage.isUpdateCreationExpense
+            ? updateExpense()
+            : createExpense()
+        "
+      >
+        {{ expensesStorage.isUpdateCreationExpense ? "Actualizar" : "Guardar" }}
+      </button>
+    </div>
+  </div>
+</app-modal>

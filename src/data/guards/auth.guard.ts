@@ -45,19 +45,27 @@ export class AuthGuard implements CanActivate {
   }
 
   formatMenuSelection(url: string) {
-    console.log("🚀 ~ AuthGuard ~ formatMenuSelection ~ url:", url)
+    this.appStorage.setObservableValue(true, 'reloadLateralMenu');
     switch (url) {
       case '/preseller/dashboard':
+      case '/admin/dashboard':
+      case '/distributor/dashboard':
         this.appStorage.selectionMenu = 0
         break;
       case '/preseller/routes':
+      case '/distributor/routes':
         this.appStorage.selectionMenu = 1
         break;
       case '/preseller/presales':
+      case '/distributor/distribution':
         this.appStorage.selectionMenu = 2
         break;
       case '/preseller/clients':
+      case '/distributor/clients':
         this.appStorage.selectionMenu = 3
+        break;
+      case '/distributor/expenses':
+        this.appStorage.selectionMenu = 4
         break;
     }
   }

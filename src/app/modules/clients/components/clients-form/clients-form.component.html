@@ -1,7 +1,10 @@
 <app-modal class="h-[1000px]">
-  <div class="px-5 pb-5 grid grid-cols-12 gap-x-5 w-[1200px]">
-    <img src="assets/images/user_image.png" class="w-64 col-span-3" />
-    <div class="col-span-9">
+  <div class="px-5 pb-5 grid grid-cols-12 gap-x-5 2xl:w-[1200px]">
+    <img
+      src="assets/images/user_image.png"
+      class="translate-y-12 2xl:translate-y-0 w-52 2xl:w-64 col-span-2 2xl:col-span-3"
+    />
+    <div class="col-span-10 2xl:col-span-9">
       <h1 class="font-black text-2xl" [formGroup]="formClient">
         Detalle del cliente:
         <span class="text-blue_3">{{
@@ -17,7 +20,10 @@
           >Contactable</mat-checkbox
         >
       </h1>
-      <form class="grid grid-cols-4 gap-5 mt-10" [formGroup]="formClient">
+      <form
+        class="grid grid-cols-4 gap-5 mt-2 2xl:mt-10"
+        [formGroup]="formClient"
+      >
         <mat-form-field appearance="fill" class="col-span-2">
           <mat-label>Nombres</mat-label>
           <input
@@ -120,7 +126,7 @@
     class="px-5 w-full grid grid-cols-2 gap-x-5"
     *ngIf="clientStorage.actualClient"
   >
-    <mat-card class="py-5" [formGroup]="formClient">
+    <mat-card class="py-5 h-[400px]" [formGroup]="formClient">
       <div class="px-5">
         <p class="font-black">
           Información Cliente-Ruta
@@ -148,96 +154,104 @@
           </mat-form-field>
         </div>
 
-        <p class="font-black">
+        <p class="font-black" *ngIf="actualPath != 'clients'">
           Observaciones del cliente
           <span class="text-green_2">{{
             clientStorage.actualClient.note.length
           }}</span>
         </p>
       </div>
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 my-5">
-        <ng-container matColumnDef="Observación">
-          <th mat-header-cell *matHeaderCellDef>Observación</th>
-          <td mat-cell *matCellDef="let element">
-            <span *ngIf="!element.editable">{{ element.description }}</span>
-            <mat-form-field appearance="fill" *ngIf="element.editable">
-              <input
-                matInput
-                type="text"
-                [value]="element.description"
-                (input)="changeDescriptionNote($event, element)"
-              />
-            </mat-form-field>
-          </td>
-        </ng-container>
+      <div class="h-[180px] overflow-auto" *ngIf="actualPath != 'clients'">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="mat-elevation-z8 my-5"
+        >
+          <ng-container matColumnDef="Observación">
+            <th mat-header-cell *matHeaderCellDef>Observación</th>
+            <td mat-cell *matCellDef="let element">
+              <span *ngIf="!element.editable">{{ element.description }}</span>
+              <mat-form-field appearance="fill" *ngIf="element.editable">
+                <input
+                  matInput
+                  type="text"
+                  [value]="element.description"
+                  (input)="changeDescriptionNote($event, element)"
+                />
+              </mat-form-field>
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="Prioridad">
-          <th mat-header-cell *matHeaderCellDef>Prioridad</th>
-          <td
-            mat-cell
-            [style.color]="
-              element.distribution_id != null ? 'black' : '#6EB8DB'
-            "
-            *matCellDef="let element"
-          >
-            <span *ngIf="!element.editable">{{
-              element.distribution_id != null ? "Normal" : "Fija"
-            }}</span>
-            <mat-form-field appearance="fill" *ngIf="element.editable">
-              <mat-label>Importancia</mat-label>
-              <mat-select
-                [value]="element.distribution_id != null ? '1' : '2'"
-                (selectionChange)="selectNoteType($event, element)"
-              >
-                <mat-option value="1">Normal</mat-option>
-                <mat-option value="2">Fija</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="Acciones">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element" [style.width.px]="130">
-            <button
-              mat-icon-button
-              style="display: inline"
-              (click)="edit(element.id, element.editable)"
+          <ng-container matColumnDef="Prioridad">
+            <th mat-header-cell *matHeaderCellDef>Prioridad</th>
+            <td
+              mat-cell
+              [style.color]="
+                element.distribution_id != null ? 'black' : '#6EB8DB'
+              "
+              *matCellDef="let element"
             >
-              <mat-icon class="cursor-pointer" *ngIf="!element.editable"
-                >edit</mat-icon
-              >
-              <mat-icon class="cursor-pointer" *ngIf="element.editable"
-                >check</mat-icon
-              >
-            </button>
-            <button
-              mat-icon-button
-              style="display: inline"
-              (click)="showDelete(element)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
+              <span *ngIf="!element.editable">{{
+                element.distribution_id != null ? "Normal" : "Fija"
+              }}</span>
+              <mat-form-field appearance="fill" *ngIf="element.editable">
+                <mat-label>Importancia</mat-label>
+                <mat-select
+                  [value]="element.distribution_id != null ? '1' : '2'"
+                  (selectionChange)="selectNoteType($event, element)"
+                >
+                  <mat-option value="1">Normal</mat-option>
+                  <mat-option value="2">Fija</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-      <div class="px-5 w-full">
+          <ng-container matColumnDef="Acciones">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element" [style.width.px]="130">
+              <button
+                mat-icon-button
+                style="display: inline"
+                (click)="edit(element.id, element.editable)"
+              >
+                <mat-icon class="cursor-pointer" *ngIf="!element.editable"
+                  >edit</mat-icon
+                >
+                <mat-icon class="cursor-pointer" *ngIf="element.editable"
+                  >check</mat-icon
+                >
+              </button>
+              <button
+                mat-icon-button
+                style="display: inline"
+                (click)="showDelete(element)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
         <button
           mat-raised-button
           style="
             background-color: #6ddbda;
             color: white;
             padding: 0 50px 0 50px;
-            width: 100%;
+            width: 94%;
+            left: 15px;
+            position: absolute;
+            bottom: 15px;
           "
           (click)="addNote()"
+          *ngIf="actualPath != 'clients'"
         >
           Agregar
         </button>
-      </div>
     </mat-card>
     <mat-card>
       <mat-tab-group animationDuration="0ms">
