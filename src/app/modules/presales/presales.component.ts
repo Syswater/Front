@@ -145,21 +145,22 @@ export class PresalesComponent implements OnInit, OnDestroy {
     this.getClientsByRoute(this.distributions.find((r: Distribution) => r.route_id == event.value)?.route);
   }
 
-  updateOrCreateOrder(element: any) {
+  updateOrCreateOrder(element: any, checkBoxSelection: boolean) {
     element.editable = !element.editable
     if (!element.order) {
-      if (element.editable) this.createOrder(element)
+      if (checkBoxSelection) this.createOrder(element)
     } else {
-      if (!element.editable) this.updateOrder(element)
+      if (checkBoxSelection) this.updateOrder(element)
     }
   }
 
-  updateOrCreateSale(element: any) {
+  updateOrCreateSale(element: any, checkBoxSelection: boolean) {
     element.editable = !element.editable
+    if (!checkBoxSelection) element.is_served = false
     if (!element.sale) {
-      if (element.editable) this.createSale(element)
+      if (checkBoxSelection) this.createSale(element)
     } else {
-      if (!element.editable) this.updateSale(element)
+      if (checkBoxSelection) this.updateSale(element)
     }
   }
 
@@ -167,6 +168,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
     try {
       this.spinner.showSpinner(true);
       await this.saleService.updateSale(element.sale);
+      await this.clientService.updateClient({ id: element.id, is_served: true });
       showPopUp('Venta actualizada con exito', 'success')
       this.getClientsByRoute(this.preSaleStorage.actualDistribution?.route)
     } catch (error) {
@@ -178,16 +180,19 @@ export class PresalesComponent implements OnInit, OnDestroy {
   async createSale(element: any) {
     try {
       this.spinner.showSpinner(true);
-      await this.saleService.createSale({
-        amount: element.order ? element.order.amount : element.quantity == '-' ? 0 : element.quantity,
-        unit_value: element.unit_value,
-        customer_id: element.id,
-        distribution_id: this.preSaleStorage.actualDistribution!.id,
-        value_paid: element.value_paid,
-        user_id: this.appStorage.user.id,
-        product_inventory_id: 1
-      });
-      showPopUp('Venta registrada con exito', 'success')
+      if (element.quantity != '-') {
+        await this.saleService.createSale({
+          amount: element.order ? element.order.amount : element.quantity == '-' ? 0 : element.quantity,
+          unit_value: element.unit_value,
+          customer_id: element.id,
+          distribution_id: this.preSaleStorage.actualDistribution!.id,
+          value_paid: element.value_paid,
+          user_id: this.appStorage.user.id,
+          product_inventory_id: 1
+        });
+      }
+      await this.clientService.updateClient({ id: element.id, is_served: true });
+      showPopUp('Cliente atendido con exito', 'success')
       this.getClientsByRoute(this.preSaleStorage.actualDistribution?.route)
     } catch (error) {
       showPopUp('Error al registrar la venta', 'error')
@@ -230,7 +235,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
   getTotalClientsAnswered(isDistribuidor: boolean) {
     let total = 0
     for (const client of this.dataSource.data) {
-      total += isDistribuidor ? client.sale ? 1 : 0 : client.order ? 1 : 0
+      total += isDistribuidor ? client.is_served ? 1 : 0 : client.order ? 1 : 0
     }
     return total
   }

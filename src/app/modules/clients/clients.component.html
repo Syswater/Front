@@ -89,15 +89,14 @@
     <ng-container matColumnDef="Observaciones">
       <th mat-header-cell *matHeaderCellDef style="max-width: 200px !important;">Observaciones</th>
       <td mat-cell *matCellDef="let element" style="max-width: 200px !important;">
-        <ng-container
-          *ngFor="let observation of element.note; let lastObs = last"
+        <ul
+          *ngFor="let observation of element.note"
         >
-          <span
+          <li
             [style.color]="observation.distribution_id != null ? 'black' : '#6EB8DB'"
-            [style.font-weight]="observation.importance != null ? 'bold' : 'normal'"
-            >{{ observation.description }}</span
-          >{{ !lastObs ? ", " : "" }}
-        </ng-container>
+            [style.font-weight]="observation.distribution_id == null ? 'bolder' : 'normal'"
+            >{{ observation.description }}</li>
+        </ul>
       </td>
     </ng-container>
 

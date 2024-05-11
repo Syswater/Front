@@ -68,7 +68,8 @@
         mat-raised-button
         type="button"
         class="w-1/2 mt-5 bg-blue_1 text-white button-status"
-        style="background-color: #6fdb90; color: white"
+        [style]=" price > value_to_paid || price < 0 ? 'background-color: #999' : 'background-color: #6fdb90; color: white'"
+        [disabled]="price > value_to_paid || price < 0"
         (click)="saveAndClose()"
       >
         Guardar

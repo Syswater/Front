@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { ModalService } from 'src/data/services/modal.service';
 import { ClientStorage } from '../../client.storage';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Route } from 'src/data/models/route';
 import { RouteService } from 'src/data/services/route.service';
 import { SpinnerService } from 'src/data/services/spinner.service';
@@ -15,50 +15,10 @@ import { showPopUp } from 'src/app/utils/SwalPopUp';
 import { Subscription } from 'rxjs';
 import { DeleteNoteComponent } from './components/delete-note/delete-note.component';
 import { PresalesStorage } from 'src/app/modules/presales/presales.storage';
-
-const abonos_data = [
-  {
-    index: 0,
-    date: moment().format('DD/MM/YYYY'),
-    price: '$20.000',
-    method: 'Nequi',
-    type: 'Abono',
-    total: '$15.000',
-  },
-  {
-    index: 1,
-    date: moment().format('DD/MM/YYYY'),
-    price: '$20.000',
-    method: 'Nequi',
-    type: 'Abono',
-    total: '$15.000',
-  },
-  {
-    index: 2,
-    date: moment().format('DD/MM/YYYY'),
-    price: '$20.000',
-    method: 'Nequi',
-    type: 'Abono',
-    total: '$15.000',
-  },
-];
-
-const envases_data = [
-  {
-    index: 0,
-    date: moment().format('DD/MM/YYYY'),
-    quanty: 1,
-    type: 'Devolución',
-    total: 3,
-  },
-  {
-    index: 1,
-    date: moment().format('DD/MM/YYYY'),
-    quanty: 1,
-    type: 'Devolución',
-    total: 3,
-  },
-];
+import { TransactionService } from 'src/data/services/transaction.service';
+import { TransactionPayment } from 'src/data/models/transactionPayment';
+import { TransactionContainer } from 'src/data/models/transactionContainer';
+import { formatDate } from 'src/app/utils/DateUtils';
 
 const ventas_data = [
   {
@@ -97,8 +57,8 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   displayedColumnsAbonos: string[] = [
     'Fecha',
     'Precio',
-    'Medio',
     'Tipo',
+    'Medio',
     'Total',
   ];
   displayedColumnsEnvases: string[] = ['Fecha', 'Cantidad', 'Tipo', 'Total'];
@@ -111,8 +71,8 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   ];
   tape_preference = ['NORMAL', 'SERVIFACIL'];
   dataSource = new MatTableDataSource<any>([]);
-  dataSourceAbonos = abonos_data;
-  dataSourceEnvases = envases_data;
+  dataSourceAbonos: TransactionPayment[] = [];
+  dataSourceEnvases: TransactionContainer[] = [];
   dataSourceVentas = ventas_data;
   client = this.clientStorage.actualClient;
   formClient = this.formBuilder.group({
@@ -122,8 +82,8 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     route_order: this.client?.route_order
       ? this.client.route_order
       : this.clientStorage.lastClient
-      ? this.clientStorage.lastClient.route_order + 1
-      : 0,
+        ? this.clientStorage.lastClient.route_order + 1
+        : 0,
     tape_preference: this.client
       ? this.client.tape_preference
       : this.tape_preference[0],
@@ -155,8 +115,9 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     private routeService: RouteService,
     private spinnerService: SpinnerService,
     private clientService: ClientService,
-    private preSaleStorage: PresalesStorage
-  ) {}
+    private preSaleStorage: PresalesStorage,
+    private transactionService: TransactionService
+  ) { }
 
   ngOnDestroy(): void {
     this.$subscription.unsubscribe();
@@ -172,6 +133,8 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     ).map((note) => ({ editable: false, ...note }));
     this.spinnerService.showSpinner(false);
     this.initUpdateObserver();
+    this.getDataTransactionPayment()
+    this.getDataTransactionContainers()
   }
 
   initUpdateObserver() {
@@ -211,8 +174,8 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
         this.actualPath == 'clients'
           ? null
           : this.preSaleStorage.actualDistribution
-          ? this.preSaleStorage.actualDistribution.id
-          : null,
+            ? this.preSaleStorage.actualDistribution.id
+            : null,
       customer_id: this.clientStorage.actualClient?.id,
     };
     this.dataSource.data.push(temporalNote);
@@ -249,7 +212,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
 
   selectNoteType($event: MatSelectChange, element: any) {
     if (this.clientStorage.actualClient && this.clientStorage.actualRoute) {
-      
+
       const index = this.clientStorage.actualClient.note.findIndex(
         (note) => note.id == element.id
       );
@@ -344,5 +307,53 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     }
     this.spinnerService.showSpinner(false);
     this.dialogRef.close();
+  }
+
+  async getDataTransactionPayment() {
+    try {
+      this.spinnerService.showSpinner(true);
+      this.dataSourceAbonos = (await this.transactionService.getTransactionsPayments({ page: 1, per_page: 5, customer_id: this.clientStorage.actualClient!.id })).items as TransactionPayment[]
+    } catch (error) {
+      showPopUp('Error al obtener las transacciones de abonos/deudas', 'error')
+    }
+    this.spinnerService.showSpinner(false);
+  }
+
+  async getDataTransactionContainers() {
+    try {
+      this.spinnerService.showSpinner(true);
+      this.dataSourceEnvases = (await this.transactionService.getTransactionsContainers({ page: 1, per_page: 5, customer_id: this.clientStorage.actualClient!.id })).items as TransactionContainer[]
+    } catch (error) {
+      showPopUp('Error al obtener las transacciones de prestamos/devoluciones', 'error')
+    }
+    this.spinnerService.showSpinner(false);
+  }
+
+  formatDate(date: any) {
+    return formatDate(date, 'DD/MM/YYYY')
+  }
+
+  formatType(type: string) {
+    switch (type) {
+      case 'DEBT':
+        return 'Deuda'
+      case 'SALE':
+        return 'Venta'
+      case 'PAID':
+        return 'Abono'
+    }
+    return 'Desconocido'
+  }
+
+  formatPaymentMethod(method: string) {
+    switch (method) {
+      case 'EFECTIVO':
+        return 'Efectivo'
+      case 'NEQUI':
+        return 'Nequi'
+      case 'DAVIPLATA':
+        return 'Daviplata'
+    }
+    return ''
   }
 }

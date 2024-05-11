@@ -72,7 +72,7 @@
         <input
           type="number"
           class="text-5xl border border-2 border-gray rounded text-center w-full h-full"
-          max="100000"
+          [max]="price"
           [(ngModel)]="price"
         />
       </div>
@@ -111,8 +111,9 @@
       mat-raised-button
       type="button"
       class="w-1/2 mt-5 bg-blue_1 text-white button-status"
-      style="background-color: #6fdb90; color: white"
+      [style]=" price < 0 || quantity < 0 ? 'background-color: #999' : 'background-color: #6fdb90; color: white'"
       (click)="saveAndClose()"
+      [disabled]="price < 0 || quantity < 0"
     >
       Guardar
     </button>

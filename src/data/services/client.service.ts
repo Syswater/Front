@@ -43,7 +43,7 @@ export class ClientService {
     return firstValueFrom(this.http.post(`${this.url}/customer/create`, { ...client }));
   }
 
-  async updateClient(client: Partial<{ id: number | null | undefined; address: string | null | undefined; neighborhood: string | null | undefined; route_order: number | null; tape_preference: string | null; is_contactable: boolean | null; name: string | null | undefined; cellphone: string | null | undefined; borrowedContainers: number | null; totalDebt: number | null; route_id: number | null | undefined; }>) {
+  async updateClient(client: Partial<{ id: number | null | undefined; address: string | null | undefined; neighborhood: string | null | undefined; route_order: number | null; tape_preference: string | null; is_contactable: boolean | null; name: string | null | undefined; cellphone: string | null | undefined; borrowedContainers: number | null; totalDebt: number | null; route_id: number | null | undefined; is_served?: boolean }>) {
     return firstValueFrom(this.http.put(`${this.url}/customer/update`, { ...client }));
   }
 

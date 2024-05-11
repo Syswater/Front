@@ -1,4 +1,4 @@
-export interface Transaction {
+export interface TransactionContainer {
     id:                   number;
     date:                 Date;
     value:                number;
