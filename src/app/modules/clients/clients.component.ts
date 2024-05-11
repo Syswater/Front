@@ -93,7 +93,6 @@ export class ClientsComponent implements OnInit, OnDestroy {
   }
 
   async filterClients(textOrEvent: string | KeyboardEvent) {
-    console.log(typeof textOrEvent)
     if (textOrEvent instanceof KeyboardEvent) {
       const event = textOrEvent as KeyboardEvent;
       const keyPressed = event.key; // La tecla presionada.

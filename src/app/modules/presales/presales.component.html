@@ -1,4 +1,4 @@
-<div class="px-10 pt-2 pb-10">
+<div class="px-5 pb-10">
   <div
     class="mt-5 w-full bg-white flex items-center px-5 pt-2 grid grid-cols-12 shadow-lg gap-y-2"
     *ngIf="distributions.length > 0"
@@ -49,23 +49,15 @@
 
     <p class="text-lg mb-5 col-span-3 text-center">
       Productos vendidos:
-      <span class="text-blue_3 font-black">{{ getTotalProductsSelled() }}</span>
-    </p>
-
-    <p class="text-lg mb-5 text-right col-span-2" *ngIf="role == 'Prevendedor'">
-      Total de clientes que contestaron:
-      <span class="text-green_1 font-black">{{
-        getTotalClientsAnswered()
+      <span class="text-blue_3 font-black">{{
+        getTotalProductsSelled(role == "Distribuidor")
       }}</span>
     </p>
 
-    <p
-      class="text-lg mb-5 text-right col-span-2"
-      *ngIf="role == 'Distribuidor'"
-    >
+    <p class="text-lg mb-5 text-right col-span-2">
       Clientes Atendidos:
       <span class="text-green_1 font-black">{{
-        getTotalClientsAnswered()
+        getTotalClientsAnswered(role == "Distribuidor")
       }}</span>
     </p>
 
@@ -98,7 +90,7 @@
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.sale ? ' background-color: rgba(109, 219, 218, 0.1);' : ''
+          element.is_served ? ' background-color: rgba(109, 219, 218, 0.1);' : ''
         "
       >
         {{ element.route_order }}
@@ -111,7 +103,7 @@
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.sale ? ' background-color: rgba(109, 219, 218, 0.1);' : ''
+          element.is_served ? ' background-color: rgba(109, 219, 218, 0.1);' : ''
         "
       >
         {{ element.name }}
@@ -138,7 +130,7 @@
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.sale ? ' background-color: rgba(109, 219, 218, 0.1);' : ''
+          element.is_served ? ' background-color: rgba(109, 219, 218, 0.1);' : ''
         "
       >
         {{ element.address }}
@@ -151,7 +143,7 @@
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.sale ? ' background-color: rgba(109, 219, 218, 0.1);' : ''
+          element.is_served ? ' background-color: rgba(109, 219, 218, 0.1);' : ''
         "
       >
         <ng-container
@@ -176,7 +168,7 @@
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.sale
+          element.is_served
             ? ' background-color: rgba(109, 219, 218, 0.1); width: 100px'
             : 'width: 100px'
         "
@@ -193,7 +185,7 @@
             mat-icon-button
             style="display: inline"
             (click)="openDialog(0, element)"
-            [disabled]="element.sale && !element.editable"
+            [disabled]="element.is_served && !element.editable"
           >
             <mat-icon>edit</mat-icon>
           </button>
@@ -207,7 +199,7 @@
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.sale
+          element.is_served
             ? 'background-color: rgba(109, 219, 218, 0.1); width: 120px'
             : 'width: 120px'
         "
@@ -235,7 +227,7 @@
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.sale
+          element.is_served
             ? ' background-color: rgba(109, 219, 218, 0.1); width: 150px'
             : 'width: 150px'
         "
@@ -252,7 +244,16 @@
             mat-icon-button
             style="display: inline"
             (click)="openDialog(1, element)"
-            [disabled]="element.sale && !element.editable"
+            [disabled]="
+              (element.is_served && !element.editable) ||
+              (element.sale
+                ? element.sale.amount == 0
+                : element.order
+                ? element.order.amount == 0
+                : element.quantity != '-'
+                ? element.quantity == 0
+                : true)
+            "
           >
             <mat-icon>edit</mat-icon>
           </button>
@@ -329,12 +330,12 @@
     </ng-container>
 
     <ng-container matColumnDef="Entregado" *ngIf="role == 'Distribuidor'">
-      <th mat-header-cell *matHeaderCellDef style="padding: 0">Entregado</th>
+      <th mat-header-cell *matHeaderCellDef style="padding: 0">Atendido</th>
       <td
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.sale
+          element.is_served
             ? '
         background-color: rgba(109, 219, 218, 0.1);  max-width: 10px; padding: 0; text-align: center; position: relative;'
             : 'max-width: 10px; padding: 0; text-align: center; position: relative;'
@@ -342,16 +343,9 @@
       >
         <mat-checkbox
           color="primary"
-          [checked]="element.sale"
+          [checked]="element.is_served"
           (change)="updateOrCreateSale(element)"
-          [disabled]="element.value_paid == 0"
-          #deliveredCheck
         ></mat-checkbox>
-        <div
-          *ngIf="element.value_paid == 0"
-          class="absolute w-1/2 h-1/2 top-5 left-5"
-          matTooltip="No se puede marcar sin haber registrado almenos una parte pago"
-        ></div>
       </td>
     </ng-container>
 
@@ -361,7 +355,7 @@
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.sale
+          element.is_served
             ? ' background-color: rgba(109, 219, 218, 0.1);width: fit-content; padding-left: 0'
             : 'width: fit-content; padding-left: 0'
         "

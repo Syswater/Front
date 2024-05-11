@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     private jwtHelper: JwtHelperService,
     private authService: AuthService,
     private appStorage: AppStorage
-  ) { }
+  ) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -40,34 +40,55 @@ export class AuthGuard implements CanActivate {
       showPopUp('No esta autorizado', 'error');
       return false;
     }
-    this.formatMenuSelection(state.url)
-    return true;
+    return this.setRoutesConfigurations(state.url, role);
   }
 
-  formatMenuSelection(url: string) {
+  setRoutesConfigurations(url: string, role: string) {
+    const urlModuleRole = url.split('/')[1];
+
+    if (
+      (urlModuleRole == 'admin' && role != 'Administrador') ||
+      (urlModuleRole == 'distributor' && role != 'Distribuidor') ||
+      (urlModuleRole == 'preseller' && role != 'Prevendedor')
+    ) {
+      showPopUp('No esta autorizado', 'error');
+      if (role == 'Administrador') this.router.navigate(['/admin/dashboard'])     
+      if (role == 'Distribuidor') this.router.navigate(['/distributor/dashboard'])     
+      if (role == 'Prevendedor') this.router.navigate(['/preseller/dashboard'])     
+      return false;
+    }
+
     this.appStorage.setObservableValue(true, 'reloadLateralMenu');
     switch (url) {
       case '/preseller/dashboard':
       case '/admin/dashboard':
       case '/distributor/dashboard':
-        this.appStorage.selectionMenu = 0
+        this.appStorage.selectionMenu = 0;
+        this.appStorage.moduleActual = 'Dashboard';
         break;
       case '/preseller/routes':
       case '/distributor/routes':
-        this.appStorage.selectionMenu = 1
+        this.appStorage.selectionMenu = 1;
+        this.appStorage.moduleActual = 'Rutas';
         break;
       case '/preseller/presales':
+        this.appStorage.selectionMenu = 2;
+        this.appStorage.moduleActual = 'Preventas';
+        break;
       case '/distributor/distribution':
-        this.appStorage.selectionMenu = 2
+        this.appStorage.selectionMenu = 2;
+        this.appStorage.moduleActual = 'Distribución';
         break;
       case '/preseller/clients':
       case '/distributor/clients':
-        this.appStorage.selectionMenu = 3
+        this.appStorage.selectionMenu = 3;
+        this.appStorage.moduleActual = 'Clientes';
         break;
       case '/distributor/expenses':
-        this.appStorage.selectionMenu = 4
+        this.appStorage.selectionMenu = 4;
+        this.appStorage.moduleActual = 'Gastos';
         break;
     }
+    return true;
   }
-
 }

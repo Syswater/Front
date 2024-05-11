@@ -24,20 +24,21 @@
     >
       <mat-icon class="text-gray">menu</mat-icon>
     </button>
+    <span class="translate-y-[-7px] inline-block text-gray_dark select-none">{{appStorage.moduleActual}}</span>
     <div
-      class="float-right grid grid-cols-9 mr-2 cursor-pointer"
+      class="float-right grid grid-cols-9 mr-2 cursor-pointer w-96"
       [matMenuTriggerFor]="menu"
     >
-      <div class="col-span-7 relative">
-        <p class="absolute top-2 text-right w-full pr-3">
+      <div class="col-span-8 relative">
+        <p class="absolute top-2 text-right w-full pr-3 overflow-hidden whitespace-nowrap overflow-ellipsis">
           {{ appStorage.user.name }}
         </p>
         <p class="absolute top-6 text-right w-full pr-3" style="color: #6ddbda">
-          <mat-icon class="absolute left-8">keyboard_arrow_down</mat-icon>
-          {{ appStorage.actualRol }}
+          <mat-icon class="">keyboard_arrow_down</mat-icon>
+          <span class="translate-y-[-7px] inline-block">{{ appStorage.actualRol }}</span>
         </p>
       </div>
-      <div class="col-span-2 mr-2 mt-1">
+      <div class="mr-2 mt-1">
         <img src="/assets/icons/svg/user_icon.svg" width="40" />
       </div>
     </div>
@@ -55,8 +56,8 @@
 </div>
 <router-outlet *ngIf="auth.isLoginView"></router-outlet>
 <app-spinner *ngIf="spinner.IsShowSpinner"></app-spinner>
-<mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="changeRole()">
+<mat-menu #menu="matMenu" xPosition="before">
+  <button mat-menu-item (click)="changeRole()" *ngIf="appStorage.user.roles?.length > 1">
     <mat-icon>account_circle</mat-icon>
     <span>Cambiar de rol</span>
   </button>

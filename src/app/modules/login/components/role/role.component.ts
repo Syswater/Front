@@ -15,7 +15,14 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class RoleComponent implements OnInit {
   roles: string[] = [];
   formRoles: FormGroup = this.fb.group({
-    role: '',
+    role:
+      localStorage.getItem('roleActual') == 'Administrador'
+        ? 'ADMIN'
+        : localStorage.getItem('roleActual') == 'Prevendedor'
+        ? 'PRE_SELLER'
+        : localStorage.getItem('roleActual') == 'Distribuidor'
+        ? 'DISTRIBUTOR'
+        : '',
   });
 
   constructor(
@@ -24,11 +31,13 @@ export class RoleComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private appStorage: AppStorage,
-    private jwtHelper: JwtHelperService,
-  ) { }
+    private jwtHelper: JwtHelperService
+  ) {}
 
   ngOnInit(): void {
-    const tokenData = this.jwtHelper.decodeToken(`${localStorage.getItem('token')}`);
+    const tokenData = this.jwtHelper.decodeToken(
+      `${localStorage.getItem('token')}`
+    );
     this.roles = tokenData.user.roles.split(',').filter((r: string) => r);
   }
 
@@ -50,7 +59,12 @@ export class RoleComponent implements OnInit {
         this.router.navigate(['distributor/dashboard']);
         break;
     }
-    showPopUp(this.authService.isLoginView ? 'Inicio de sesión exitoso' : 'Cambio de rol exitoso', 'success');
+    showPopUp(
+      this.authService.isLoginView
+        ? 'Inicio de sesión exitoso'
+        : 'Cambio de rol exitoso',
+      'success'
+    );
     this.authService.isLoginView = false;
     this.dialogRef.close();
   }

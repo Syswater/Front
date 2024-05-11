@@ -14,7 +14,6 @@ import { ClientService } from 'src/data/services/client.service';
 import { showPopUp } from 'src/app/utils/SwalPopUp';
 import { Subscription } from 'rxjs';
 import { DeleteNoteComponent } from './components/delete-note/delete-note.component';
-import { AppStorage } from 'src/app/app.storage';
 import { PresalesStorage } from 'src/app/modules/presales/presales.storage';
 
 const abonos_data = [
@@ -339,6 +338,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       await this.clientService.updateClient(client);
       showPopUp('Cliente actualizado con éxito', 'success');
       this.clientStorage.setObservableValue(true, 'reloadClients');
+      this.preSaleStorage.setObservableValue(true, 'reloadClients');
     } catch (error) {
       showPopUp('Error al actualizar el cliente', 'error');
     }

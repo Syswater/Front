@@ -219,18 +219,18 @@ export class PresalesComponent implements OnInit, OnDestroy {
     this.spinner.showSpinner(false);
   }
 
-  getTotalProductsSelled() {
+  getTotalProductsSelled(isDistribuidor: boolean) {
     let total = 0
     for (const client of this.dataSource.data) {
-      total += client.order ? client.order.amount : client.quantity != '-' ? client.quantity : 0
+      total += isDistribuidor ? client.sale ? client.sale.amount : 0 : client.order ? client.order.amount : client.quantity != '-' ? client.quantity : 0
     }
     return total
   }
 
-  getTotalClientsAnswered() {
+  getTotalClientsAnswered(isDistribuidor: boolean) {
     let total = 0
     for (const client of this.dataSource.data) {
-      total += client.order ? 1 : 0
+      total += isDistribuidor ? client.sale ? 1 : 0 : client.order ? 1 : 0
     }
     return total
   }

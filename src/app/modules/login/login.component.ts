@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
       this.spinnerService.showSpinner(true)
       const data = await this.authService.login(this.formLogin.value)
       const tokenData = this.jwtHelper.decodeToken(data.token)
-      this.appStorage.user = tokenData.user
+      this.appStorage.user = { ...tokenData.user, roles: tokenData.user.roles.split(',').filter((r: string) => r) }
       const roles = tokenData.user.roles.split(',').filter((r: string) => r)
       localStorage.setItem("token", data.token)
       if (roles.length > 1) {

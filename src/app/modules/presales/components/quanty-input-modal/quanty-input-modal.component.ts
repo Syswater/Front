@@ -55,20 +55,20 @@ export class QuantyInputModalComponent implements OnInit {
   }
 
   incrementPrice() {
-    this.price += 500
+    this.price += 1000
     if(this.preSaleStorage.actualClientDistribution.sale){
-      this.preSaleStorage.actualClientDistribution.sale.unit_value += 500
+      this.preSaleStorage.actualClientDistribution.sale.unit_value += 1000
     }else{
-      this.preSaleStorage.actualClientDistribution.sale.unit_value += 500
+      this.preSaleStorage.actualClientDistribution.sale.unit_value += 1000
     }
   }
 
   decrementPrice() {
-    if (this.price > 500) this.price -= 500
+    if (this.price > 1000) this.price -= 1000
     if(this.preSaleStorage.actualClientDistribution.sale){
-      if (this.preSaleStorage.actualClientDistribution.sale.unit_value > 500) this.preSaleStorage.actualClientDistribution.sale.unit_value -= 500
+      if (this.preSaleStorage.actualClientDistribution.sale.unit_value > 1000) this.preSaleStorage.actualClientDistribution.sale.unit_value -= 1000
     }else{
-      if (this.preSaleStorage.actualClientDistribution.unit_value > 500) this.preSaleStorage.actualClientDistribution.unit_value -= 500
+      if (this.preSaleStorage.actualClientDistribution.unit_value > 1000) this.preSaleStorage.actualClientDistribution.unit_value -= 1000
     }
   }
 
