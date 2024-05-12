@@ -24,33 +24,6 @@ import { SalesService } from 'src/data/services/sales.service';
 import { PaymentModalComponent } from './components/payment-modal/payment-modal.component';
 import { ContainersModalComponent } from './components/containers-modal/containers-modal.component';
 
-const ventas_data = [
-  {
-    index: 0,
-    date: moment().format('DD/MM/YYYY'),
-    product: 'Agua',
-    quanty: 1,
-    price: '$20.000',
-    total: '$20.000',
-  },
-  {
-    index: 1,
-    date: moment().format('DD/MM/YYYY'),
-    product: 'Agua',
-    quanty: 1,
-    price: '$20.000',
-    total: '$20.000',
-  },
-  {
-    index: 2,
-    date: moment().format('DD/MM/YYYY'),
-    product: 'Agua',
-    quanty: 1,
-    price: '$20.000',
-    total: '$20.000',
-  },
-];
-
 @Component({
   selector: 'app-clients-form',
   templateUrl: './clients-form.component.html',
@@ -115,6 +88,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   showVentasSpinner: boolean = true;
   $reloadTransactionPayment!: Subscription
   $reloadTransactionContainers!: Subscription
+  $reloadNotesClient!: Subscription
 
   constructor(
     private formBuilder: FormBuilder,
@@ -133,6 +107,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     this.$subscription.unsubscribe();
     this.$reloadTransactionPayment.unsubscribe();
     this.$reloadTransactionContainers.unsubscribe();
+    this.$reloadNotesClient.unsubscribe();
   }
 
   async ngOnInit() {
@@ -145,6 +120,13 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     ).map((note) => ({ editable: false, ...note }));
     this.spinnerService.showSpinner(false);
     if (this.clientStorage.actualClient) {
+      this.$reloadNotesClient = this.clientStorage.getObservable('reloadNotesClient').subscribe(()=> {
+        this.dataSource.data = (
+          this.clientStorage.actualClient
+            ? this.clientStorage.actualClient.note
+            : []
+        ).map((note) => ({ editable: false, ...note }));
+      })
       this.$reloadTransactionPayment = this.clientStorage.getObservable('reloadTransactionPayment').subscribe(() => this.getDataTransactionPayment())
       this.$reloadTransactionContainers = this.clientStorage.getObservable('reloadTransactionContainers').subscribe(() => this.getDataTransactionContainers())
       this.getDataTransactionPayment()
@@ -155,9 +137,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
 
   showDelete(element: Observation) {
     this.clientStorage.deleteNote = element;
-    this.modalService.open(DeleteNoteComponent, () => {
-      this.dialogRef.close();
-    });
+    this.modalService.open(DeleteNoteComponent);
   }
 
   edit(id: number, clickCheck: boolean) {

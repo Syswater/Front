@@ -17,13 +17,19 @@ export class DeleteNoteComponent {
   async deleteNote() {
     try {
       this.spinnerService.showSpinner(true)
-      await this.clientService.deleteNote(this.clientStorage.deleteNote?.id)
-      showPopUp('Observación eliminada con éxito', 'success')
+      if(this.clientStorage.deleteNote!.id > 0) {
+        await this.clientService.deleteNote(this.clientStorage.deleteNote?.id)
+      }
       if(this.clientStorage.actualClient){
         const index = this.clientStorage.actualClient.note.findIndex(note => note.id == this.clientStorage.deleteNote?.id);
         this.clientStorage.actualClient?.note.splice(index, 1);
       }
-      this.clientStorage.setObservableValue(true, 'reloadClients')
+      if(this.clientStorage.deleteNote!.id > 0) {
+        showPopUp('Observación eliminada con éxito', 'success')
+        this.clientStorage.setObservableValue(true, 'reloadClients')
+      }else{
+        this.clientStorage.setObservableValue(true, 'reloadNotesClient')
+      }
     } catch (error) {
       showPopUp('Error al eliminar la observación', 'error')
     }
