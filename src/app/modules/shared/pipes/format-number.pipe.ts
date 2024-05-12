@@ -15,13 +15,6 @@ export class FormatNumberPipe implements PipeTransform {
     // Separar los miles con puntos
     stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-    // Separar los millones con comas
-    if (stringValue.length > 6) {
-      const millones = stringValue.slice(0, -6);
-      const miles = stringValue.slice(-6);
-      stringValue = millones + "'" + miles;
-    }
-
     return stringValue;
   }
 }

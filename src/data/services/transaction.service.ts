@@ -22,4 +22,12 @@ export class TransactionService {
     const { page, per_page, customer_id } = options
     return firstValueFrom(this.http.get<Pagination>(`${this.url}/transactionContainer/findAll/${page}/${[per_page]}/${customer_id}`))
   }
+
+  async createTransactionPayment(options: { date: string; type: string; customer_id: number; user_id: any; value: number, payment_method: string }) {
+    return firstValueFrom(this.http.post(`${this.url}/transactionPayment/create`, { ...options }));
+  }
+
+  async createTransactionContainer(options: { date: string; type: string; customer_id: number; user_id: any; product_inventroy_id: number, value: number }) {
+    return firstValueFrom(this.http.post(`${this.url}/transactionContainer/create`, { ...options }));
+  }
 }

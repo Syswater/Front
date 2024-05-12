@@ -1,79 +1,124 @@
 <app-modal>
-    <div class="w-[700px]">
-      <div class="px-10 pb-5 text-center">
-        <h1 class="font-black text-3xl text-center">
-          Cliente
-          <span class="text-blue_3">{{ preSaleStorage.actualClient?.name }}</span>
-        </h1>
-      </div>
-      <h1 class="pl-10 text-2xl text-left mb-5">Valor total a pagar de la venta <span class="text-blue_1">$. {{ value_to_paid }}</span></h1>
-      <div class="grid grid-cols-4 pb-5">
-        <div class="text-center">
-          <button
-            mat-raised-button
-            style="
-              background-color: #db6f6f;
-              color: white;
-              font-size: xx-large;
-              width: 100px;
-              height: 100px;
-              border-radius: 100%;
-            "
-            (click)="decrementPrice()"
-          >
-            -
-          </button>
-        </div>
-        <div class="relative col-span-2">
-          <span class="absolute left-2 text-5xl top-6">$</span>
-          <input
-            type="number"
-            class="text-5xl border border-2 border-gray rounded text-center w-full h-full"
-            max="100000"
-            [(ngModel)]="price"
-          />
-        </div>
-        <div class="text-center">
-          <button
-            mat-raised-button
-            style="
-              background-color: #6fdb90;
-              color: white;
-              font-size: xx-large;
-              width: 100px;
-              height: 100px;
-              border-radius: 100%;
-            "
-            (click)="incrementPrice()"
-          >
-            +
-          </button>
-        </div>
-        <p class="col-span-4 text-center">Valor a pagar</p>
-      </div>
+  <div class="w-[700px]">
+    <div class="px-10 pb-5 text-center">
+      <h1 class="font-black text-3xl text-center">
+        Cliente
+        <span class="text-blue_3">{{ preSaleStorage.actualClient?.name }}</span>
+      </h1>
     </div>
-    <div class="grid grid-cols-2 gap-5 w-full px-5 mb-5">
-      <div class="text-right">
+    <h1 class="pl-10 text-2xl text-left mb-5">
+      Valor total a pagar de la venta
+      <span class="text-blue_1">$. {{ value_to_paid }}</span>
+    </h1>
+    <div class="grid grid-cols-4 pb-5">
+      <div class="text-center">
         <button
           mat-raised-button
-          type="button"
-          class="w-1/2 mt-5 bg-blue_1 text-white button-status"
-          style="background-color: #000000; color: white"
-          (click)="cancel()"
+          style="
+            background-color: #db6f6f;
+            color: white;
+            font-size: xx-large;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          "
+          (click)="decrementPrice()"
         >
-          Cancelar
+          -
         </button>
       </div>
+      <div class="relative col-span-2">
+        <span class="absolute left-2 text-5xl top-6">$</span>
+        <input
+          type="number"
+          class="text-5xl border border-2 border-gray rounded text-center w-full h-full"
+          max="100000"
+          [(ngModel)]="price"
+        />
+      </div>
+      <div class="text-center">
+        <button
+          mat-raised-button
+          style="
+            background-color: #6fdb90;
+            color: white;
+            font-size: xx-large;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          "
+          (click)="incrementPrice()"
+        >
+          +
+        </button>
+      </div>
+      <p class="col-span-4 text-center mb-10">Valor a pagar</p>
+
+      <div class="text-center">
+        <button
+          mat-raised-button
+          style="
+            background-color: #db6f6f;
+            color: white;
+            font-size: xx-large;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          "
+          (click)="changeMethod(-1)"
+        >
+          {{ "<" }}
+        </button>
+      </div>
+      <input
+        type="text"
+        class="text-5xl border border-2 border-gray rounded text-center w-full h-full col-span-2"
+        [(ngModel)]="methods[actualMethod]"
+        readonly
+      />
+      <div class="text-center">
+        <button
+          mat-raised-button
+          style="
+            background-color: #6fdb90;
+            color: white;
+            font-size: xx-large;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          "
+          (click)="changeMethod(1)"
+        >
+          {{ ">" }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-5 w-full px-5 mb-5">
+    <div class="text-right">
       <button
         mat-raised-button
         type="button"
         class="w-1/2 mt-5 bg-blue_1 text-white button-status"
-        [style]=" price > value_to_paid || price < 0 ? 'background-color: #999' : 'background-color: #6fdb90; color: white'"
-        [disabled]="price > value_to_paid || price < 0"
-        (click)="saveAndClose()"
+        style="background-color: #000000; color: white"
+        (click)="cancel()"
       >
-        Guardar
+        Cancelar
       </button>
     </div>
-  </app-modal>
-  
+    <button
+      mat-raised-button
+      type="button"
+      class="w-1/2 mt-5 bg-blue_1 text-white button-status"
+      [style]="
+        price > value_to_paid || price < 0
+          ? 'background-color: #999'
+          : 'background-color: #6fdb90; color: white'
+      "
+      [disabled]="price > value_to_paid || price < 0"
+      (click)="saveAndClose()"
+    >
+      Guardar
+    </button>
+  </div>
+</app-modal>

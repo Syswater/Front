@@ -15,7 +15,9 @@ export class ClientStorage {
 
     //OBSERVABLES
     private observables : any = {
-        reloadClients: new BehaviorSubject<boolean>(false)
+        reloadClients: new BehaviorSubject<boolean>(false),
+        reloadTransactionPayment: new BehaviorSubject<boolean>(false),
+        reloadTransactionContainers: new BehaviorSubject<boolean>(false)
     }
 
     setObservableValue(value: boolean, key: string) {

@@ -10,16 +10,24 @@ import { PresalesStorage } from '../../presales.storage';
 export class ValuePaidModalComponent implements OnInit {
   price: any;
   value_to_paid: any;
+  methods: string[] = ['Efectivo', 'Nequi', 'Daviplata', 'Bancolombia'];
+  actualMethod: number = 0
+  method_enum = {
+    'Efectivo': 'EFECTIVO',
+    'Nequi': 'NEQUI',
+    'Daviplata': 'DAVIPLATA',
+    'Bancolombia': 'BANCOLOMBIA'
+  }
 
   constructor(public preSaleStorage: PresalesStorage, private dialogRef: MatDialogRef<ValuePaidModalComponent>) { }
 
   ngOnInit(): void {
     let quantity = 0
-    if(this.preSaleStorage.actualClientDistribution.sale){
+    if (this.preSaleStorage.actualClientDistribution.sale) {
       this.price = this.preSaleStorage.actualClientDistribution.sale.value_paid
       quantity = this.preSaleStorage.actualClientDistribution.sale.amount
       this.value_to_paid = quantity * this.preSaleStorage.actualClientDistribution.sale.unit_value
-    }else{
+    } else {
       if (this.preSaleStorage.actualClientDistribution.order) {
         quantity = this.preSaleStorage.actualClientDistribution.order.amount
       } else {
@@ -31,11 +39,13 @@ export class ValuePaidModalComponent implements OnInit {
   }
 
   saveAndClose() {
-    if (this.preSaleStorage.actualClientDistribution.sale){
+    if (this.preSaleStorage.actualClientDistribution.sale) {
       this.preSaleStorage.actualClientDistribution.sale.value_paid = this.price
-    }else{
+    } else {
       this.preSaleStorage.actualClientDistribution.value_paid = this.price
     }
+    const method = this.methods[this.actualMethod] as keyof typeof this.method_enum;
+    this.preSaleStorage.actualClientDistribution.payment_method = this.method_enum[method]
     this.dialogRef.close()
   }
 
@@ -49,5 +59,21 @@ export class ValuePaidModalComponent implements OnInit {
 
   incrementPrice() {
     if (this.price < this.value_to_paid) this.price += 500
+  }
+
+  changeMethod(index: number) {
+    if(index == 1){
+      if(this.actualMethod < this.methods.length - 1){
+        this.actualMethod++
+      }else{
+        this.actualMethod = 0
+      }
+    } else {
+      if(this.actualMethod > 0) {
+        this.actualMethod--
+      }else{
+        this.actualMethod = this.methods.length - 1
+      }
+    }
   }
 }

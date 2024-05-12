@@ -19,6 +19,10 @@ import { TransactionService } from 'src/data/services/transaction.service';
 import { TransactionPayment } from 'src/data/models/transactionPayment';
 import { TransactionContainer } from 'src/data/models/transactionContainer';
 import { formatDate } from 'src/app/utils/DateUtils';
+import { Sale } from 'src/data/models/sale';
+import { SalesService } from 'src/data/services/sales.service';
+import { PaymentModalComponent } from './components/payment-modal/payment-modal.component';
+import { ContainersModalComponent } from './components/containers-modal/containers-modal.component';
 
 const ventas_data = [
   {
@@ -64,20 +68,20 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   displayedColumnsEnvases: string[] = ['Fecha', 'Cantidad', 'Tipo', 'Total'];
   displayedColumnsVentas: string[] = [
     'Fecha',
-    'Producto',
     'Cantidad',
     'Precio',
     'Total',
+    'Valor pagado'
   ];
   tape_preference = ['NORMAL', 'SERVIFACIL'];
   dataSource = new MatTableDataSource<any>([]);
   dataSourceAbonos: TransactionPayment[] = [];
   dataSourceEnvases: TransactionContainer[] = [];
-  dataSourceVentas = ventas_data;
+  dataSourceVentas: Sale[] = [];
   client = this.clientStorage.actualClient;
   formClient = this.formBuilder.group({
     id: this.client?.id,
-    address: this.client?.address,
+    address: [this.client?.address, Validators.required],
     neighborhood: this.client?.neighborhood,
     route_order: this.client?.route_order
       ? this.client.route_order
@@ -106,6 +110,11 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   updateClientFields: any = {};
   $subscription!: Subscription;
   actualPath = window.location.pathname.split('/')[2];
+  showAbonosSpinner: boolean = true;
+  showDevolucionesSpinner: boolean = true;
+  showVentasSpinner: boolean = true;
+  $reloadTransactionPayment!: Subscription
+  $reloadTransactionContainers!: Subscription
 
   constructor(
     private formBuilder: FormBuilder,
@@ -116,11 +125,14 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     private spinnerService: SpinnerService,
     private clientService: ClientService,
     private preSaleStorage: PresalesStorage,
-    private transactionService: TransactionService
+    private transactionService: TransactionService,
+    private salesService: SalesService
   ) { }
 
   ngOnDestroy(): void {
     this.$subscription.unsubscribe();
+    this.$reloadTransactionPayment.unsubscribe();
+    this.$reloadTransactionContainers.unsubscribe();
   }
 
   async ngOnInit() {
@@ -132,15 +144,13 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
         : []
     ).map((note) => ({ editable: false, ...note }));
     this.spinnerService.showSpinner(false);
-    this.initUpdateObserver();
-    this.getDataTransactionPayment()
-    this.getDataTransactionContainers()
-  }
-
-  initUpdateObserver() {
-    this.$subscription = this.formClient.valueChanges.subscribe((value) => {
-      console.log(value);
-    });
+    if (this.clientStorage.actualClient) {
+      this.$reloadTransactionPayment = this.clientStorage.getObservable('reloadTransactionPayment').subscribe(() => this.getDataTransactionPayment())
+      this.$reloadTransactionContainers = this.clientStorage.getObservable('reloadTransactionContainers').subscribe(() => this.getDataTransactionContainers())
+      this.getDataTransactionPayment()
+      this.getDataTransactionContainers()
+      this.getSalesClients()
+    }
   }
 
   showDelete(element: Observation) {
@@ -312,20 +322,36 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   async getDataTransactionPayment() {
     try {
       this.spinnerService.showSpinner(true);
+      this.showAbonosSpinner = true
       this.dataSourceAbonos = (await this.transactionService.getTransactionsPayments({ page: 1, per_page: 5, customer_id: this.clientStorage.actualClient!.id })).items as TransactionPayment[]
     } catch (error) {
       showPopUp('Error al obtener las transacciones de abonos/deudas', 'error')
     }
     this.spinnerService.showSpinner(false);
+    this.showAbonosSpinner = false
   }
 
   async getDataTransactionContainers() {
     try {
       this.spinnerService.showSpinner(true);
+      this.showDevolucionesSpinner = true
       this.dataSourceEnvases = (await this.transactionService.getTransactionsContainers({ page: 1, per_page: 5, customer_id: this.clientStorage.actualClient!.id })).items as TransactionContainer[]
     } catch (error) {
       showPopUp('Error al obtener las transacciones de prestamos/devoluciones', 'error')
     }
+    this.showDevolucionesSpinner = false
+    this.spinnerService.showSpinner(false);
+  }
+
+  async getSalesClients() {
+    try {
+      this.spinnerService.showSpinner(true);
+      this.showVentasSpinner = true
+      this.dataSourceVentas = await this.salesService.getAllSalesCustomer(this.clientStorage.actualClient!.id)
+    } catch (error) {
+      showPopUp('Error al obtener las ventas del cliente', 'error')
+    }
+    this.showVentasSpinner = false
     this.spinnerService.showSpinner(false);
   }
 
@@ -341,6 +367,10 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
         return 'Venta'
       case 'PAID':
         return 'Abono'
+      case 'BORROWED':
+        return 'Préstamo'
+      case 'RETURNED':
+        return 'Devolución'
     }
     return 'Desconocido'
   }
@@ -353,7 +383,20 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
         return 'Nequi'
       case 'DAVIPLATA':
         return 'Daviplata'
+      case 'BANCOLOMBIA':
+        return 'Bancolombia'
     }
     return ''
+  }
+
+  openDialog(index: number) {
+    switch (index) {
+      case 0:
+        this.modalService.open(PaymentModalComponent)
+        break;
+      case 1:
+        this.modalService.open(ContainersModalComponent)
+        break;
+    }
   }
 }

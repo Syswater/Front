@@ -7,4 +7,5 @@ export interface Sale {
     user_id: number;
     value_paid: number;
     product_inventory_id: number;
+    date: Date
 }

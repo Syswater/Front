@@ -99,7 +99,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
         with_order: true,
         filter: this.filter,
         with_sale: this.role == 'Distribuidor' ? true : undefined
-      })).map(d => ({ ...d, editable: false, quantity: '-', unit_value: this.preSaleStorage.actualDistribution?.route.price, value_paid: d.sale ? d.sale.value_paid : 0 }));
+      })).map(d => ({ ...d, editable: false, quantity: '-', unit_value: this.preSaleStorage.actualDistribution?.route.price, value_paid: d.sale ? d.sale.value_paid : 0, payment_method: 'EFECTIVO' }));
     }
     this.spinner.showSpinner(false);
   }
@@ -167,7 +167,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
   async updateSale(element: any) {
     try {
       this.spinner.showSpinner(true);
-      await this.saleService.updateSale(element.sale);
+      await this.saleService.updateSale({ ...element.sale,  payment_method: element.payment_method});
       await this.clientService.updateClient({ id: element.id, is_served: true });
       showPopUp('Venta actualizada con exito', 'success')
       this.getClientsByRoute(this.preSaleStorage.actualDistribution?.route)
@@ -188,7 +188,8 @@ export class PresalesComponent implements OnInit, OnDestroy {
           distribution_id: this.preSaleStorage.actualDistribution!.id,
           value_paid: element.value_paid,
           user_id: this.appStorage.user.id,
-          product_inventory_id: 1
+          product_inventory_id: 1,
+          payment_method: element.payment_method
         });
       }
       await this.clientService.updateClient({ id: element.id, is_served: true });

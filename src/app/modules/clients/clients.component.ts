@@ -102,7 +102,6 @@ export class ClientsComponent implements OnInit, OnDestroy {
         await this.getClientsByRoute(this.clientStorage.actualRoute)
       }
     } else {
-      console.log('entro')
       this.filter = `${textOrEvent}`
       await this.getClientsByRoute(this.clientStorage.actualRoute)
     }

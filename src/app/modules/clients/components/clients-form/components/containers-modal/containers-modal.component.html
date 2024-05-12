@@ -1,0 +1,51 @@
+<app-modal>
+  <div class="p-10" [formGroup]="formContainers">
+    <h1 class="text-2xl font-black text-center">
+      Registrar préstamo/devolución cliente<br /><span class="text-green_1">{{
+        clientStorage.actualClient?.name
+      }}</span>
+    </h1>
+
+    <p class="text-xl mt-10">Cantidad envases</p>
+    <mat-form-field appearance="fill" class="w-full">
+      <input
+        matInput
+        placeholder="Digite la cantidad"
+        type="number"
+        min="0"
+        formControlName="value"
+      />
+    </mat-form-field>
+
+    <p class="text-xl mt-5">Tipo</p>
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-select formControlName="type">
+        <mat-option value="BORROWED">Préstamo</mat-option>
+        <mat-option value="RETURNED">Devolución</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="grid grid-cols-2 gap-5 mt-5">
+      <button
+        mat-raised-button
+        style="background-color: #000000; color: white"
+        (click)="close()"
+      >
+        Cancelar
+      </button>
+      <button
+        mat-raised-button
+        type="button"
+        [style]="
+          formContainers.invalid
+            ? 'background-color: #999; color: white'
+            : 'background-color: #6fdb90; color: white'
+        "
+        [disabled]="formContainers.invalid"
+        (click)="createContainer()"
+      >
+        Registrar
+      </button>
+    </div>
+  </div>
+</app-modal>
