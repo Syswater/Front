@@ -31,3 +31,7 @@ body {
 .mdc-evolution-chip-set__chips {
   justify-content: center !important;
 }
+
+.mat-expansion-panel-body{
+  padding: 0 !important;
+}

@@ -13,7 +13,8 @@ module.exports = {
         blue_3: '#6E96DB',
         green_1: '#6EDAB6',
         green_2: '#6FDB90',
-        gray_dark: '#7E86A0'
+        gray_dark: '#7E86A0',
+        warn: '#f44336'
       }
     },
   },

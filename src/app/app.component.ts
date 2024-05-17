@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from 'src/data/services/auth.service';
 import { SpinnerService } from 'src/data/services/spinner.service';
 import { AppStorage } from './app.storage';
@@ -12,7 +12,7 @@ import { RoleComponent } from './modules/login/components/role/role.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'FrontSysWater';
 
   constructor(
@@ -20,7 +20,12 @@ export class AppComponent {
     public spinner: SpinnerService,
     public appStorage: AppStorage,
     private modalService: ModalService
-  ) {}
+  ) {
+  }
+  
+  ngOnInit(): void {
+    this.checkViewport()
+  }
 
   logOut() {
     this.modalService.open(LogoutModalComponent)
@@ -28,5 +33,14 @@ export class AppComponent {
 
   changeRole(){
     this.modalService.open(RoleComponent)
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.checkViewport();
+  }
+
+  checkViewport() {
+    this.appStorage.isDesktop = window.innerWidth >= 768;
   }
 }

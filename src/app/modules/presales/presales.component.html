@@ -85,7 +85,7 @@
     *ngIf="distributions.length > 0"
   >
     <ng-container matColumnDef="Orden">
-      <th mat-header-cell *matHeaderCellDef>Orden</th>
+      <th mat-header-cell *matHeaderCellDef>#</th>
       <td
         mat-cell
         *matCellDef="let element"
@@ -100,7 +100,23 @@
     </ng-container>
 
     <ng-container matColumnDef="Cliente">
-      <th mat-header-cell *matHeaderCellDef>Cliente</th>
+      <th mat-header-cell *matHeaderCellDef style="padding: 0; min-width: 150px;">Cliente</th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [style]="
+          element.is_served && role == 'Distribuidor'
+            ? ' background-color: rgba(109, 219, 218, 0.1); width: fit-content'
+            : ''
+        "
+        style="padding: 0;"
+      >
+        <p>{{ element.name }}</p>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deuda/envases" *ngIf="role == 'Distribuidor'">
+      <th mat-header-cell *matHeaderCellDef style="padding: 0; min-width: 83px;">Deuda / Envases</th>
       <td
         mat-cell
         *matCellDef="let element"
@@ -109,10 +125,17 @@
             ? ' background-color: rgba(109, 219, 218, 0.1);'
             : ''
         "
+        style="padding: 0; min-width: 83px;"
       >
-        {{ element.name }}
+        <p class="text-warn" *ngIf="element.totalDebt">
+         $. {{ element.totalDebt | formatNumberMiles }}
+        </p>
+        <p class="text-blue_3" *ngIf="element.borrowedContainers">
+          {{ element.borrowedContainers }} envases
+        </p>
       </td>
     </ng-container>
+
 
     <ng-container matColumnDef="Telefono" *ngIf="role == 'Prevendedor'">
       <th mat-header-cell *matHeaderCellDef>Telefono</th>
@@ -134,9 +157,7 @@
         mat-cell
         *matCellDef="let element"
         [style]="
-          element.is_served
-            ? ' background-color: rgba(109, 219, 218, 0.1)'
-            : ''
+          element.is_served ? ' background-color: rgba(109, 219, 218, 0.1)' : ''
         "
       >
         <span class="text-blue_3 font-black" *ngIf="element.neighborhood"
@@ -147,7 +168,7 @@
     </ng-container>
 
     <ng-container matColumnDef="Observaciones" *ngIf="role == 'Distribuidor'">
-      <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+      <th mat-header-cell *matHeaderCellDef style="padding: 0; min-width: 160px;">Observaciones</th>
       <td
         mat-cell
         *matCellDef="let element"
@@ -173,7 +194,7 @@
     </ng-container>
 
     <ng-container matColumnDef="Cantidad" *ngIf="role == 'Distribuidor'">
-      <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+      <th mat-header-cell *matHeaderCellDef style="padding: 0">Cantidad</th>
       <td
         mat-cell
         *matCellDef="let element"
@@ -182,6 +203,7 @@
             ? ' background-color: rgba(109, 219, 218, 0.1); width: 100px'
             : 'width: 100px'
         "
+        style="padding: 0"
       >
         <div class="grid grid-cols-2">
           <span class="flex items-center justify-center inline-block">{{
@@ -232,7 +254,7 @@
     </ng-container>
 
     <ng-container matColumnDef="Total pagado" *ngIf="role == 'Distribuidor'">
-      <th mat-header-cell *matHeaderCellDef>Total pagado</th>
+      <th mat-header-cell *matHeaderCellDef style="padding: 0">Total pagado</th>
       <td
         mat-cell
         *matCellDef="let element"
@@ -241,6 +263,7 @@
             ? ' background-color: rgba(109, 219, 218, 0.1); width: 150px'
             : 'width: 150px'
         "
+        style="padding: 0"
       >
         <div class="grid grid-cols-2">
           <p class="flex items-center inline-block">

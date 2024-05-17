@@ -10,16 +10,18 @@ import { NavigationStart, Router } from '@angular/router';
 export class AuthService {
 
   url = environment.API_URL
-  isLoginView = window.location.pathname == '/login' || window.location.pathname == '/'
+  isLoginView = window.location.pathname == '/login'
 
   constructor(private http: HttpClient, private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         if (event.navigationTrigger === 'popstate') {
-          this.isLoginView = window.location.pathname == '/login' || window.location.pathname == '/'
+          this.isLoginView = window.location.pathname == '/login'
         }
       }
     });
+    const token = localStorage.getItem('token')
+    this.isLoginView = !token
   }
 
   async login(credentials: any) {

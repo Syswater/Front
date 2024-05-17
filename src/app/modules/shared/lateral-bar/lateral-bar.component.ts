@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppStorage } from 'src/app/app.storage';
@@ -9,34 +9,10 @@ import { AppStorage } from 'src/app/app.storage';
   styleUrls: ['./lateral-bar.component.css']
 })
 export class LateralBarComponent implements OnInit, OnDestroy {
+  @Input() mode: 'Lateral' | 'Below' = 'Lateral'
   disabled_color = '#7E86A0'
   selected = this.appStorage.selectionMenu;
-  icons = [
-    {
-      iconPath: 'assets/icons/svg/dashboard_icon.svg',
-      size: '1.8rem',
-      redirectTo: 'preseller/dashboard',
-      text: 'Dashboard'
-    },
-    {
-      iconPath: 'assets/icons/svg/routes_icon.svg',
-      size: '1.8rem',
-      redirectTo: 'preseller/routes',
-      text: 'Rutas'
-    },
-    {
-      iconPath: 'assets/icons/svg/presales_icon.svg',
-      size: '1.8rem',
-      redirectTo: 'preseller/presales',
-      text: 'Preventas'
-    },
-    {
-      iconPath: 'assets/icons/svg/clients_icon.svg',
-      size: '1.8rem',
-      redirectTo: 'preseller/clients',
-      text: 'Clientes'
-    }
-  ]
+  icons: any[] = []
 
   $reloadMenu!: Subscription
 
@@ -52,6 +28,7 @@ export class LateralBarComponent implements OnInit, OnDestroy {
     const roleActual = `${localStorage.getItem('roleActual')}`
     switch (roleActual) {
       case 'Administrador':
+        this.icons = this.getRoutesAdmin()
         break;
       case 'Prevendedor':
         this.icons = this.getRoutesPreseller()
@@ -60,6 +37,39 @@ export class LateralBarComponent implements OnInit, OnDestroy {
         this.icons = this.getRoutesDistributor()
         break;
     }
+  }
+
+  getRoutesAdmin() {
+    return [
+      {
+        iconPath: 'assets/icons/svg/dashboard_icon.svg',
+        size: '1.8rem',
+        redirectTo: 'admin/dashboard',
+        text: 'Dashboard',
+        index: 0
+      },
+      {
+        iconPath: 'assets/icons/svg/routes_icon.svg',
+        size: '1.8rem',
+        redirectTo: 'admin/routes',
+        text: 'Rutas',
+        index: 1
+      },
+      {
+        iconPath: 'assets/icons/svg/clients_icon.svg',
+        size: '1.8rem',
+        redirectTo: 'admin/clients',
+        text: 'Clientes',
+        index: 2
+      },
+      {
+        iconPath: 'assets/icons/svg/reports_icon.svg',
+        size: '1.8rem',
+        redirectTo: 'admin/reports',
+        text: 'Reportes',
+        index: 3
+      }
+    ]
   }
 
   redirectTo(path: string) {
@@ -72,28 +82,31 @@ export class LateralBarComponent implements OnInit, OnDestroy {
         iconPath: 'assets/icons/svg/dashboard_icon.svg',
         size: '1.8rem',
         redirectTo: 'preseller/dashboard',
-        text: 'Dashboard'
+        text: 'Dashboard',
+        index: 0
       },
       {
         iconPath: 'assets/icons/svg/routes_icon.svg',
         size: '1.8rem',
         redirectTo: 'preseller/routes',
-        text: 'Rutas'
+        text: 'Rutas',
+        index: 1
       },
       {
         iconPath: 'assets/icons/svg/presales_icon.svg',
         size: '1.8rem',
         redirectTo: 'preseller/presales',
-        text: 'Preventas'
+        text: 'Preventas',
+        index: 2
       },
       {
         iconPath: 'assets/icons/svg/clients_icon.svg',
         size: '1.8rem',
         redirectTo: 'preseller/clients',
-        text: 'Clientes'
+        text: 'Clientes',
+        index: 3
       }
     ]
-
   }
 
   getRoutesDistributor() {
@@ -102,33 +115,42 @@ export class LateralBarComponent implements OnInit, OnDestroy {
         iconPath: 'assets/icons/svg/dashboard_icon.svg',
         size: '1.8rem',
         redirectTo: 'distributor/dashboard',
-        text: 'Dashboard'
+        text: 'Dashboard',
+        index: 0
       },
       {
         iconPath: 'assets/icons/svg/routes_icon.svg',
         size: '1.8rem',
         redirectTo: 'distributor/routes',
-        text: 'Rutas'
+        text: 'Rutas',
+        index: 1
       },
       {
         iconPath: 'assets/icons/svg/distribution_icon.svg',
         size: '1.8rem',
         redirectTo: 'distributor/distribution',
-        text: 'Distribucion'
+        text: 'Distribucion',
+        index: 2
       },
       {
         iconPath: 'assets/icons/svg/clients_icon.svg',
         size: '1.8rem',
         redirectTo: 'distributor/clients',
-        text: 'Clientes'
+        text: 'Clientes',
+        index: 3
       },
       {
         iconPath: 'assets/icons/svg/expenses_icon.svg',
         size: '1.8rem',
         redirectTo: 'distributor/expenses',
-        text: 'Gastos'
+        text: 'Gastos',
+        index: 4
       }
     ]
 
+  }
+
+  getPartIcons(index: number): any {
+    return index == 0 ? this.icons.slice(0, Math.floor(this.icons.length / 2)) : this.icons.slice(Math.floor(this.icons.length / 2))
   }
 }

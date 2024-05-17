@@ -1,9 +1,14 @@
 <div
   class="h-screen fixed bg-blue_dark p-2 overflow-hidden"
-  [style.width.px]="appStorage.lateralMenuExpansion ? 150 : 70"
+  [ngStyle]="
+    mode == 'Lateral'
+      ? { width: appStorage.lateralMenuExpansion ? '150px' : '70px' }
+      : { width: '100%' }
+  "
   style="transition: ease-in-out 200ms"
+  [style]="mode == 'Below' ? 'height: 48px' : ''"
 >
-  <div *ngIf="!appStorage.lateralMenuExpansion">
+  <div *ngIf="mode == 'Lateral' && !appStorage.lateralMenuExpansion">
     <img
       src="assets/icons/logo_basic_icon.png"
       alt=""
@@ -11,28 +16,31 @@
       width="54"
     />
     <div
-      *ngFor="let icon of icons; index as i"
+      *ngFor="let icon of icons"
       class="relative"
-      (click)="appStorage.selectionMenu = i; redirectTo(icon.redirectTo)"
+      (click)="
+        appStorage.selectionMenu = icon.index; redirectTo(icon.redirectTo)
+      "
       style="transition: ease-in-out 200ms"
     >
       <app-icon
         [iconPath]="icon.iconPath"
-        [color]="i == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'"
+        [color]="icon.index == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'"
         class="cursor-pointer"
         [size]="icon.size"
       ></app-icon>
       <div class="h-5"></div>
       <div
-        *ngIf="i == appStorage.selectionMenu"
+        *ngIf="icon.index == appStorage.selectionMenu"
         class="h-full translate-y-[-10px] translate-x-[-8px] w-1 absolute top-0"
         [ngStyle]="{
-          'background-color': i == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'
+          'background-color':
+            icon.index == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'
         }"
       ></div>
     </div>
   </div>
-  <div *ngIf="appStorage.lateralMenuExpansion">
+  <div *ngIf="mode == 'Lateral' && appStorage.lateralMenuExpansion">
     <div class="text-center">
       <img
         src="assets/icons/logo-oneline.png"
@@ -42,32 +50,79 @@
       />
     </div>
     <div
-      *ngFor="let icon of icons; index as i"
+      *ngFor="let icon of icons"
       class="relative cursor-pointer"
-      (click)="appStorage.selectionMenu = i; redirectTo(icon.redirectTo)"
+      (click)="
+        appStorage.selectionMenu = icon.index; redirectTo(icon.redirectTo)
+      "
     >
       <app-icon
         [iconPath]="icon.iconPath"
-        [color]="i == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'"
+        [color]="icon.index == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'"
         class="text-left translate-x-[10px] inline-block"
         [size]="icon.size"
       ></app-icon>
       <span
-        [style]="i == appStorage.selectionMenu ? 'color: #6DDBDA' : 'color: #7E86A0'"
+        [style]="
+          icon.index == appStorage.selectionMenu
+            ? 'color: #6DDBDA'
+            : 'color: #7E86A0'
+        "
         class="absolute left-12 top-1.5 font-bold text-sm"
         >{{ icon.text }}</span
       >
       <div class="h-5"></div>
       <div
-        *ngIf="i == appStorage.selectionMenu"
+        *ngIf="icon.index == appStorage.selectionMenu"
         class="h-full translate-y-[-10px] translate-x-[-8px] w-1 absolute top-0"
         [ngStyle]="{
-          'background-color': i == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'
+          'background-color':
+            icon.index == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'
         }"
       ></div>
     </div>
-    <p style="color: #7e86a0" class="absolute bottom-2 font-bold text-sm w-[130px] text-center">
+    <p
+      style="color: #7e86a0"
+      class="absolute bottom-2 font-bold text-sm w-[130px] text-center"
+    >
       Version 1.0.0
     </p>
+  </div>
+  <div *ngIf="mode == 'Below'" class="flex justify-around">
+    <span
+      *ngFor="let icon of getPartIcons(0)"
+      (click)="
+        appStorage.selectionMenu = icon.index; redirectTo(icon.redirectTo)
+      "
+    >
+      <app-icon
+        [iconPath]="icon.iconPath"
+        [color]="icon.index == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'"
+        class="cursor-pointer inline"
+        [size]="icon.size"
+        [matTooltip]="icon.text"
+      ></app-icon>
+    </span>
+    <img
+      src="assets/icons/logo_basic_icon.png"
+      alt=""
+      class="inline"
+      width="50"
+      *ngIf="appStorage.actualRol != 'Distribuidor'"
+    />
+    <span
+      *ngFor="let icon of getPartIcons(1); index as i"
+      (click)="
+        appStorage.selectionMenu = icon.index; redirectTo(icon.redirectTo)
+        "
+        [matTooltip]="icon.text"
+    >
+      <app-icon
+        [iconPath]="icon.iconPath"
+        [color]="icon.index == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'"
+        class="cursor-pointer inline"
+        [size]="icon.size"
+      ></app-icon>
+    </span>
   </div>
 </div>

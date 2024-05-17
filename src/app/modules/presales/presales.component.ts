@@ -45,6 +45,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
   displayedColumnsDistribution: string[] = [
     'Orden',
     'Cliente',
+    'deuda/envases',
     'Dirección',
     'Observaciones',
     'Cantidad',

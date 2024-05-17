@@ -11,6 +11,7 @@ export class AppStorage {
   lateralMenuExpansion = false
   selectionMenu: number = 0;
   moduleActual: string = 'Dashboard';
+  isDesktop: boolean = false;
 
   constructor(private jwtHelper: JwtHelperService) {
     const userData = localStorage.getItem('token') ? this.jwtHelper.decodeToken(`${localStorage.getItem('token')}`).user : null;

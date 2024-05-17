@@ -9,6 +9,8 @@ import { PresalesComponent } from './modules/presales/presales.component';
 import { DashboardDistributorComponent } from './modules/dashboard-distributor/dashboard-distributor.component';
 import { NotFoundComponent } from './modules/not-found/not-found.component';
 import { ExpensesComponent } from './modules/expenses/expenses.component';
+import { ReportsComponent } from './modules/reports/reports.component';
+import { DashboardAdminComponent } from './modules/dashboard-admin/dashboard-admin.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -28,6 +30,14 @@ const routes: Routes = [
       { path: 'clients', component: ClientsComponent, canActivate: [AuthGuard] },
       { path: 'expenses', component: ExpensesComponent, canActivate: [AuthGuard] },
       { path: 'distribution', component: PresalesComponent, canActivate: [AuthGuard] }
+    ]
+  },
+  {
+    path: 'admin', children: [
+      { path: 'dashboard', component: DashboardAdminComponent, canActivate: [AuthGuard] },
+      { path: 'routes', component: RoutesComponent, canActivate: [AuthGuard] },
+      { path: 'clients', component: ClientsComponent, canActivate: [AuthGuard] },
+      { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
     ]
   },
   { path: '**', component: NotFoundComponent }

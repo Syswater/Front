@@ -1,61 +1,83 @@
-<app-lateral-bar *ngIf="!auth.isLoginView"></app-lateral-bar>
-<div
-  [style]="
-    appStorage.lateralMenuExpansion
-      ? 'width: calc(100vw - 150px); transform: translateX(150px);'
-      : 'width: calc(100vw - 70px); transform: translateX(70px);'
-  "
-  *ngIf="!auth.isLoginView"
-  style="transition: ease-in-out 200ms;"
->
+<ng-container *ngIf="!auth.isLoginView">
+  <app-lateral-bar mode="Lateral" *ngIf="appStorage.isDesktop"></app-lateral-bar>
+  
   <div
-    class="h-15 bg-white"
-    [style]="
-      appStorage.lateralMenuExpansion
-        ? 'width: calc(100vw - 150px)'
-        : 'width: calc(100vw - 70px)'
-    "
+    [ngClass]="{
+      'expanded': appStorage.lateralMenuExpansion,
+      'collapsed': !appStorage.lateralMenuExpansion
+    }"
+    [ngStyle]="{
+      width: appStorage.lateralMenuExpansion ? 'calc(100vw - 150px)' : 'calc(100vw - 70px)',
+      transform: appStorage.lateralMenuExpansion ? 'translateX(150px)' : 'translateX(70px)',
+      transition: 'ease-in-out 200ms'
+    }"
+    *ngIf="appStorage.isDesktop"
   >
-    <button
-      mat-icon-button
-      (click)="
-        appStorage.lateralMenuExpansion = !appStorage.lateralMenuExpansion
-      "
-    >
-      <mat-icon class="text-gray">menu</mat-icon>
-    </button>
-    <span class="translate-y-[-7px] inline-block text-gray_dark select-none">{{appStorage.moduleActual}}</span>
-    <div
-      class="float-right grid grid-cols-9 mr-2 cursor-pointer w-96"
-      [matMenuTriggerFor]="menu"
-    >
-      <div class="col-span-8 relative">
-        <p class="absolute top-2 text-right w-full pr-3 overflow-hidden whitespace-nowrap overflow-ellipsis">
-          {{ appStorage.user.name }}
-        </p>
-        <p class="absolute top-6 text-right w-full pr-3" style="color: #6ddbda">
-          <mat-icon class="">keyboard_arrow_down</mat-icon>
-          <span class="translate-y-[-7px] inline-block">{{ appStorage.actualRol }}</span>
-        </p>
-      </div>
-      <div class="mr-2 mt-1">
-        <img src="/assets/icons/svg/user_icon.svg" width="40" />
+    <div class="h-15 bg-white" [ngStyle]="{ width: appStorage.lateralMenuExpansion ? 'calc(100vw - 150px)' : 'calc(100vw - 70px)' }">
+      <button mat-icon-button (click)="appStorage.lateralMenuExpansion = !appStorage.lateralMenuExpansion">
+        <mat-icon class="text-gray">menu</mat-icon>
+      </button>
+      <span class="translate-y-[-7px] inline-block text-gray_dark select-none">{{ appStorage.moduleActual }}</span>
+      <div class="float-right grid grid-cols-9 mr-2 cursor-pointer w-96" [matMenuTriggerFor]="menu">
+        <div class="col-span-8 relative">
+          <p class="absolute top-2 text-right w-full pr-3 overflow-hidden whitespace-nowrap overflow-ellipsis">
+            {{ appStorage.user.name }}
+          </p>
+          <p class="absolute top-6 text-right w-full pr-3" style="color: #6ddbda">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+            <span class="translate-y-[-7px] inline-block">{{ appStorage.actualRol }}</span>
+          </p>
+        </div>
+        <div class="mr-2 mt-1">
+          <img src="/assets/icons/svg/user_icon.svg" width="40" alt="User Icon" />
+        </div>
       </div>
     </div>
+
+    <div>
+      <router-outlet></router-outlet>
+    </div>
   </div>
-  <div
-    class=""
-    [style]="
-      appStorage.lateralMenuExpansion
-        ? 'width: calc(100vw - 150px)'
-        : 'width: calc(100vw - 70px)'
-    "
-  >
-    <router-outlet></router-outlet>
-  </div>
-</div>
+
+    <div [ngStyle]="{ transition: 'ease-in-out 200ms' }" *ngIf="!appStorage.isDesktop" >
+      <div class="h-[48px] bg-white">
+        <span
+          class="translate-y-[10px] inline-block text-gray_dark select-none ml-2"
+          >{{ appStorage.moduleActual }}</span
+        >
+        <div
+          class="float-right grid grid-cols-6 cursor-pointer w-[268px]"
+          [matMenuTriggerFor]="menu"
+        >
+          <div class="col-span-5 relative">
+            <p
+              class="absolute top-2 text-right w-full pr-3 overflow-hidden whitespace-nowrap overflow-ellipsis"
+            >
+              {{ appStorage.user.name }}
+            </p>
+            <p class="absolute top-6 text-right w-full pr-3" style="color: #6ddbda">
+              <mat-icon>keyboard_arrow_down</mat-icon>
+              <span class="translate-y-[-7px] inline-block">{{
+                appStorage.actualRol
+              }}</span>
+            </p>
+          </div>
+          <div class="mr-2 mt-1 col-span-1">
+            <img src="/assets/icons/svg/user_icon.svg" width="40" alt="User Icon" />
+          </div>
+        </div>
+      </div>
+      <div style="height: calc(100vh - 96px)">
+        <router-outlet></router-outlet>
+      </div>
+      <app-lateral-bar mode="Below"></app-lateral-bar>
+    </div>
+
+</ng-container>
+
 <router-outlet *ngIf="auth.isLoginView"></router-outlet>
 <app-spinner *ngIf="spinner.IsShowSpinner"></app-spinner>
+
 <mat-menu #menu="matMenu" xPosition="before">
   <button mat-menu-item (click)="changeRole()" *ngIf="appStorage.user.roles?.length > 1">
     <mat-icon>account_circle</mat-icon>

@@ -14,6 +14,7 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerIntl } from '@angular/material/datepicker';
 import { FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import { AppStorage } from 'src/app/app.storage';
 @Component({
   selector: 'app-routes',
   templateUrl: './routes.component.html',
@@ -30,6 +31,7 @@ export class RoutesComponent implements OnInit {
   roleActual = ''
 
   constructor(
+    public appStorage: AppStorage,
     private routeService: RouteService,
     private spinnerService: SpinnerService,
     private routeStorage: RouteStorage,

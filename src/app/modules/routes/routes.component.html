@@ -1,14 +1,14 @@
-<div class="px-5 pt-2 pb-10">
-  <mat-card class="px-5 mb-5 mt-5">
+<div class="px-2 md:px-5 pt-2 pb-14">
+  <mat-card class="py-5 md:py-1 px-5 mb-5 mt-1 md:mt-5">
     <div class="grid grid-cols-12 items-center">
-      <div class="col-span-1">
+      <div class="col-span-12 md:col-span-1">
         <p class="text-lg">
           # Rutas:
           <span class="text-blue_3 font-black">{{ routes.length }}</span>
         </p>
       </div>
 
-      <mat-form-field class="mr-5 translate-y-2 col-span-9">
+      <mat-form-field class="md:mr-5 translate-y-2 col-span-12 md:col-span-9">
         <mat-label>Buscar Ruta</mat-label>
         <input
           matInput
@@ -50,10 +50,26 @@
   </mat-card>
 
   <mat-accordion>
-    <mat-expansion-panel *ngFor="let route of routes">
-      <mat-expansion-panel-header>
-        <div class="w-full h-full grid grid-cols-12 items-center">
-          <div class="col-span-2" *ngIf="roleActual == 'Administrador'">
+    <mat-expansion-panel *ngFor="let route of routes" style="text-align: center;">
+      <mat-expansion-panel-header
+        [ngStyle]="{
+          display: appStorage.isDesktop ? 'flex' : 'contents',
+        }"
+      >
+        <div class="w-full h-full grid grid-cols-12 text-left items-center py-5">
+          <div class="col-span-5" *ngIf="!appStorage.isDesktop"></div>
+          
+          <div class="col-span-7 md:col-span-2 rounded" *ngIf="!appStorage.isDesktop">
+            <p>
+              Ruta: <span class="text-blue_3">{{ route.name }}</span>
+            </p>
+          </div>
+          
+          <div class="col-span-5" *ngIf="!appStorage.isDesktop"></div>
+          <div
+            class="col-span-4 md:col-span-2" 
+            *ngIf="roleActual == 'Administrador' && appStorage.isDesktop"
+          >
             <button mat-icon-button (click)="showDialogRoute(route, 1)">
               <mat-icon>edit</mat-icon>
             </button>
@@ -61,27 +77,44 @@
               <mat-icon>delete</mat-icon>
             </button>
           </div>
-          <div class="col-span-2 rounded">
+
+          <div
+            class="absolute" 
+            *ngIf="roleActual == 'Administrador' && !appStorage.isDesktop"
+          >
+            <button mat-icon-button (click)="showDialogRoute(route, 1)" class="ml-5 translate-y-2">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="showDialogRoute(route, 2)" class="ml-5 translate-y-2">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <div class="col-span-7 md:col-span-2 rounded" *ngIf="appStorage.isDesktop">
             <p>
               Ruta: <span class="text-blue_3">{{ route.name }}</span>
             </p>
           </div>
 
-          <div class="col-span-2 rounded">
+          <div class="col-span-7 md:col-span-2 rounded">
             <p>
               Lugar de Reparto:
               <span class="text-blue_2">{{ route.location }}</span>
             </p>
           </div>
 
-          <div class="col-span-4 rounded">
+          <div class="col-span-5" *ngIf="!appStorage.isDesktop"></div>
+
+          <div class="col-span-7 md:col-span-4 rounded">
             <p>
               Días de Reparto:
               <span class="text-green_1">{{ route.weekdays }}</span>
             </p>
           </div>
 
-          <div class="col-span-2" [ngSwitch]="route.status">
+          <div class="col-span-5" *ngIf="!appStorage.isDesktop"></div>
+
+          <div class="col-span-7 md:col-span-2" [ngSwitch]="route.status">
             <p>
               Estado:
               <span *ngSwitchCase="'PREORDER'" class="text-blue_3"
@@ -103,12 +136,12 @@
       </mat-expansion-panel-header>
 
       <div class="grid grid-cols-3">
-        <div class="col-start-1 col-span-2">
+        <div class="col-span-3 md:col-span-2 pb-[16px] md:pl-[16px]">
           <table
             aria-describedby="weekdays"
             mat-table
             [dataSource]="[route]"
-            class="mat-elevation-z8"
+            class="mat-elevation-z8 mt-5"
           >
             <ng-container
               *ngFor="let weekday of weekdays"
@@ -131,7 +164,7 @@
         </div>
 
         <div
-          class="col-start-3 rounded centered-container"
+          class="rounded centered-container col-span-3 md:col-span-1 mb-5"
           [ngSwitch]="route.status"
         >
           <p>
@@ -209,7 +242,7 @@
           <button
             mat-raised-button
             type="button"
-            class="w-1/2 mt-5 bg-blue_3 text-white button-status"
+            class="w-1/2 my-5 bg-blue_3 text-white button-status"
             [style]="
               formDate.invalid
                 ? 'background-color: #E3E3E3; color: white'

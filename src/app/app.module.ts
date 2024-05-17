@@ -19,6 +19,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { NotFoundComponent } from './modules/not-found/not-found.component';
 import { DashboardDistributorModule } from './modules/dashboard-distributor/dashboard-distributor.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
+import { DashboardAdminComponent } from './modules/dashboard-admin/dashboard-admin.component';
+import { ReportsComponent } from './modules/reports/reports.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -27,6 +29,8 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     NotFoundComponent,
+    DashboardAdminComponent,
+    ReportsComponent,
   ],
   imports: [
     BrowserModule,
