@@ -1,32 +1,62 @@
 <app-modal>
   <div class="p-10" [formGroup]="formPayment">
     <h1 class="text-2xl font-black text-center">
-      Registrar abono cliente<br /><span class="text-green_1">{{
+      Registrar transacción cliente<br /><span class="text-green_1">{{
         clientStorage.actualClient?.name
       }}</span>
     </h1>
 
-    <p class="text-xl mt-10">Valor a abonar ($)</p>
-    <mat-form-field appearance="fill" class="w-full">
-      <input
-        matInput
-        placeholder="Digite el valor a abonar"
-        type="number"
-        step="500"
-        formControlName="value"
-      />
-    </mat-form-field>
+    <div class="grid grid-cols-2 gap-x-5">
 
-    <p class="text-xl mt-5">Tipo</p>
-    <mat-form-field appearance="fill" class="w-full">
-      <mat-select formControlName="payment_method">
-        <mat-option
-          *ngFor="let method of methods; index as i"
-          [value]="method.toUpperCase()"
-          >{{ method }}</mat-option
+      <mat-chip-listbox
+        class="col-span-2 w-full my-5"
+      >
+        <mat-chip-option
+          *ngFor="let chip of chips; index as i"
+          [selected]="chip.selected"
+          (click)="selectOption(i)"
+          [color]="chip.name == 'Abono' ? 'primary' : 'warn'"
+          style="display: inline-block;"
         >
-      </mat-select>
-    </mat-form-field>
+          {{ chip.name }}
+        </mat-chip-option>
+      </mat-chip-listbox>
+
+      <p class="text-xl mt-2 col-span-{{isAbonos()?'1':'2'}}">Valor de la transacción ($)</p>
+      <p class="text-xl mt-2" *ngIf="isAbonos()">Medio de pago</p>
+
+      <mat-form-field appearance="fill" class="w-full col-span-{{isAbonos()?'1':'2'}}" >
+        <input
+          matInput
+          placeholder="Digite el valor de la transacción"
+          type="number"
+          step="500"
+          formControlName="value"
+        />
+        <mat-error *ngIf="formPayment.get('value')?.hasError('min')">No se admiten números negativos</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="w-full" *ngIf="isAbonos()">
+        <mat-select formControlName="payment_method">
+          <mat-option
+            *ngFor="let method of methods; index as i"
+            [value]="method.toUpperCase()"
+            >{{ method }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <p class="text-xl mt-2 col-span-2">Recibido por</p>
+      <mat-form-field appearance="fill" class="w-full col-span-2">
+        <mat-select formControlName="user_id">
+          <mat-option
+            *ngFor="let user of users; index as i"
+            [value]="user.id"
+            >{{ user.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
 
     <div class="grid grid-cols-2 gap-5 mt-5">
       <button

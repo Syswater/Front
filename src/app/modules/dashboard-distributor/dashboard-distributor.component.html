@@ -62,12 +62,17 @@
           img_path="assets/icons/svg/expenses_icon.svg"
         ></app-card>
         <app-card
-          title="Envases prestados"
-          [footer]="getTotalDebtAndEnvases().totalEnvases + ' Envases'"
-          color="green_2"
-          [height]="32"
-          img_path="/assets/icons/icon4.png"
-        ></app-card>
+        title="Deuda / Envases Prestados"
+        [footer]="
+          '$. ' +
+          (getTotalDebtAndEnvases().totalDebt | formatNumberMiles) +
+          ' / ' +
+          getTotalDebtAndEnvases().totalEnvases + ' u'
+        "
+        color="green_2"
+        [height]="32"
+        img_path="/assets/icons/icon4.png"
+      ></app-card>
       </div>
       <div class="mt-5 grid grid-cols-2 gap-10">
         <mat-card class="p-5">

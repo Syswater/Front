@@ -7,4 +7,5 @@ export interface TransactionPayment {
     total:          number;
     user_id:        number;
     customer_id:    number;
+    user_name:      string;
 }

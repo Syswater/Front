@@ -167,7 +167,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
   async updateSale(element: any) {
     try {
       this.spinner.showSpinner(true);
-      await this.saleService.updateSale({ ...element.sale,  payment_method: element.payment_method});
+      await this.saleService.updateSale({ ...element.sale, payment_method: element.payment_method });
       await this.clientService.updateClient({ id: element.id, is_served: true });
       showPopUp('Venta actualizada con exito', 'success')
       this.getClientsByRoute(this.preSaleStorage.actualDistribution?.route)
@@ -180,7 +180,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
   async createSale(element: any) {
     try {
       this.spinner.showSpinner(true);
-      if (element.quantity != '-') {
+      if (element.order || element.quantity != '-') {
         await this.saleService.createSale({
           amount: element.order ? element.order.amount : element.quantity == '-' ? 0 : element.quantity,
           unit_value: element.unit_value,

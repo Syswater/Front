@@ -5,6 +5,7 @@ import { MaterialModule } from '../material/material.module';
 import { CardInfoComponent } from './components/card-info/card-info.component';
 import { CardComponent } from './components/card/card.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
   imports: [
     CommonModule,
     MaterialModule,
-    NgxChartsModule
+    NgxChartsModule,
+    SharedModule
   ],
   exports: [
     CardComponent,

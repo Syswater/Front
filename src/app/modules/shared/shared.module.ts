@@ -8,6 +8,7 @@ import { SpinnerComponent } from './spinner/spinner.component';
 import { CircleButtonComponent } from './circle-button/circle-button.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { FormatNumberPipe } from './pipes/format-number.pipe';
+import { ScrolldetectorDirective } from './directives/scrolldetector.directive';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { FormatNumberPipe } from './pipes/format-number.pipe';
     SpinnerComponent,
     CircleButtonComponent,
     ConfirmationComponent,
-    FormatNumberPipe
+    FormatNumberPipe,
+    ScrolldetectorDirective
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import { FormatNumberPipe } from './pipes/format-number.pipe';
     SpinnerComponent,
     CircleButtonComponent,
     ConfirmationComponent,
-    FormatNumberPipe
+    FormatNumberPipe,
+    ScrolldetectorDirective
   ]
 })
 export class SharedModule { }

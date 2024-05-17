@@ -23,6 +23,7 @@ import { Sale } from 'src/data/models/sale';
 import { SalesService } from 'src/data/services/sales.service';
 import { PaymentModalComponent } from './components/payment-modal/payment-modal.component';
 import { ContainersModalComponent } from './components/containers-modal/containers-modal.component';
+import { AppStorage } from 'src/app/app.storage';
 
 @Component({
   selector: 'app-clients-form',
@@ -37,19 +38,21 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     'Tipo',
     'Medio',
     'Total',
+    'User',
   ];
-  displayedColumnsEnvases: string[] = ['Fecha', 'Cantidad', 'Tipo', 'Total'];
+  displayedColumnsEnvases: string[] = ['Fecha', 'Cantidad', 'Tipo', 'Total', 'User'];
   displayedColumnsVentas: string[] = [
     'Fecha',
     'Cantidad',
     'Precio',
     'Total',
-    'Valor pagado'
+    'Valor pagado',
+    'User'
   ];
   tape_preference = ['NORMAL', 'SERVIFACIL'];
   dataSource = new MatTableDataSource<any>([]);
-  dataSourceAbonos: TransactionPayment[] = [];
-  dataSourceEnvases: TransactionContainer[] = [];
+  dataSourceAbonos = new MatTableDataSource<TransactionPayment>([]);
+  dataSourceEnvases = new MatTableDataSource<TransactionContainer>([]);
   dataSourceVentas: Sale[] = [];
   client = this.clientStorage.actualClient;
   formClient = this.formBuilder.group({
@@ -89,6 +92,12 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   $reloadTransactionPayment!: Subscription
   $reloadTransactionContainers!: Subscription
   $reloadNotesClient!: Subscription
+  pageContainers: number = 1;
+  totalPagesContainers: number = 100;
+  totalPagesPayment: number = 100;
+  pagePayment: number = 1;
+  isActiveUpdate = true
+  $changesForm!: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -100,7 +109,8 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     private clientService: ClientService,
     private preSaleStorage: PresalesStorage,
     private transactionService: TransactionService,
-    private salesService: SalesService
+    private salesService: SalesService,
+    public appStorage: AppStorage
   ) { }
 
   ngOnDestroy(): void {
@@ -108,6 +118,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     this.$reloadTransactionPayment.unsubscribe();
     this.$reloadTransactionContainers.unsubscribe();
     this.$reloadNotesClient.unsubscribe();
+    this.$changesForm.unsubscribe()
   }
 
   async ngOnInit() {
@@ -120,17 +131,27 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     ).map((note) => ({ editable: false, ...note }));
     this.spinnerService.showSpinner(false);
     if (this.clientStorage.actualClient) {
-      this.$reloadNotesClient = this.clientStorage.getObservable('reloadNotesClient').subscribe(()=> {
+      this.isActiveUpdate = false
+      this.$changesForm = this.formClient.valueChanges.subscribe(()=>{
+        this.isActiveUpdate = true
+      })
+      this.$reloadNotesClient = this.clientStorage.getObservable('reloadNotesClient').subscribe(() => {
         this.dataSource.data = (
           this.clientStorage.actualClient
             ? this.clientStorage.actualClient.note
             : []
         ).map((note) => ({ editable: false, ...note }));
       })
-      this.$reloadTransactionPayment = this.clientStorage.getObservable('reloadTransactionPayment').subscribe(() => this.getDataTransactionPayment())
-      this.$reloadTransactionContainers = this.clientStorage.getObservable('reloadTransactionContainers').subscribe(() => this.getDataTransactionContainers())
-      this.getDataTransactionPayment()
-      this.getDataTransactionContainers()
+      this.$reloadTransactionPayment = this.clientStorage.getObservable('reloadTransactionPayment').subscribe(() => {
+        this.pagePayment = 1
+        this.dataSourceAbonos.data = []
+        this.getDataTransactionPayment(this.pagePayment)
+      })
+      this.$reloadTransactionContainers = this.clientStorage.getObservable('reloadTransactionContainers').subscribe(() => {
+        this.pageContainers = 1
+        this.dataSourceEnvases.data = []
+        this.getDataTransactionContainers(this.pageContainers)
+      })
       this.getSalesClients()
     }
   }
@@ -299,11 +320,14 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  async getDataTransactionPayment() {
+  async getDataTransactionPayment(page: number) {
     try {
       this.spinnerService.showSpinner(true);
       this.showAbonosSpinner = true
-      this.dataSourceAbonos = (await this.transactionService.getTransactionsPayments({ page: 1, per_page: 5, customer_id: this.clientStorage.actualClient!.id })).items as TransactionPayment[]
+      const response = await this.transactionService.getTransactionsPayments({ page, per_page: 10, customer_id: this.clientStorage.actualClient!.id })
+      const items = response.items as TransactionPayment[]
+      this.totalPagesPayment = response.totalPages
+      this.dataSourceAbonos.data = [...this.dataSourceAbonos.data, ...items]
     } catch (error) {
       showPopUp('Error al obtener las transacciones de abonos/deudas', 'error')
     }
@@ -311,11 +335,14 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     this.showAbonosSpinner = false
   }
 
-  async getDataTransactionContainers() {
+  async getDataTransactionContainers(page: number) {
     try {
       this.spinnerService.showSpinner(true);
       this.showDevolucionesSpinner = true
-      this.dataSourceEnvases = (await this.transactionService.getTransactionsContainers({ page: 1, per_page: 5, customer_id: this.clientStorage.actualClient!.id })).items as TransactionContainer[]
+      const response = await this.transactionService.getTransactionsContainers({ page, per_page: 10, customer_id: this.clientStorage.actualClient!.id });
+      const items = response.items as TransactionContainer[];
+      this.totalPagesContainers = response.totalPages;
+      this.dataSourceEnvases.data = [...this.dataSourceEnvases.data, ...items];
     } catch (error) {
       showPopUp('Error al obtener las transacciones de prestamos/devoluciones', 'error')
     }
@@ -377,6 +404,14 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       case 1:
         this.modalService.open(ContainersModalComponent)
         break;
+    }
+  }
+
+  getNextPage(option: number) {
+    if (option == 0) {
+      if (this.pagePayment < this.totalPagesPayment) this.getDataTransactionPayment(++this.pagePayment);
+    } else {
+      if (this.pageContainers < this.totalPagesContainers) this.getDataTransactionContainers(++this.pageContainers);
     }
   }
 }

@@ -31,7 +31,7 @@
         title="Deuda / Envases Prestados"
         [footer]="
           '$. ' +
-          getTotalDebtAndEnvases().totalDebt +
+          (getTotalDebtAndEnvases().totalDebt | formatNumberMiles) +
           ' / ' +
           getTotalDebtAndEnvases().totalEnvases
         "
@@ -156,7 +156,7 @@
                 class="rounded-full border border-cyan border-8 flex items-center justify-center h-40 w-40 translate-y-6"
               >
                 <span class="text-cyan font-black text-2xl"
-                  >$. {{ getTotalDebtAndEnvases().totalDebt }}</span
+                  >$. {{ (getTotalDebtAndEnvases().totalDebt | formatNumberMiles) }}</span
                 >
               </div>
               <div
@@ -176,7 +176,7 @@
                 <span class="text-green_2 font-black">{{ getDate() }}</span>
                 se reportó una deuda de
                 <span class="font-black text-cyan"
-                  >$. {{ getTotalDebtAndEnvases().totalDebt }}</span
+                  >$. {{ (getTotalDebtAndEnvases().totalDebt | formatNumberMiles) }}</span
                 >
                 y un total de envases prestados de
                 <span class="font-black text-green_1"

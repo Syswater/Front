@@ -276,7 +276,11 @@
             <mat-icon matPrefix class="mr-2">payment</mat-icon>
             Abonos/Deudas
           </ng-template>
-          <div class="h-[270px] relative overflow-auto">
+          <div
+            class="h-[270px] relative overflow-auto"
+            appScrolldetector
+            (finalScroll)="getNextPage(0)"
+          >
             <table
               mat-table
               [dataSource]="dataSourceAbonos"
@@ -289,8 +293,10 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="Precio">
-                <th mat-header-cell *matHeaderCellDef>Precio</th>
-                <td mat-cell *matCellDef="let element">
+                <th mat-header-cell *matHeaderCellDef style="padding: 0">
+                  Valor
+                </th>
+                <td mat-cell *matCellDef="let element" style="padding: 0">
                   $. {{ element.value | formatNumberMiles }}
                 </td>
               </ng-container>
@@ -302,21 +308,23 @@
                   [style]="
                     formatType(element.type) == 'Abono' ||
                     formatType(element.type) == 'Venta'
-                      ? 'color: #6fdb90; font-weight: bolder'
-                      : 'color: #db6f6f; font-weight: bolder'
+                      ? 'color: #6fdb90; font-weight: bolder;'
+                      : 'color: #db6f6f; font-weight: bolder;'
                   "
                 >
                   {{ formatType(element.type) }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="Medio">
-                <th mat-header-cell *matHeaderCellDef>Medio</th>
-                <td mat-cell *matCellDef="let element">
+                <th mat-header-cell *matHeaderCellDef style="padding: 0">
+                  Medio
+                </th>
+                <td mat-cell *matCellDef="let element" style="padding: 0">
                   {{ formatPaymentMethod(element.payment_method) }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="Total">
-                <th mat-header-cell *matHeaderCellDef>Total</th>
+                <th mat-header-cell *matHeaderCellDef style="padding-right: 0;">Total</th>
                 <td
                   mat-cell
                   *matCellDef="let element; let i = index"
@@ -327,8 +335,25 @@
                         : 'font-weight: bolder'
                       : ''
                   "
+                  style="padding-right: 0;"
                 >
                   $. {{ element.total | formatNumberMiles }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="User">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="padding: 0 16px 0 0; width: fit-content;"
+                >Atendió</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="width: fit-content; padding: 0 16px 0 0; text-align: center;"
+                >
+                  <mat-icon [matTooltip]="element.user_name" class="inline-block"
+                    >account_circle</mat-icon
+                  >
                 </td>
               </ng-container>
 
@@ -347,7 +372,7 @@
             </div>
             <div
               class="bg-white text-center"
-              *ngIf="dataSourceAbonos.length == 0 && !showAbonosSpinner"
+              *ngIf="dataSourceAbonos.data.length == 0 && !showAbonosSpinner"
             >
               <img
                 src="assets/images/no_data_image.jpg"
@@ -374,7 +399,7 @@
               "
               (click)="openDialog(0)"
             >
-              Agregar Abono
+              Agregar Abono/Deuda
             </button>
           </div>
         </mat-tab>
@@ -383,7 +408,11 @@
             <mat-icon matPrefix class="mr-2">local_drink</mat-icon>
             Préstamos/Devoluciones
           </ng-template>
-          <div class="h-[270px] relative overflow-auto">
+          <div
+            class="h-[270px] relative overflow-auto"
+            appScrolldetector
+            (finalScroll)="getNextPage(1)"
+          >
             <table
               mat-table
               [dataSource]="dataSourceEnvases"
@@ -420,6 +449,22 @@
                   }}</span>
                 </td>
               </ng-container>
+              <ng-container matColumnDef="User">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="padding: 0 16px 0 0; width: fit-content;"
+                >Atendió</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="width: fit-content; padding: 0 16px 0 0; text-align: center;"
+                >
+                  <mat-icon [matTooltip]="element.user_name" class="inline-block"
+                    >account_circle</mat-icon
+                  >
+                </td>
+              </ng-container>
 
               <tr
                 mat-header-row
@@ -432,7 +477,7 @@
             </table>
             <div
               class="bg-white text-center"
-              *ngIf="dataSourceEnvases.length == 0"
+              *ngIf="dataSourceEnvases.data.length == 0"
             >
               <img
                 src="assets/images/no_data_image.jpg"
@@ -458,9 +503,10 @@
                 bottom: 6px;
                 width: 93%;
               "
+              *ngIf="appStorage.moduleActual == 'Distribución'"
               (click)="openDialog(1)"
             >
-              Agregar transacción
+              Agregar Préstamo/Devolución
             </button>
           </div>
         </mat-tab>
@@ -476,14 +522,14 @@
               class="mat-elevation-z8"
             >
               <ng-container matColumnDef="Fecha">
-                <th mat-header-cell *matHeaderCellDef>Fecha</th>
-                <td mat-cell *matCellDef="let element">
+                <th mat-header-cell *matHeaderCellDef style="padding-left: 8px;">Fecha</th>
+                <td mat-cell *matCellDef="let element" style="padding-left: 8px;">
                   {{ formatDate(element.date) }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="Cantidad">
-                <th mat-header-cell *matHeaderCellDef>Cantidad</th>
-                <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+                <th mat-header-cell *matHeaderCellDef style="padding: 0;">Cant.</th>
+                <td mat-cell *matCellDef="let element" style="padding: 0; text-align: center;">{{ element.amount }}</td>
               </ng-container>
               <ng-container matColumnDef="Precio">
                 <th mat-header-cell *matHeaderCellDef>Precio</th>
@@ -492,18 +538,36 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="Total">
-                <th mat-header-cell *matHeaderCellDef>Total</th>
-                <td mat-cell *matCellDef="let element">
+                <th mat-header-cell *matHeaderCellDef style="padding: 0;">Total</th>
+                <td mat-cell *matCellDef="let element" style="padding: 0; font-weight: bolder;">
                   $.
                   {{ element.amount * element.unit_value | formatNumberMiles }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="Valor pagado">
-                <th mat-header-cell *matHeaderCellDef>Valor pagado</th>
-                <td mat-cell *matCellDef="let element">
+                <th mat-header-cell *matHeaderCellDef >Valor pagado</th>
+                <td mat-cell *matCellDef="let element" >
                   $. {{ element.value_paid | formatNumberMiles }}
                 </td>
               </ng-container>
+
+              <ng-container matColumnDef="User">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  style="padding: 0 8px 0 0; width: fit-content;"
+                >Atendió</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="width: fit-content; padding: 0 8px 0 0; text-align: center;"
+                >
+                  <mat-icon [matTooltip]="element.user_name" class="inline-block"
+                    >account_circle</mat-icon
+                  >
+                </td>
+              </ng-container>
+              
               <tr mat-header-row *matHeaderRowDef="displayedColumnsVentas"></tr>
               <tr
                 mat-row
@@ -547,11 +611,11 @@
       type="button"
       class="w-1/2 mt-5 bg-blue_1 text-white button-status"
       [style]="
-        formClient.invalid
+        formClient.invalid || !isActiveUpdate
           ? ' background-color: #999; color: white'
           : ' background-color: #6ddbda; color: white'
       "
-      [disabled]="formClient.invalid"
+      [disabled]="formClient.invalid || !isActiveUpdate"
       (click)="clientStorage.actualClient ? updateClient() : createClient()"
     >
       {{ clientStorage.actualClient ? "Actualizar" : "Crear" }}
