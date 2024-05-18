@@ -13,14 +13,24 @@ export class LogoutModalComponent {
   constructor(private auth: AuthService, private router: Router) { }
 
   logOut() {
-    localStorage.removeItem('lastUserTransaction');
-    localStorage.removeItem('sales-actualRoute');
-    localStorage.removeItem('client-actualRoute');
-    localStorage.removeItem('token');
-    localStorage.removeItem('roleActual');
+    this.removeValuesLocalStorage()
     this.auth.isLoginView = true
     this.router.navigate(['/login']);
     showPopUp('Sesion cerrada con exito', 'success')
+  }
+
+  private removeValuesLocalStorage() {
+    localStorage.removeItem('dashboard-pre-actualDistribution');
+    localStorage.removeItem('dashboard-pre-actualRoute');
+    localStorage.removeItem('dashboard-dist-actualRoute');
+    localStorage.removeItem('dashboard-dist-actualDistribution');
+    localStorage.removeItem('expenses-actualDistribution');
+    localStorage.removeItem('sales-actualDistribution');
+    localStorage.removeItem('sales-actualRoute');
+    localStorage.removeItem('client-actualRoute');
+    localStorage.removeItem('lastUserTransaction');
+    localStorage.removeItem('token');
+    localStorage.removeItem('roleActual');
   }
 
 }
