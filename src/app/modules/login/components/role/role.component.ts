@@ -42,6 +42,9 @@ export class RoleComponent implements OnInit {
   }
 
   enterSystem() {
+    localStorage.removeItem('sales-actualDistribution')
+    localStorage.removeItem('sales-actualRoute')
+    localStorage.removeItem('client-actualRoute')
     switch (this.formRoles.value.role) {
       case 'ADMIN':
         localStorage.setItem('roleActual', 'Administrador');

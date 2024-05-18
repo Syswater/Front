@@ -8,7 +8,7 @@ import { Route } from "src/data/models/route";
 })
 export class DashboardDistributorStorage {
     actualRoute?: Route | null = null
-    actualDistribution: Distribution | null = null;
+    actualDistribution?: Distribution | null = null;
 
     //OBSERVABLES
     private observables : any = {

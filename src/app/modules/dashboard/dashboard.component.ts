@@ -91,10 +91,12 @@ export class DashboardComponent implements OnInit {
     this.authService.isLoginView = false;
     this.spinner.showSpinner(true);
     await this.getRoutes();
-    await this.updateRoute(this.dashboardStorage.actualRoute);
+    if (!localStorage.getItem('dashboard-pre-actualDistribution')) localStorage.setItem('dashboard-pre-actualDistribution', JSON.stringify(this.distributionRoutes[0]))
+    if (!localStorage.getItem('dashboard-pre-actualRoute')) localStorage.setItem('dashboard-pre-actualRoute', JSON.stringify(this.distributionRoutes[0].route))
+    await this.updateRoute(JSON.parse(`${localStorage.getItem('dashboard-pre-actualRoute')}`));
     await this.getDashboardClientsInfo();
     await this.getDistributions();
-    await this.getClientsByRoute(this.dashboardStorage.actualDistribution?.route);
+    await this.getClientsByRoute(JSON.parse(`${localStorage.getItem('dashboard-pre-actualRoute')}`));
     this.updateGraphics()
     this.spinner.showSpinner(false);
   }
@@ -158,12 +160,13 @@ export class DashboardComponent implements OnInit {
 
   async getRoutes() {
     this.distributionRoutes = await this.distributionService.getDistributions({ status: 'PREORDER', with_route: true })
-    this.dashboardStorage.actualRoute = this.distributionRoutes[0].route;
   }
 
   async changeRoute(event: any) {
     this.spinner.showSpinner(true);
-    this.updateRoute(this.distributionRoutes.find((r) => r.route_id == event.value)?.route);
+    const route = this.distributionRoutes.find((r) => r.route_id == event.value)?.route
+    localStorage.setItem('dashboard-pre-actualRoute', JSON.stringify(route))
+    this.updateRoute(route);
     await this.getClientsByRoute(this.dashboardStorage.actualRoute);
     this.updateGraphics()
     this.dataSourcePresales.data = [...this.dataSourcePresales.data]

@@ -50,16 +50,15 @@ export class ExpensesComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.spinner.showSpinner(true);
+    this.role = `${localStorage.getItem('roleActual')}`
+    await this.getExpensesCategories();
+    await this.getDistributions();
     this.$reloadTable = this.expensesStorage.getObservable('reloadExpenses').subscribe(() => { 
       this.spinner.showSpinner(true);
       this.getExpensesByDistribution(this.expensesStorage.actualDistribution!) 
       this.spinner.showSpinner(false);
     })
-    this.spinner.showSpinner(true);
-    this.role = `${localStorage.getItem('roleActual')}`
-    await this.getExpensesCategories();
-    await this.getDistributions();
-    await this.getExpensesByDistribution(this.expensesStorage.actualDistribution!);
     this.spinner.showSpinner(false);
   }
   
@@ -71,7 +70,12 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     this.distributions = await this.distributionService.getDistributions({
       status: 'OPENED', with_route: true, distributor_id: this.jwtHelper.decodeToken(`${localStorage.getItem('token')}`).user.id
     })
-    this.expensesStorage.actualDistribution = this.distributions.length > 0 ? this.distributions[0] : null
+    if(!localStorage.getItem('expenses-actualDistribution')){
+      localStorage.setItem('expenses-actualDistribution', JSON.stringify(this.distributions.length > 0 ? this.distributions[0] : null))
+      this.expensesStorage.actualDistribution = this.distributions.length > 0 ? this.distributions[0] : null
+    } else {
+      this.expensesStorage.actualDistribution = JSON.parse(`${localStorage.getItem('expenses-actualDistribution')}`)
+    }
   }
   
   async filterExpenses(event: MatSelectChange) {
@@ -113,6 +117,7 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     this.spinner.showSpinner(true);
     const distribution = this.distributions.find((r: Distribution) => r.route_id == event.value)!
     this.expensesStorage.actualDistribution = distribution
+    localStorage.setItem('expenses-actualDistribution', JSON.stringify(distribution))
     this.getExpensesByDistribution(distribution);
     this.spinner.showSpinner(false);
   }

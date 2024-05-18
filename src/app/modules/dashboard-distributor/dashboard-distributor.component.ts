@@ -86,10 +86,13 @@ export class DashboardDistributorComponent implements OnInit {
     this.authService.isLoginView = false;
     this.spinner.showSpinner(true);
     await this.getRoutesDistributor();
-    await this.updateRoute(this.dashboardStorage.actualRoute);
+    if (!localStorage.getItem('dashboard-dist-actualRoute')) localStorage.setItem('dashboard-dist-actualRoute', JSON.stringify(this.distributionRoutes[0].route))
+    if (!localStorage.getItem('dashboard-dist-actualDistribution')) localStorage.setItem('dashboard-dist-actualDistribution', JSON.stringify(this.distributionRoutes[0]))
+    this.dashboardStorage.actualDistribution = this.distributionRoutes[0]
+    await this.updateRoute(JSON.parse(`${localStorage.getItem('dashboard-dist-actualRoute')}`));
     await this.getDashboardClientsInfo();
     await this.getClientsByRoute(
-      this.dashboardStorage.actualDistribution?.route
+      JSON.parse(`${localStorage.getItem('dashboard-dist-actualRoute')}`)
     );
     await this.getExpensesDistribution()
     this.updateGraphics();
@@ -147,7 +150,7 @@ export class DashboardDistributorComponent implements OnInit {
       this.dataSourceSales.data = (
         await this.clientService.getListClients({
           route_id: route!.id,
-          distribution_id: this.dashboardStorage.actualDistribution?.id,
+          distribution_id: JSON.parse(`${localStorage.getItem('dashboard-dist-actualDistribution')}`).id,
           with_notes: true,
           with_sale: true,
         })
@@ -178,17 +181,19 @@ export class DashboardDistributorComponent implements OnInit {
       with_route: true,
       distributor_id: this.appStorage.user.id
     });
-    this.dashboardStorage.actualDistribution = this.distributionRoutes[0]
-    this.dashboardStorage.actualRoute = this.distributionRoutes[0].route;
   }
 
   async changeRoute(event: any) {
     this.spinner.showSpinner(true);
-    this.updateRoute(
-      this.distributionRoutes.find((r) => r.route_id == event.value)?.route
-    );
+    const distribution = this.distributionRoutes.find((r) => r.route_id == event.value);
+    localStorage.setItem('dashboard-dist-actualRoute', JSON.stringify(distribution?.route))
+    localStorage.setItem('dashboard-dist-actualDistribution', JSON.stringify(distribution))
+    this.dashboardStorage.actualDistribution = distribution
+    this.dashboardStorage.actualRoute = distribution?.route
+    this.updateRoute(distribution?.route);
     await this.getClientsByRoute(this.dashboardStorage.actualRoute);
     this.updateGraphics();
+    this.getExpensesDistribution()
     this.dataSourceSales.data = [...this.dataSourceSales.data];
     this.spinner.showSpinner(false);
   }
@@ -233,7 +238,7 @@ export class DashboardDistributorComponent implements OnInit {
   getTotalPaid(): number {
     let totalPaid = 0
     for (const customer of this.dataSourceSales.data) {
-      if(customer.sale){
+      if (customer.sale) {
         totalPaid += customer.sale.value_paid
       }
     }
@@ -242,11 +247,11 @@ export class DashboardDistributorComponent implements OnInit {
 
   async getExpensesDistribution() {
     this.expensesDt = await this.expenseService.getListExpenses({
-      distribution_id: this.dashboardStorage.actualDistribution!.id
+      distribution_id: JSON.parse(`${localStorage.getItem('dashboard-dist-actualDistribution')}`).id
     })
   }
 
-  getTotalExpenses(){
+  getTotalExpenses() {
     let totalExpense = 0
     for (const expense of this.expensesDt) {
       totalExpense += expense.value
