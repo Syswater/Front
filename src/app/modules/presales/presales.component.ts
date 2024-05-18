@@ -152,6 +152,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
     const distribution = this.distributions.find((r: Distribution) => r.route_id == event.value)
     localStorage.setItem('sales-actualDistribution', JSON.stringify(distribution))
     localStorage.setItem('sales-actualRoute', JSON.stringify(distribution?.route))
+    this.preSaleStorage.actualDistribution = distribution
     this.getClientsByRoute(distribution?.route);
   }
 
