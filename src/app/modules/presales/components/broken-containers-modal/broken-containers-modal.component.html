@@ -1,0 +1,82 @@
+<app-modal>
+  <div class="px-10 w-[600px]">
+    <h1 class="text-2xl font-black text-center">
+      Registrar envases rotos de la ruta <br /><span class="text-green_1">{{
+        preSaleStorage.actualDistribution?.route?.name
+      }}</span>
+    </h1>
+    <div class="h-8"></div>
+
+    <form [formGroup]="formBrokenContainers">
+      <div class="grid grid-cols-3 px-10 pb-5">
+        <div class="text-left">
+          <button
+            mat-raised-button
+            style="
+              background-color: #db6f6f;
+              color: white;
+              font-size: xx-large;
+              width: 100px;
+              height: 100px;
+              border-radius: 100%;
+            "
+            (click)="decrementQuanty()"
+          >
+            -
+          </button>
+        </div>
+        <input
+          type="number"
+          class="text-5xl border border-2 border-gray rounded text-center"
+          formControlName="broken_containers"
+        />
+        <div class="text-right">
+          <button
+            mat-raised-button
+            style="
+              background-color: #6fdb90;
+              color: white;
+              font-size: xx-large;
+              width: 100px;
+              height: 100px;
+              border-radius: 100%;
+            "
+            (click)="incrementQuanty()"
+          >
+            +
+          </button>
+        </div>
+        <p class="col-span-3 text-center">Cantidad de envases rotos</p>
+      </div>
+
+    </form>
+
+    <div class="grid grid-cols-2 gap-5 w-full mb-5">
+      <div class="text-right">
+        <button
+          mat-raised-button
+          type="button"
+          class="w-[150px] mt-5 bg-blue_1 text-white button-status"
+          style="background-color: #000000; color: white"
+          (click)="close()"
+        >
+          Cancelar
+        </button>
+      </div>
+      <button
+        mat-raised-button
+        type="button"
+        class="w-[150px] mt-5 bg-blue_1 text-white button-status"
+        [style]="
+          formBrokenContainers.invalid
+            ? 'background-color: #999; color: white'
+            : 'background-color: #6fdb90; color: white'
+        "
+        [disabled]="formBrokenContainers.invalid"
+        (click)="updateBrokenContainers()"
+      >
+        Actualizar
+      </button>
+    </div>
+  </div>
+</app-modal>

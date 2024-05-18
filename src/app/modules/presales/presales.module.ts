@@ -10,6 +10,7 @@ import { QuantyInputModalComponent } from './components/quanty-input-modal/quant
 import { ExpenseComponent } from './components/expense/expense.component';
 import { ValuePaidModalComponent } from './components/value-paid-modal/value-paid-modal.component';
 import { CloseRequestDistributionComponent } from './components/close-request-distribution/close-request-distribution.component';
+import { BrokenContainersModalComponent } from './components/broken-containers-modal/broken-containers-modal.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { CloseRequestDistributionComponent } from './components/close-request-di
     QuantyInputModalComponent,
     ExpenseComponent,
     ValuePaidModalComponent,
-    CloseRequestDistributionComponent
+    CloseRequestDistributionComponent,
+    BrokenContainersModalComponent
   ],
   imports: [
     CommonModule,

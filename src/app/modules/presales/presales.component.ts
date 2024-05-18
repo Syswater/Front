@@ -24,6 +24,7 @@ import { ValuePaidModalComponent } from './components/value-paid-modal/value-pai
 import { SalesService } from 'src/data/services/sales.service';
 import { AppStorage } from 'src/app/app.storage';
 import { CloseRequestDistributionComponent } from './components/close-request-distribution/close-request-distribution.component';
+import { BrokenContainersModalComponent } from './components/broken-containers-modal/broken-containers-modal.component';
 
 @Component({
   selector: 'app-presales',
@@ -178,7 +179,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
   async updateSale(element: any) {
     try {
       this.spinner.showSpinner(true);
-      const { customer_id, distribution_id, product_inventory_id, user_name, ...sale } = element.sale
+      const { customer_id, distribution_id, product_inventory_id, user_name, transaction_payment, ...sale } = element.sale
       await this.saleService.updateSale({ ...sale, payment_method: element.payment_method });
       await this.clientService.updateClient({ id: element.id, is_served: true });
       showPopUp('Venta actualizada con exito', 'success')
@@ -291,6 +292,9 @@ export class PresalesComponent implements OnInit, OnDestroy {
         break;
       case 3:
         this.modalService.open(CloseRequestDistributionComponent)
+        break;
+      case 4:
+        this.modalService.open(BrokenContainersModalComponent)
         break;
     }
   }

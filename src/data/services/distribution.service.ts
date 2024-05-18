@@ -37,4 +37,8 @@ export class DistributionService {
   async closeDistribution(options: { distribution_id?: number }) {
     return await firstValueFrom(this.http.post(`${this.url}/distribution/close`, { ...options }));
   }
+  
+  async updateDistribution(options: any) {
+    return await firstValueFrom(this.http.put(`${this.url}/distribution/update`, { ...options }));
+  }
 }

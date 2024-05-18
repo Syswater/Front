@@ -39,7 +39,7 @@
       </mat-select>
     </mat-form-field>
 
-    <p class="text-lg mb-5 col-span-3">
+    <p class="text-lg mb-5 col-span-{{role == 'Distribuidor'? '4': '3'}}">
       Ruta
       <span class="text-cyan font-black">{{
         preSaleStorage.actualDistribution?.route?.name
@@ -47,23 +47,29 @@
       - {{ preSaleStorage.actualDistribution?.route?.location }}
     </p>
 
-    <p class="text-lg mb-5 col-span-3 text-center">
-      Productos {{ role == "Distribuidor" ? "vendidos" : "prevendidos" }}:
+    <p class="text-lg mb-5 col-span-3 text-center" *ngIf="role == 'Prevendedor'">
+      Productos prevendidos:
       <span class="text-blue_3 font-black">{{
-        getTotalProductsSelled(role == "Distribuidor")
+        getTotalProductsSelled(false)
       }}</span>
     </p>
 
-    <p class="text-lg mb-5 text-right col-span-2">
-      Clientes Atendidos:
-      <span class="text-green_1 font-black">{{
-        getTotalClientsAnswered(role == "Distribuidor")
-      }}</span>
-    </p>
-
-    <div class="text-right w-full col-span-4">
+    <div class="text-right w-full col-span-8">
       <button
         class="inline-block 2xl:mr-5"
+        (click)="openDialog(4, null)"
+        style="
+          background-color: #6E96DB;
+          color: white;
+          transform: translateY(-10px);
+        "
+        mat-raised-button
+        *ngIf="role == 'Distribuidor'"
+      >
+        Envases Rotos 
+      </button>
+      <button
+        class="inline-block ml-2 2xl:mr-5"
         (click)="openDialog(3, null)"
         style="
           background-color: #dc7297;
@@ -207,7 +213,7 @@
     </ng-container>
 
     <ng-container matColumnDef="Cantidad" *ngIf="role == 'Distribuidor'">
-      <th mat-header-cell *matHeaderCellDef style="padding: 0">Cantidad</th>
+      <th mat-header-cell *matHeaderCellDef style="padding: 0">Cantidad <span class="text-blue_3 font-black">({{getTotalProductsSelled(true)}})</span></th>
       <td
         mat-cell
         *matCellDef="let element"
@@ -376,7 +382,7 @@
     </ng-container>
 
     <ng-container matColumnDef="Entregado" *ngIf="role == 'Distribuidor'">
-      <th mat-header-cell *matHeaderCellDef style="padding: 0">Atendido</th>
+      <th mat-header-cell *matHeaderCellDef style="padding: 0">Atendido <span class="text-green_1 font-black">({{getTotalClientsAnswered(true)}})</span></th>
       <td
         mat-cell
         *matCellDef="let element"
