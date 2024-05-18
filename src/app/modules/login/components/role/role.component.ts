@@ -42,9 +42,7 @@ export class RoleComponent implements OnInit {
   }
 
   enterSystem() {
-    localStorage.removeItem('sales-actualDistribution')
-    localStorage.removeItem('sales-actualRoute')
-    localStorage.removeItem('client-actualRoute')
+    this.removeValuesLocalStorage();
     switch (this.formRoles.value.role) {
       case 'ADMIN':
         localStorage.setItem('roleActual', 'Administrador');
@@ -70,5 +68,16 @@ export class RoleComponent implements OnInit {
     );
     this.authService.isLoginView = false;
     this.dialogRef.close();
+  }
+
+  private removeValuesLocalStorage() {
+    localStorage.removeItem('dashboard-pre-actualDistribution');
+    localStorage.removeItem('dashboard-pre-actualRoute');
+    localStorage.removeItem('dashboard-dist-actualRoute');
+    localStorage.removeItem('dashboard-dist-actualDistribution');
+    localStorage.removeItem('expenses-actualDistribution');
+    localStorage.removeItem('sales-actualDistribution');
+    localStorage.removeItem('sales-actualRoute');
+    localStorage.removeItem('client-actualRoute');
   }
 }

@@ -36,11 +36,6 @@ body {
   padding: 0 !important;
 }
 
-.ngx-charts-outer, .ngx-charts{
-  width: 100% !important;
-  height: 100% !important;
-}
-
 g[ngx-charts-axis-label]{
   display: none;
 }

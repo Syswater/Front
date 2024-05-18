@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AuthService } from 'src/data/services/auth.service';
 import { SpinnerService } from 'src/data/services/spinner.service';
 import { AppStorage } from './app.storage';
@@ -14,17 +14,27 @@ import { RoleComponent } from './modules/login/components/role/role.component';
 })
 export class AppComponent implements OnInit {
   title = 'FrontSysWater';
+  mediaQueryList!: MediaQueryList;
+  mediaQueryListener!: () => void;
 
   constructor(
     public auth: AuthService,
     public spinner: SpinnerService,
     public appStorage: AppStorage,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef
   ) {
   }
   
   ngOnInit(): void {
     this.checkViewport()
+    this.mediaQueryList = window.matchMedia('(min-width: 768px)');
+    this.mediaQueryListener = () => {
+      this.appStorage.isDesktop = this.mediaQueryList.matches;
+      this.cdr.detectChanges();
+    };
+    this.mediaQueryList.addEventListener('change', this.mediaQueryListener);
+    this.appStorage.isDesktop = this.mediaQueryList.matches;
   }
 
   logOut() {

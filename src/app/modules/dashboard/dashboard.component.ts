@@ -91,8 +91,8 @@ export class DashboardComponent implements OnInit {
     this.authService.isLoginView = false;
     this.spinner.showSpinner(true);
     await this.getRoutes();
-    if (!localStorage.getItem('dashboard-pre-actualDistribution')) localStorage.setItem('dashboard-pre-actualDistribution', JSON.stringify(this.distributionRoutes[0]))
-    if (!localStorage.getItem('dashboard-pre-actualRoute')) localStorage.setItem('dashboard-pre-actualRoute', JSON.stringify(this.distributionRoutes[0].route))
+    if (!localStorage.getItem('dashboard-pre-actualDistribution')) localStorage.setItem('dashboard-pre-actualDistribution', JSON.stringify(this.distributionRoutes.length ? this.distributionRoutes[0] : []))
+    if (!localStorage.getItem('dashboard-pre-actualRoute')) localStorage.setItem('dashboard-pre-actualRoute', JSON.stringify(this.distributionRoutes[0] ? this.distributionRoutes[0].route : null))
     await this.updateRoute(JSON.parse(`${localStorage.getItem('dashboard-pre-actualRoute')}`));
     await this.getDashboardClientsInfo();
     await this.getDistributions();
@@ -142,12 +142,16 @@ export class DashboardComponent implements OnInit {
   }
 
   async getClientsByRoute(route: Route | undefined | null) {
-    this.dataSourcePresales.data = (await this.clientService.getListClients({
-      route_id: route!.id,
-      distribution_id: this.dashboardStorage.actualDistribution?.id,
-      with_notes: true,
-      with_order: true
-    })).map(d => ({ ...d, quantity: '-' }));
+    if(route){
+      this.dataSourcePresales.data = (await this.clientService.getListClients({
+        route_id: route!.id,
+        distribution_id: this.dashboardStorage.actualDistribution?.id,
+        with_notes: true,
+        with_order: true
+      })).map(d => ({ ...d, quantity: '-' }));
+    }else{
+      this.dataSourcePresales.data = []
+    }
   }
 
   async getDashboardClientsInfo() {
@@ -160,6 +164,7 @@ export class DashboardComponent implements OnInit {
 
   async getRoutes() {
     this.distributionRoutes = await this.distributionService.getDistributions({ status: 'PREORDER', with_route: true })
+    console.log("🚀 ~ DashboardComponent ~ getRoutes ~ distributionRoutes:", this.distributionRoutes)
   }
 
   async changeRoute(event: any) {

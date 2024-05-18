@@ -4,7 +4,8 @@
       class="mt-5 w-full h-20 bg-white flex items-center pl-5 pt-2 shadow-lg"
     >
       <p class="text-lg">
-        Hola <span class="text-teal-400">{{appStorage.user.name}}</span>, Bienvenido de vuelta
+        Hola <span class="text-teal-400">{{ appStorage.user.name }}</span
+        >, Bienvenido de vuelta
       </p>
       <mat-form-field class="mr-5 translate-y-2 absolute right-10">
         <mat-select
@@ -19,7 +20,10 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mt-5 w-full grid md:grid-cols-2 2xl:grid-cols-4 gap-x-10 gap-y-5">
+    <div
+      class="mt-5 w-full grid md:grid-cols-2 2xl:grid-cols-4 gap-x-10 gap-y-5"
+      *ngIf="distributionRoutes.length"
+    >
       <app-card
         title="Ruta en curso"
         [footer]="dashboardStorage.actualRoute?.name || ''"
@@ -60,7 +64,7 @@
         img_path="/assets/icons/icon4.png"
       ></app-card>
     </div>
-    <div class="mt-5 grid grid-cols-2 gap-10">
+    <div class="mt-5 grid grid-cols-2 gap-10" *ngIf="distributionRoutes.length">
       <mat-card class="p-5">
         <div class="grid grid-cols-12 h-36">
           <div
@@ -156,7 +160,10 @@
                 class="rounded-full border border-cyan border-8 flex items-center justify-center h-40 w-40 translate-y-6"
               >
                 <span class="text-cyan font-black text-2xl"
-                  >$. {{ (getTotalDebtAndEnvases().totalDebt | formatNumberMiles) }}</span
+                  >$.
+                  {{
+                    getTotalDebtAndEnvases().totalDebt | formatNumberMiles
+                  }}</span
                 >
               </div>
               <div
@@ -176,7 +183,10 @@
                 <span class="text-green_2 font-black">{{ getDate() }}</span>
                 se reportó una deuda de
                 <span class="font-black text-cyan"
-                  >$. {{ (getTotalDebtAndEnvases().totalDebt | formatNumberMiles) }}</span
+                  >$.
+                  {{
+                    getTotalDebtAndEnvases().totalDebt | formatNumberMiles
+                  }}</span
                 >
                 y un total de envases prestados de
                 <span class="font-black text-green_1"
@@ -298,6 +308,20 @@
           ></tr>
         </table>
       </app-card-info>
+    </div>
+    <div
+      class="mt-5 w-full bg-white px-5 pt-2 shadow-lg p-10 text-center"
+      *ngIf="distributionRoutes.length == 0"
+    >
+      <img
+        src="assets/images/no_data_image.jpg"
+        class="inline-block"
+        alt=""
+        width="500"
+      />
+      <p class="text-4xl text-blue_3">
+        Oops! No encontramos rutas registradas en estado Preventa 
+      </p>
     </div>
   </div>
 </div>

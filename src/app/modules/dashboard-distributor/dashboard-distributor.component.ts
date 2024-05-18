@@ -86,8 +86,8 @@ export class DashboardDistributorComponent implements OnInit {
     this.authService.isLoginView = false;
     this.spinner.showSpinner(true);
     await this.getRoutesDistributor();
-    if (!localStorage.getItem('dashboard-dist-actualRoute')) localStorage.setItem('dashboard-dist-actualRoute', JSON.stringify(this.distributionRoutes[0].route))
-    if (!localStorage.getItem('dashboard-dist-actualDistribution')) localStorage.setItem('dashboard-dist-actualDistribution', JSON.stringify(this.distributionRoutes[0]))
+    if (!localStorage.getItem('dashboard-dist-actualRoute')) localStorage.setItem('dashboard-dist-actualRoute', JSON.stringify(this.distributionRoutes.length ? this.distributionRoutes[0].route : null))
+    if (!localStorage.getItem('dashboard-dist-actualDistribution')) localStorage.setItem('dashboard-dist-actualDistribution', JSON.stringify(this.distributionRoutes.length ? this.distributionRoutes[0] : []))
     this.dashboardStorage.actualDistribution = this.distributionRoutes[0]
     await this.updateRoute(JSON.parse(`${localStorage.getItem('dashboard-dist-actualRoute')}`));
     await this.getDashboardClientsInfo();
@@ -147,14 +147,18 @@ export class DashboardDistributorComponent implements OnInit {
 
   async getClientsByRoute(route: Route | undefined | null) {
     try {
-      this.dataSourceSales.data = (
-        await this.clientService.getListClients({
-          route_id: route!.id,
-          distribution_id: JSON.parse(`${localStorage.getItem('dashboard-dist-actualDistribution')}`).id,
-          with_notes: true,
-          with_sale: true,
-        })
-      ).map((d) => ({ ...d, quantity: '-' }));
+      if(route){
+        this.dataSourceSales.data = (
+          await this.clientService.getListClients({
+            route_id: route!.id,
+            distribution_id: JSON.parse(`${localStorage.getItem('dashboard-dist-actualDistribution')}`).id,
+            with_notes: true,
+            with_sale: true,
+          })
+        ).map((d) => ({ ...d, quantity: '-' }));
+      }else{
+        this.dataSourceSales.data = []
+      }
     } catch (error) {
       showPopUp('Error al obtener los clientes', 'error');
       this.spinner.showSpinner(false);
@@ -162,13 +166,17 @@ export class DashboardDistributorComponent implements OnInit {
   }
 
   async getDashboardClientsInfo() {
-    this.dataSourceClients.data = await this.clientService.getListClients({
-      route_id: this.dashboardStorage.actualDistribution!.route_id,
-      distribution_id: this.dashboardStorage.actualDistribution!.id,
-      with_notes: true,
-      with_order: true,
-      with_sale: true
-    });
+    if(this.dashboardStorage.actualDistribution){
+      this.dataSourceClients.data = await this.clientService.getListClients({
+        route_id: this.dashboardStorage.actualDistribution!.route_id,
+        distribution_id: this.dashboardStorage.actualDistribution!.id,
+        with_notes: true,
+        with_order: true,
+        with_sale: true
+      });
+    }else{
+      this.dataSourceClients.data = []
+    }
   }
 
   async updateRoute(route: Route | undefined | null) {
@@ -181,6 +189,7 @@ export class DashboardDistributorComponent implements OnInit {
       with_route: true,
       distributor_id: this.appStorage.user.id
     });
+    this.dashboardStorage.actualDistribution = this.distributionRoutes[0];
   }
 
   async changeRoute(event: any) {
@@ -246,9 +255,15 @@ export class DashboardDistributorComponent implements OnInit {
   }
 
   async getExpensesDistribution() {
-    this.expensesDt = await this.expenseService.getListExpenses({
-      distribution_id: JSON.parse(`${localStorage.getItem('dashboard-dist-actualDistribution')}`).id
-    })
+    try {
+      if(this.dashboardStorage.actualDistribution){
+        this.expensesDt = await this.expenseService.getListExpenses({
+          distribution_id: this.dashboardStorage.actualDistribution!.id
+        })
+      }
+    } catch (error) {
+      showPopUp('Error al obtener los gastos de la distribucion', 'error')
+    }
   }
 
   getTotalExpenses() {

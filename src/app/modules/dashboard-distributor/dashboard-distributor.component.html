@@ -19,7 +19,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="mt-5 w-full grid grid-cols-3 2xl:grid-cols-4 gap-x-10 gap-y-5">
+      <div class="mt-5 w-full grid grid-cols-3 2xl:grid-cols-4 gap-x-10 gap-y-5" *ngIf="distributionRoutes.length">
         <app-card
           title="Ruta en curso"
           [footer]="dashboardStorage.actualRoute?.name || ''"
@@ -74,7 +74,7 @@
         img_path="/assets/icons/icon4.png"
       ></app-card>
       </div>
-      <div class="mt-5 grid grid-cols-2 gap-10">
+      <div class="mt-5 grid grid-cols-2 gap-10" *ngIf="distributionRoutes.length">
         <mat-card class="p-5">
           <div class="grid grid-cols-12 h-36">
             <div
@@ -313,6 +313,20 @@
           </table>
         </app-card-info>
       </div>
+      <div
+      class="mt-5 w-full bg-white px-5 pt-2 shadow-lg p-10 text-center"
+      *ngIf="distributionRoutes.length == 0"
+    >
+      <img
+        src="assets/images/no_data_image.jpg"
+        class="inline-block"
+        alt=""
+        width="500"
+      />
+      <p class="text-4xl text-blue_3">
+        Oops! No encontramos rutas registradas en estado Distribución 
+      </p>
+    </div>
     </div>
   </div>
   

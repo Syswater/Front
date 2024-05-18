@@ -9,7 +9,9 @@ import { AuthService } from 'src/data/services/auth.service';
 })
 export class NotFoundComponent {
 
-  constructor(private router: Router, private appStorage: AppStorage, private authService: AuthService) { }
+  constructor(private router: Router, private appStorage: AppStorage, private authService: AuthService) {
+    this.authService.isLoginView = true
+  }
 
   goToLogin() {
     const token = localStorage.getItem('token')
@@ -25,6 +27,7 @@ export class NotFoundComponent {
       this.router.navigate(['/login'])
       return
     }
+    this.authService.isLoginView = false
     this.appStorage.selectionMenu = 0
     switch (roleActual) {
       case 'Administrador':
