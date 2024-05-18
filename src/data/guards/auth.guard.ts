@@ -29,18 +29,33 @@ export class AuthGuard implements CanActivate {
     const role = localStorage.getItem('roleActual');
     if (!token || this.jwtHelper.isTokenExpired(token)) {
       this.router.navigate(['/login']);
+      this.removeValuesLocalStorage()
       this.authService.isLoginView = true;
       showPopUp('No esta autorizado', 'error');
       return false;
     }
     if (!role) {
-      localStorage.removeItem('token');
+      this.removeValuesLocalStorage()
       this.router.navigate(['/login']);
       this.authService.isLoginView = true;
       showPopUp('No esta autorizado', 'error');
       return false;
     }
     return this.setRoutesConfigurations(state.url, role);
+  }
+
+  private removeValuesLocalStorage() {
+    localStorage.removeItem('dashboard-pre-actualDistribution');
+    localStorage.removeItem('dashboard-pre-actualRoute');
+    localStorage.removeItem('dashboard-dist-actualRoute');
+    localStorage.removeItem('dashboard-dist-actualDistribution');
+    localStorage.removeItem('expenses-actualDistribution');
+    localStorage.removeItem('sales-actualDistribution');
+    localStorage.removeItem('sales-actualRoute');
+    localStorage.removeItem('client-actualRoute');
+    localStorage.removeItem('lastUserTransaction');
+    localStorage.removeItem('token');
+    localStorage.removeItem('roleActual');
   }
 
   setRoutesConfigurations(url: string, role: string) {
