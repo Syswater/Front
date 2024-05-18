@@ -1,0 +1,75 @@
+<app-modal>
+  <div class="px-10" [formGroup]="formInitDistribution">
+    <h1 class="text-2xl font-black text-center">
+      Iniciar distribución de ruta <br /><span class="text-green_1">{{
+        routeStorage.actualRoute?.name
+      }}</span>
+    </h1>
+    <div class="h-8"></div>
+
+    <form [formGroup]="formInitDistribution">
+      <p class="text-xl">Tipo de producto</p>
+
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Producto</mat-label>
+        <mat-select formControlName="product_inventory_id">
+          <mat-option [value]="product.id" *ngFor="let product of products">{{
+            product.product_name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <p class="text-xl">Botellones a cargar</p>
+
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Cantidad de botellones</mat-label>
+        <input matInput type="number" formControlName="load" step="1" min="0" />
+      </mat-form-field>
+
+      <p class="text-xl">Distribuidores encargados</p>
+      <mat-form-field class="w-full">
+        <mat-label>Usuarios Distribuidores</mat-label>
+        <mat-select [formControl]="usersControl" multiple>
+          <mat-select-trigger>
+            <span *ngIf="usersControl.value?.length == 1">{{usersControl.value?.[0]?.name || ''}}</span>
+            <span
+              *ngIf="(usersControl.value?.length || 0) > 1"
+              class="example-additional-selection"
+            >
+              (+{{ (usersControl.value?.length || 0) }}
+              {{ usersControl.value?.length === 2 ? "other" : "others" }})
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let user of users" [value]="user">{{
+            user.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+    <div class="text-right">
+      <button
+        mat-raised-button
+        type="button"
+        class="w-full mt-5 bg-blue_1 text-white button-status"
+        style="background-color: #000000; color: white"
+      >
+        Cancelar
+      </button>
+    </div>
+    <button
+      mat-raised-button
+      type="button"
+      class="w-full mt-2 mb-5 bg-blue_1 text-white button-status"
+      [style]="
+        formInitDistribution.invalid
+          ? 'background-color: #999; color: white'
+          : 'background-color: #6fdb90; color: white'
+      "
+      [disabled]="formInitDistribution.invalid"
+      (click)="initDistribution()"
+    >
+      Iniciar distribución
+    </button>
+  </div>
+</app-modal>

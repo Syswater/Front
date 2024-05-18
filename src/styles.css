@@ -35,3 +35,44 @@ body {
 .mat-expansion-panel-body{
   padding: 0 !important;
 }
+
+.ngx-charts-outer, .ngx-charts{
+  width: 100% !important;
+  height: 100% !important;
+}
+
+g[ngx-charts-axis-label]{
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .media-query-table .mat-table {
+    display: block;
+  }
+
+  .media-query-table .mat-mdc-header-row, .media-query-table .mat-mdc-row {
+    display: contents;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 16px; /* Añadir espacio entre filas */
+    padding: 8px; /* Añadir padding alrededor de cada fila */
+    border-radius: 8px; /* Añadir bordes redondeados para mejor estética */
+  }
+
+  .media-query-table .mat-mdc-header-row {
+    display: none;
+  }
+
+  .media-query-table .mat-mdc-cell, .media-query-table .mat-mdc-header-cell {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px; /* Incrementar el padding para mayor separación */
+  }
+
+  .media-query-table .mat-mdc-cell {
+    overflow-y: auto;
+    height: 49px !important;
+    border-bottom: 1px solid #e0e0e0; /* Añadir un borde inferior a las celdas */
+  }
+}

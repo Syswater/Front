@@ -1,1 +1,97 @@
-<p>reports works!</p>
+<div class="px-2 md:px-5 pt-2 md:pt-5 pb-14">
+  <mat-card class="p-5 mb-5">
+    <div class="grid grid-cols-12">
+      <p class="col-span-12">Selecciona una ruta</p>
+      <mat-form-field class="col-span-12">
+        <mat-select
+          (selectionChange)="changeRoute($event)"
+          [value]="routes[0].id"
+        >
+          <mat-option
+            *ngFor="let route of routes; index as i"
+            [value]="route.id"
+            >{{ route.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <p class="col-span-12">Selecciona un rango de fechas</p>
+      <mat-form-field class="col-span-12">
+        <mat-date-range-input [rangePicker]="campaignOnePicker">
+          <input matStartDate placeholder="Fecha inicial" />
+          <input matEndDate placeholder="Fecha final" />
+        </mat-date-range-input>
+        <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="campaignOnePicker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+      </mat-form-field>
+      <button
+        mat-raised-button
+        type="submit"
+        class="w-full mt-5 col-span-12"
+        style="background-color: #72dcdc; color: white"
+      >
+        Consultar
+      </button>
+    </div>
+  </mat-card>
+
+  <div class="grid grid-cols-4">
+    <app-card
+      title="Total Vendido"
+      [footer]="totalSales"
+      color="blue_2"
+      [height]="32"
+      img_path="/assets/icons/icon2.png"
+      class="col-span-4 md:col-span-2 2xl:col-span-1"
+    ></app-card>
+
+    <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1 mt-2">
+      <h1 class="pl-5 text-2xl font-black mt-5">Ventas realizadas</h1>
+      <h1 class="pl-5 mb-5">(Efectivo, Nequi, Bancolombia, Daviplata)</h1>
+      <ngx-charts-area-chart
+        [view]="[420, 400]"
+        [scheme]="reportsStorage.colorScheme"
+        [legend]="false"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxis]="true"
+        [yAxis]="true"
+        xAxisLabel="xAxisLabel"
+        yAxisLabel="yAxisLabel"
+        [timeline]="true"
+        [results]="data"
+        class="translate-x-[-30px]"
+      >
+      </ngx-charts-area-chart>
+      <div
+        class="translate-y-[-30] inline-block mb-5"
+        style="margin-top: -75px"
+      >
+        <h1 class="pl-5 text-2xl mb-2">Metodo de pago</h1>
+        <div class="grid grid-cols-2 pl-5">
+          <div>
+            <p>Efectivo</p>
+            <p>Nequi</p>
+            <p>Bancolombia</p>
+            <p>Daviplata</p>
+          </div>
+          <div class="grid grid-cols-2">
+            <p>$ 40.000</p>
+            <p>$ 40.000</p>
+            <p>$ 40.000</p>
+            <p>$ 40.000</p>
+            <p>$ 40.000</p>
+            <p>$ 40.000</p>
+            <p>$ 40.000</p>
+            <p>$ 40.000</p>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-card class="p-5 mt-5"> </mat-card>
+</div>

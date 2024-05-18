@@ -9,6 +9,7 @@ import { DeleteOrderComponent } from './components/delete-order/delete-order.com
 import { QuantyInputModalComponent } from './components/quanty-input-modal/quanty-input-modal.component';
 import { ExpenseComponent } from './components/expense/expense.component';
 import { ValuePaidModalComponent } from './components/value-paid-modal/value-paid-modal.component';
+import { CloseRequestDistributionComponent } from './components/close-request-distribution/close-request-distribution.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ValuePaidModalComponent } from './components/value-paid-modal/value-pai
     DeleteOrderComponent,
     QuantyInputModalComponent,
     ExpenseComponent,
-    ValuePaidModalComponent
+    ValuePaidModalComponent,
+    CloseRequestDistributionComponent
   ],
   imports: [
     CommonModule,

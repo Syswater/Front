@@ -13,6 +13,9 @@ export class LogoutModalComponent {
   constructor(private auth: AuthService, private router: Router) { }
 
   logOut() {
+    localStorage.removeItem('lastUserTransaction');
+    localStorage.removeItem('sales-actualRoute');
+    localStorage.removeItem('client-actualRoute');
     localStorage.removeItem('token');
     localStorage.removeItem('roleActual');
     this.auth.isLoginView = true

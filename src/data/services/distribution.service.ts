@@ -9,7 +9,6 @@ import { Distribution } from '../models/distribution';
 })
 export class DistributionService {
 
-
   url = environment.API_URL;
 
   constructor(private http: HttpClient) { }
@@ -27,4 +26,15 @@ export class DistributionService {
     return await firstValueFrom(this.http.post(`${this.url}/distribution/initDistribution`, { ...options }));
   }
 
+  async openDistribution(options: { distribution_id: number; load: number; product_inventory_id: number, distributors_ids: number[] }) {
+    return await firstValueFrom(this.http.post(`${this.url}/distribution/open`, { ...options }));
+  }
+  
+  async changeStatusDistribution(options: { id?: number; status: string; }) {
+    return await firstValueFrom(this.http.put(`${this.url}/distribution/changeStatus`, { ...options }));
+  }
+
+  async closeDistribution(options: { distribution_id?: number }) {
+    return await firstValueFrom(this.http.post(`${this.url}/distribution/close`, { ...options }));
+  }
 }

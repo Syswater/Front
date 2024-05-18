@@ -63,7 +63,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       ? this.client.route_order
       : this.clientStorage.lastClient
         ? this.clientStorage.lastClient.route_order + 1
-        : 0,
+        : 1,
     tape_preference: this.client
       ? this.client.tape_preference
       : this.tape_preference[0],

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { RouteService } from '../../../data/services/route.service';
 import { Route } from '../../../data/models/route';
 import { SpinnerService } from 'src/data/services/spinner.service';
@@ -15,12 +15,16 @@ import { MatDatepickerIntl } from '@angular/material/datepicker';
 import { FormBuilder, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AppStorage } from 'src/app/app.storage';
+import { ConfirmRejectDistributionComponent } from './components/confirm-reject-distribution/confirm-reject-distribution.component';
+import { ConfirmAcceptDistributionComponent } from './components/confirm-accept-distribution/confirm-accept-distribution.component';
+import { InitDistributionFormComponent } from './components/init-distribution-form/init-distribution-form.component';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-routes',
   templateUrl: './routes.component.html',
   styleUrls: ['./routes.component.css'],
 })
-export class RoutesComponent implements OnInit {
+export class RoutesComponent implements OnInit, OnDestroy {
   routes: Route[] = [];
   weekdays: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   filter?: string;
@@ -29,6 +33,7 @@ export class RoutesComponent implements OnInit {
   })
   minDate: Date = moment().add(1, 'day').toDate();
   roleActual = ''
+  $routesReload!: Subscription
 
   constructor(
     public appStorage: AppStorage,
@@ -43,9 +48,13 @@ export class RoutesComponent implements OnInit {
     @Inject(MAT_DATE_LOCALE) private _locale: string,
   ) { }
 
+  ngOnDestroy(): void {
+    this.$routesReload.unsubscribe()
+  }
+
   async ngOnInit() {
     this.roleActual = `${localStorage.getItem('roleActual')}`
-    await this.loadRoutes();
+    this.$routesReload = this.routeStorage.getObservable('reloadRoutes').subscribe(() => this.loadRoutes());
     this._locale = 'es';
     this._adapter.setLocale(this._locale);
   }
@@ -108,5 +117,20 @@ export class RoutesComponent implements OnInit {
       }
       this.spinnerService.showSpinner(false)
     }
+  }
+
+  initDistributionAdmin(route: Route) {
+    this.routeStorage.actualRoute = route
+    this.modalService.open(InitDistributionFormComponent)
+  }
+
+  rejectClosed(route: Route) {
+    this.routeStorage.actualRoute = route
+    this.modalService.open(ConfirmRejectDistributionComponent)
+  }
+
+  acceptClosed(route: Route) {
+    this.routeStorage.actualRoute = route
+    this.modalService.open(ConfirmAcceptDistributionComponent)
   }
 }

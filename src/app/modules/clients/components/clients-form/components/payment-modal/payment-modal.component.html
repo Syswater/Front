@@ -7,25 +7,35 @@
     </h1>
 
     <div class="grid grid-cols-2 gap-x-5">
-
-      <mat-chip-listbox
-        class="col-span-2 w-full my-5"
-      >
+      <mat-chip-listbox class="col-span-2 w-full my-5">
         <mat-chip-option
           *ngFor="let chip of chips; index as i"
           [selected]="chip.selected"
           (click)="selectOption(i)"
           [color]="chip.name == 'Abono' ? 'primary' : 'warn'"
-          style="display: inline-block;"
+          style="display: inline-block"
         >
           {{ chip.name }}
         </mat-chip-option>
       </mat-chip-listbox>
 
-      <p class="text-xl mt-2 col-span-{{isAbonos()?'1':'2'}}">Valor de la transacción ($)</p>
-      <p class="text-xl mt-2" *ngIf="isAbonos()">Medio de pago</p>
+      <p
+        class="text-xl mt-2 col-span-{{
+          isAbonos() && appStorage.isDesktop ? '1' : '2'
+        }}"
+      >
+        Valor de la transacción ($)
+      </p>
+      <p class="text-xl mt-2" *ngIf="isAbonos() && appStorage.isDesktop">
+        Medio de pago
+      </p>
 
-      <mat-form-field appearance="fill" class="w-full col-span-{{isAbonos()?'1':'2'}}" >
+      <mat-form-field
+        appearance="fill"
+        class="w-full col-span-{{
+          isAbonos() && appStorage.isDesktop ? '1' : '2'
+        }}"
+      >
         <input
           matInput
           placeholder="Digite el valor de la transacción"
@@ -33,10 +43,22 @@
           step="500"
           formControlName="value"
         />
-        <mat-error *ngIf="formPayment.get('value')?.hasError('min')">No se admiten números negativos</mat-error>
+        <mat-error *ngIf="formPayment.get('value')?.hasError('min')"
+          >No se admiten números negativos</mat-error
+        >
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="w-full" *ngIf="isAbonos()">
+      <p class="text-xl mt-2 col-span-2" *ngIf="isAbonos() && !appStorage.isDesktop">
+        Medio de pago
+      </p>
+
+      <mat-form-field
+        appearance="fill"
+        class="w-full col-span-{{
+          isAbonos() && appStorage.isDesktop ? '1' : '2'
+        }}"
+        *ngIf="isAbonos()"
+      >
         <mat-select formControlName="payment_method">
           <mat-option
             *ngFor="let method of methods; index as i"

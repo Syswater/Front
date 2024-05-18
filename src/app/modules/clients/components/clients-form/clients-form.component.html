@@ -1,19 +1,27 @@
-<app-modal class="h-[1000px]">
-  <div class="px-5 pb-5 grid grid-cols-12 gap-x-5 2xl:w-[1200px]">
-    <img
-      src="assets/images/user_image.png"
-      class="translate-y-12 2xl:translate-y-0 w-52 2xl:w-64 col-span-2 2xl:col-span-3"
-    />
-    <div class="col-span-10 2xl:col-span-9">
-      <h1 class="font-black text-2xl" [formGroup]="formClient">
+<app-modal class="md:h-[1000px]">
+  <div class="px-5 pb-5 grid grid-cols-12 gap-x-5 2xl:w-[1200px] min-w-[344px]">
+    <div
+      class="md:translate-y-12 2xl:translate-y-0 2xl:w-64 col-span-12 md:col-span-2 2xl:col-span-3 text-center"
+    >
+      <img
+        src="assets/images/user_image.png"
+        class="w-32 md:w-52 inline-block"
+      />
+    </div>
+    <div class="col-span-12 md:col-span-10 2xl:col-span-9">
+      <h1
+        class="font-black text-2xl text-center md:text-left"
+        [formGroup]="formClient"
+      >
         Detalle del cliente:
         <span class="text-blue_3">{{
           clientStorage.actualClient
             ? clientStorage.actualClient.name
             : nameInput.value
         }}</span>
+        <br *ngIf="!appStorage.isDesktop" />
         <mat-checkbox
-          class="float-right"
+          class="md:float-right"
           labelPosition="before"
           color="primary"
           formControlName="is_contactable"
@@ -24,7 +32,7 @@
         class="grid grid-cols-4 gap-5 mt-2 2xl:mt-10"
         [formGroup]="formClient"
       >
-        <mat-form-field appearance="fill" class="col-span-2">
+        <mat-form-field appearance="fill" class="col-span-4 md:col-span-2">
           <mat-label>Nombres</mat-label>
           <input
             matInput
@@ -33,7 +41,11 @@
             #nameInput
           />
         </mat-form-field>
-        <mat-form-field appearance="fill" *ngIf="clientStorage.actualClient">
+        <mat-form-field
+          appearance="fill"
+          *ngIf="clientStorage.actualClient"
+          class="col-span-4 md:col-span-1"
+        >
           <mat-label>Celular</mat-label>
           <input
             matInput
@@ -41,7 +53,7 @@
             formControlName="cellphone"
           />
         </mat-form-field>
-        <div *ngIf="clientStorage.actualClient">
+        <div *ngIf="clientStorage.actualClient && appStorage.isDesktop">
           <div class="grid grid-cols-12">
             <mat-icon
               class="col-span-3 text-[52px] translate-x-[-5px]"
@@ -55,7 +67,11 @@
             </div>
           </div>
         </div>
-        <mat-form-field appearance="fill" *ngIf="clientStorage.actualClient">
+        <mat-form-field
+          appearance="fill"
+          *ngIf="clientStorage.actualClient"
+          class="col-span-4 md:col-span-1"
+        >
           <mat-label>Dirección</mat-label>
           <input
             matInput
@@ -70,6 +86,7 @@
           appearance="fill"
           *ngIf="!clientStorage.actualClient"
           class="col-span-2"
+          class="col-span-4 md:col-span-1"
         >
           <mat-label>Dirección</mat-label>
           <input
@@ -81,7 +98,11 @@
             La dirección es <strong>obligatoria</strong>
           </mat-error>
         </mat-form-field>
-        <mat-form-field appearance="fill" *ngIf="!clientStorage.actualClient">
+        <mat-form-field
+          appearance="fill"
+          *ngIf="!clientStorage.actualClient"
+          class="col-span-4 md:col-span-1"
+        >
           <mat-label>Celular</mat-label>
           <input
             matInput
@@ -91,7 +112,7 @@
             class="cellphone"
           />
         </mat-form-field>
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="col-span-4 md:col-span-1">
           <mat-label>Barrio</mat-label>
           <input
             matInput
@@ -99,7 +120,7 @@
             formControlName="neighborhood"
           />
         </mat-form-field>
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="fill" class="col-span-4 md:col-span-1">
           <mat-label>Preferencia de tapa</mat-label>
           <mat-select formControlName="tape_preference">
             <mat-option *ngFor="let tape of tape_preference" [value]="tape">{{
@@ -108,20 +129,45 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="fill" *ngIf="!clientStorage.actualClient">
+        <mat-form-field
+          appearance="fill"
+          *ngIf="!clientStorage.actualClient"
+          class="col-span-4 md:col-span-1"
+        >
           <mat-label>Orden</mat-label>
           <input type="number" min="0" formControlName="route_order" matInput />
         </mat-form-field>
 
-        <div *ngIf="clientStorage.actualClient">
+        <div
+          *ngIf="clientStorage.actualClient && !appStorage.isDesktop"
+          class="col-span-4"
+        >
           <div class="grid grid-cols-12">
             <mat-icon
-              class="col-span-3 text-[52px] translate-x-[-5px]"
+              class="col-span-6 md:col-span-3 text-[52px] translate-x-[50px] mdtranslate-x-[-5px]"
+              color="primary"
+              style="width: 52px; height: 52px"
+              >local_drink</mat-icon
+            >
+            <div class="col-span-6 md:col-span-9">
+              <p class="text-blue_3 font-bold">Envases prestados</p>
+              <p>{{ clientStorage.actualClient.borrowedContainers }} envases</p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="clientStorage.actualClient"
+          class="col-span-4 md:col-span-1"
+        >
+          <div class="grid grid-cols-12">
+            <mat-icon
+              class="col-span-6 md:col-span-3 text-[52px] translate-x-[50px] md:translate-x-[-5px]"
               color="warn"
               style="width: 52px; height: 52px"
               >payment</mat-icon
             >
-            <div class="col-span-9">
+            <div class="col-span-6 md:col-span-9">
               <p class="text-rose-400 font-bold">Total deuda</p>
               <p>
                 $ {{ clientStorage.actualClient.totalDebt | formatNumberMiles }}
@@ -133,16 +179,16 @@
     </div>
   </div>
   <div
-    class="px-5 w-full grid grid-cols-2 gap-x-5"
+    class="px-5 w-full grid md:grid-cols-2 gap-5"
     *ngIf="clientStorage.actualClient"
   >
-    <mat-card class="py-5 h-[400px]" [formGroup]="formClient">
+    <mat-card class="py-5 h-[500px] md:h-[400px]" [formGroup]="formClient">
       <div class="px-5">
         <p class="font-black">
           Información Cliente-Ruta
           <span class="text-blue_2">{{ clientStorage.actualRoute?.name }}</span>
         </p>
-        <div class="grid grid-cols-2 gap-5">
+        <div class="grid md:grid-cols-2 gap-5">
           <mat-form-field appearance="fill">
             <mat-label>Ruta</mat-label>
             <mat-select formControlName="route_id">
@@ -175,13 +221,17 @@
         <table
           mat-table
           [dataSource]="dataSource"
-          class="mat-elevation-z8 my-5"
+          class="mat-elevation-z8 my-5 media-query-table"
         >
           <ng-container matColumnDef="Observación">
             <th mat-header-cell *matHeaderCellDef>Observación</th>
             <td mat-cell *matCellDef="let element">
               <span *ngIf="!element.editable">{{ element.description }}</span>
-              <mat-form-field appearance="fill" *ngIf="element.editable">
+              <mat-form-field
+                appearance="fill"
+                *ngIf="element.editable"
+                class="w-full"
+              >
                 <input
                   matInput
                   type="text"
@@ -204,7 +254,11 @@
               <span *ngIf="!element.editable">{{
                 element.distribution_id != null ? "Normal" : "Fija"
               }}</span>
-              <mat-form-field appearance="fill" *ngIf="element.editable">
+              <mat-form-field
+                appearance="fill"
+                *ngIf="element.editable"
+                class="w-full"
+              >
                 <mat-label>Importancia</mat-label>
                 <mat-select
                   [value]="element.distribution_id != null ? '1' : '2'"
@@ -220,11 +274,16 @@
 
           <ng-container matColumnDef="Acciones">
             <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element" [style.width.px]="130">
+            <td
+              mat-cell
+              *matCellDef="let element"
+              [ngStyle]="{ width: appStorage.isDesktop ? '130px' : 'auto' }"
+            >
               <div
                 *ngIf="
                   actualPath != 'clients' || element.distribution_id == null
                 "
+                class="text-center"
               >
                 <button
                   mat-icon-button
@@ -249,7 +308,11 @@
             </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns"
+            class="py-2"
+          ></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
       </div>
@@ -259,18 +322,26 @@
           background-color: #6ddbda;
           color: white;
           padding: 0 50px 0 50px;
-          width: 94%;
           left: 15px;
           position: absolute;
           bottom: 15px;
         "
+        [ngStyle]="{
+          width: appStorage.isDesktop ? '94%' : '90%'
+        }"
         (click)="addNote()"
       >
         Agregar
       </button>
     </mat-card>
+
     <mat-card>
-      <mat-tab-group animationDuration="0ms">
+      <mat-tab-group
+        animationDuration="0ms"
+        [ngStyle]="{
+          width: appStorage.isDesktop ? 'auto' : '304px'
+        }"
+      >
         <mat-tab>
           <ng-template mat-tab-label>
             <mat-icon matPrefix class="mr-2">payment</mat-icon>
@@ -324,7 +395,9 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="Total">
-                <th mat-header-cell *matHeaderCellDef style="padding-right: 0;">Total</th>
+                <th mat-header-cell *matHeaderCellDef style="padding-right: 0">
+                  Total
+                </th>
                 <td
                   mat-cell
                   *matCellDef="let element; let i = index"
@@ -335,7 +408,7 @@
                         : 'font-weight: bolder'
                       : ''
                   "
-                  style="padding-right: 0;"
+                  style="padding-right: 0"
                 >
                   $. {{ element.total | formatNumberMiles }}
                 </td>
@@ -344,14 +417,22 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  style="padding: 0 16px 0 0; width: fit-content;"
-                >Atendió</th>
+                  style="padding: 0 16px 0 0; width: fit-content"
+                >
+                  Atendió
+                </th>
                 <td
                   mat-cell
                   *matCellDef="let element"
-                  style="width: fit-content; padding: 0 16px 0 0; text-align: center;"
+                  style="
+                    width: fit-content;
+                    padding: 0 16px 0 0;
+                    text-align: center;
+                  "
                 >
-                  <mat-icon [matTooltip]="element.user_name" class="inline-block"
+                  <mat-icon
+                    [matTooltip]="element.user_name"
+                    class="inline-block"
                     >account_circle</mat-icon
                   >
                 </td>
@@ -395,8 +476,10 @@
                 padding: 0 50px 0 50px;
                 position: absolute;
                 bottom: 6px;
-                width: 93%;
               "
+              [ngStyle]="{
+                width: appStorage.isDesktop ? '94%' : '90%'
+              }"
               (click)="openDialog(0)"
             >
               Agregar Abono/Deuda
@@ -453,14 +536,22 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  style="padding: 0 16px 0 0; width: fit-content;"
-                >Atendió</th>
+                  style="padding: 0 16px 0 0; width: fit-content"
+                >
+                  Atendió
+                </th>
                 <td
                   mat-cell
                   *matCellDef="let element"
-                  style="width: fit-content; padding: 0 16px 0 0; text-align: center;"
+                  style="
+                    width: fit-content;
+                    padding: 0 16px 0 0;
+                    text-align: center;
+                  "
                 >
-                  <mat-icon [matTooltip]="element.user_name" class="inline-block"
+                  <mat-icon
+                    [matTooltip]="element.user_name"
+                    class="inline-block"
                     >account_circle</mat-icon
                   >
                 </td>
@@ -501,8 +592,10 @@
                 padding: 0 50px 0 50px;
                 position: absolute;
                 bottom: 6px;
-                width: 93%;
               "
+              [ngStyle]="{
+                width: appStorage.isDesktop ? '94%' : '90%'
+              }"
               *ngIf="appStorage.moduleActual == 'Distribución'"
               (click)="openDialog(1)"
             >
@@ -522,14 +615,28 @@
               class="mat-elevation-z8"
             >
               <ng-container matColumnDef="Fecha">
-                <th mat-header-cell *matHeaderCellDef style="padding-left: 8px;">Fecha</th>
-                <td mat-cell *matCellDef="let element" style="padding-left: 8px;">
+                <th mat-header-cell *matHeaderCellDef style="padding-left: 8px">
+                  Fecha
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="padding-left: 8px"
+                >
                   {{ formatDate(element.date) }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="Cantidad">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0;">Cant.</th>
-                <td mat-cell *matCellDef="let element" style="padding: 0; text-align: center;">{{ element.amount }}</td>
+                <th mat-header-cell *matHeaderCellDef style="padding: 0">
+                  Cant.
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="padding: 0; text-align: center"
+                >
+                  {{ element.amount }}
+                </td>
               </ng-container>
               <ng-container matColumnDef="Precio">
                 <th mat-header-cell *matHeaderCellDef>Precio</th>
@@ -538,15 +645,21 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="Total">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0;">Total</th>
-                <td mat-cell *matCellDef="let element" style="padding: 0; font-weight: bolder;">
+                <th mat-header-cell *matHeaderCellDef style="padding: 0">
+                  Total
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  style="padding: 0; font-weight: bolder"
+                >
                   $.
                   {{ element.amount * element.unit_value | formatNumberMiles }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="Valor pagado">
-                <th mat-header-cell *matHeaderCellDef >Valor pagado</th>
-                <td mat-cell *matCellDef="let element" >
+                <th mat-header-cell *matHeaderCellDef>Valor pagado</th>
+                <td mat-cell *matCellDef="let element">
                   $. {{ element.value_paid | formatNumberMiles }}
                 </td>
               </ng-container>
@@ -555,19 +668,27 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  style="padding: 0 8px 0 0; width: fit-content;"
-                >Atendió</th>
+                  style="padding: 0 8px 0 0; width: fit-content"
+                >
+                  Atendió
+                </th>
                 <td
                   mat-cell
                   *matCellDef="let element"
-                  style="width: fit-content; padding: 0 8px 0 0; text-align: center;"
+                  style="
+                    width: fit-content;
+                    padding: 0 8px 0 0;
+                    text-align: center;
+                  "
                 >
-                  <mat-icon [matTooltip]="element.user_name" class="inline-block"
+                  <mat-icon
+                    [matTooltip]="element.user_name"
+                    class="inline-block"
                     >account_circle</mat-icon
                   >
                 </td>
               </ng-container>
-              
+
               <tr mat-header-row *matHeaderRowDef="displayedColumnsVentas"></tr>
               <tr
                 mat-row
@@ -599,7 +720,7 @@
       <button
         mat-raised-button
         type="button"
-        class="w-1/2 mt-5 bg-blue_1 text-white button-status"
+        class="w-full md:w-1/2 mt-5 bg-blue_1 text-white button-status"
         style="background-color: #000000; color: white"
         (click)="close()"
       >
@@ -609,7 +730,7 @@
     <button
       mat-raised-button
       type="button"
-      class="w-1/2 mt-5 bg-blue_1 text-white button-status"
+      class="w-full md:w-1/2 mt-5 bg-blue_1 text-white button-status"
       [style]="
         formClient.invalid || !isActiveUpdate
           ? ' background-color: #999; color: white'

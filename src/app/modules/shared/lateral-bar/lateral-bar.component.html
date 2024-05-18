@@ -1,9 +1,9 @@
 <div
-  class="h-screen fixed bg-blue_dark p-2 overflow-hidden"
+  class="h-screen fixed bg-blue_dark p-2 overflow-hidden z-40"
   [ngStyle]="
     mode == 'Lateral'
       ? { width: appStorage.lateralMenuExpansion ? '150px' : '70px' }
-      : { width: '100%' }
+      : { width: '100%', bottom: 0 }
   "
   style="transition: ease-in-out 200ms"
   [style]="mode == 'Below' ? 'height: 48px' : ''"

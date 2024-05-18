@@ -23,6 +23,7 @@ import { ExpensesStorage } from '../expenses/expenses.storage';
 import { ValuePaidModalComponent } from './components/value-paid-modal/value-paid-modal.component';
 import { SalesService } from 'src/data/services/sales.service';
 import { AppStorage } from 'src/app/app.storage';
+import { CloseRequestDistributionComponent } from './components/close-request-distribution/close-request-distribution.component';
 
 @Component({
   selector: 'app-presales',
@@ -82,9 +83,9 @@ export class PresalesComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.role = `${localStorage.getItem('roleActual')}`
     await this.getDistributions();
-    await this.getClientsByRoute(this.preSaleStorage.actualDistribution?.route);
+    if(!localStorage.getItem('sales-actualRoute')) localStorage.setItem('sales-actualRoute', JSON.stringify(this.preSaleStorage.actualDistribution?.route))
     this.$reload = this.preSaleStorage.getObservable('reloadClients').subscribe(() => {
-      this.getClientsByRoute(this.preSaleStorage.actualDistribution?.route)
+      this.getClientsByRoute(JSON.parse(`${localStorage.getItem('sales-actualRoute')}`))
     })
   }
 
@@ -110,7 +111,12 @@ export class PresalesComponent implements OnInit, OnDestroy {
     this.distributions = await this.distributionService.getDistributions({
       status: this.role == 'Distribuidor' ? 'OPENED' : 'PREORDER', with_route: true, distributor_id: this.role == 'Distribuidor' ? this.jwtHelper.decodeToken(`${localStorage.getItem('token')}`).user.id : undefined
     })
-    this.preSaleStorage.actualDistribution = this.distributions.length > 0 ? this.distributions[0] : null
+    if(!localStorage.getItem('sales-actualDistribution')){
+      localStorage.setItem('sales-actualDistribution', JSON.stringify(this.distributions[0]))
+      this.preSaleStorage.actualDistribution = this.distributions.length > 0 ? this.distributions[0] : null
+    }else{
+      this.preSaleStorage.actualDistribution = JSON.parse(`${localStorage.getItem('sales-actualDistribution')}`) as Distribution
+    }
     this.spinner.showSpinner(false);
   }
 
@@ -143,7 +149,10 @@ export class PresalesComponent implements OnInit, OnDestroy {
   }
 
   changeRoute(event: any) {
-    this.getClientsByRoute(this.distributions.find((r: Distribution) => r.route_id == event.value)?.route);
+    const distribution = this.distributions.find((r: Distribution) => r.route_id == event.value)
+    localStorage.setItem('sales-actualDistribution', JSON.stringify(distribution))
+    localStorage.setItem('sales-actualRoute', JSON.stringify(distribution?.route))
+    this.getClientsByRoute(distribution?.route);
   }
 
   updateOrCreateOrder(element: any, checkBoxSelection: boolean) {
@@ -168,7 +177,8 @@ export class PresalesComponent implements OnInit, OnDestroy {
   async updateSale(element: any) {
     try {
       this.spinner.showSpinner(true);
-      await this.saleService.updateSale({ ...element.sale, payment_method: element.payment_method });
+      const { customer_id, distribution_id, product_inventory_id, user_name, ...sale } = element.sale
+      await this.saleService.updateSale({ ...sale, payment_method: element.payment_method });
       await this.clientService.updateClient({ id: element.id, is_served: true });
       showPopUp('Venta actualizada con exito', 'success')
       this.getClientsByRoute(this.preSaleStorage.actualDistribution?.route)
@@ -277,6 +287,9 @@ export class PresalesComponent implements OnInit, OnDestroy {
         this.expenseStorage.actualExpense = null
         this.expenseStorage.isUpdateCreationExpense = false
         this.modalService.open(ExpenseComponent)
+        break;
+      case 3:
+        this.modalService.open(CloseRequestDistributionComponent)
         break;
     }
   }

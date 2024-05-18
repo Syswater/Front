@@ -6,12 +6,18 @@ import { SharedModule } from "../shared/shared.module";
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import { DeleteRouteModalComponent } from './components/delete-route-modal/delete-route-modal.component';
+import { ConfirmRejectDistributionComponent } from './components/confirm-reject-distribution/confirm-reject-distribution.component';
+import { ConfirmAcceptDistributionComponent } from './components/confirm-accept-distribution/confirm-accept-distribution.component';
+import { InitDistributionFormComponent } from './components/init-distribution-form/init-distribution-form.component';
 
 @NgModule({
   declarations: [
     RoutesComponent,
     RouteFormComponent,
-    DeleteRouteModalComponent
+    DeleteRouteModalComponent,
+    ConfirmRejectDistributionComponent,
+    ConfirmAcceptDistributionComponent,
+    InitDistributionFormComponent
   ],
   imports: [
     CommonModule,

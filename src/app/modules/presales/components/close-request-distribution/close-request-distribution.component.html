@@ -1,0 +1,11 @@
+<app-confirmation (confirmate)="rejectCloseRequest()">
+  <p class="text-center">
+    ¿Estas seguro de querer crear una solicitud de cierre de la distribución
+    <span class="text-blue_3 font-black">{{
+      preSaleStorage.actualDistribution?.route?.name
+    }}</span
+    >?.
+  </p>
+  <br />
+  <p>Debes esperar a la confirmación de un usuario Administrador.</p>
+</app-confirmation>

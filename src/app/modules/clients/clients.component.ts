@@ -52,12 +52,15 @@ export class ClientsComponent implements OnInit, OnDestroy {
   }
 
   changeRoute(event: any) {
-    this.getClientsByRoute(this.routes.find((r) => r.id == event.value));
+    const route = this.routes.find((r) => r.id == event.value)
+    localStorage.setItem('client-actualRoute', JSON.stringify(route))
+    this.getClientsByRoute(route);
   }
 
   async reload() {
     await this.getRoutes();
-    await this.getClientsByRoute(this.routes[0]);
+    if(!localStorage.getItem('client-actualRoute')) localStorage.setItem('client-actualRoute', JSON.stringify(this.routes[0]))
+    await this.getClientsByRoute(JSON.parse(`${localStorage.getItem('client-actualRoute')}`));
   }
 
   async getClientsByRoute(route: Route | undefined | null) {
@@ -113,4 +116,12 @@ export class ClientsComponent implements OnInit, OnDestroy {
     input.value = ''
   }
 
+  getTotalDebtAndEnvases() {
+    let totalDebt = 0, totalEnvases = 0
+    for (const client of this.dataSource) {
+      totalDebt += client.totalDebt ?? 0
+      totalEnvases += client.borrowedContainers ?? 0
+    }
+    return { totalDebt, totalEnvases}
+  }
 }

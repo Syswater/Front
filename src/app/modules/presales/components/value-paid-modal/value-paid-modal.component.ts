@@ -36,6 +36,20 @@ export class ValuePaidModalComponent implements OnInit {
       this.price = quantity * this.preSaleStorage.actualClientDistribution.unit_value
       this.value_to_paid = quantity * this.preSaleStorage.actualClientDistribution.unit_value
     }
+    switch (this.preSaleStorage.actualClientDistribution.payment_method) {
+      case 'EFECTIVO':
+        this.actualMethod = 0;
+        break;
+      case 'NEQUI':
+        this.actualMethod = 1;
+        break;
+      case 'DAVIPLATA':
+        this.actualMethod = 2;
+        break;
+      case 'BANCOLOMBIA':
+        this.actualMethod = 3;
+        break;
+    }
   }
 
   saveAndClose() {
@@ -62,16 +76,16 @@ export class ValuePaidModalComponent implements OnInit {
   }
 
   changeMethod(index: number) {
-    if(index == 1){
-      if(this.actualMethod < this.methods.length - 1){
+    if (index == 1) {
+      if (this.actualMethod < this.methods.length - 1) {
         this.actualMethod++
-      }else{
+      } else {
         this.actualMethod = 0
       }
     } else {
-      if(this.actualMethod > 0) {
+      if (this.actualMethod > 0) {
         this.actualMethod--
-      }else{
+      } else {
         this.actualMethod = this.methods.length - 1
       }
     }

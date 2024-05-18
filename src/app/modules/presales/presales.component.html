@@ -63,7 +63,20 @@
 
     <div class="text-right w-full col-span-4">
       <button
-        class="inline-block w-[161px]"
+        class="inline-block 2xl:mr-5"
+        (click)="openDialog(3, null)"
+        style="
+          background-color: #dc7297;
+          color: white;
+          transform: translateY(-10px);
+        "
+        mat-raised-button
+        *ngIf="role == 'Distribuidor'"
+      >
+        Solicitud de cierre
+      </button>
+      <button
+        class="inline-block w-[166px] mt-2 ml-2 lg:mt-auto"
         (click)="openDialog(2, null)"
         style="
           background-color: #72dcdc;

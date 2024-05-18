@@ -1,0 +1,13 @@
+<app-confirmation (confirmate)="confirmCloseRequest()">
+    <p class="text-center">
+      ¿Confirmas aceptar la solicitud de cierre de la distribución
+      <span class="text-blue_3 font-black">{{
+        routeStorage.actualRoute?.name
+      }}</span
+      >?.
+    </p><br>
+    <p>
+      La distribución en curso quedará cerrada y no se podrán realizar más cambios.
+    </p>
+  </app-confirmation>
+  

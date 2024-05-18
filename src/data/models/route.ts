@@ -4,7 +4,8 @@ export interface Route {
     location: string,
     weekdays: string[],
     price: number,
-    status?: RouteStatus
+    status?: RouteStatus,
+    distribution_id?: number
 }
 
 export enum DayOfWeek {

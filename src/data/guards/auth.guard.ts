@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     private jwtHelper: JwtHelperService,
     private authService: AuthService,
     private appStorage: AppStorage
-  ) {}
+  ) { }
 
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -52,9 +52,9 @@ export class AuthGuard implements CanActivate {
       (urlModuleRole == 'preseller' && role != 'Prevendedor')
     ) {
       showPopUp('No esta autorizado', 'error');
-      if (role == 'Administrador') this.router.navigate(['/admin/dashboard'])     
-      if (role == 'Distribuidor') this.router.navigate(['/distributor/dashboard'])     
-      if (role == 'Prevendedor') this.router.navigate(['/preseller/dashboard'])     
+      if (role == 'Administrador') this.router.navigate(['/admin/dashboard'])
+      if (role == 'Distribuidor') this.router.navigate(['/distributor/dashboard'])
+      if (role == 'Prevendedor') this.router.navigate(['/preseller/dashboard'])
       return false;
     }
 
@@ -67,9 +67,14 @@ export class AuthGuard implements CanActivate {
         this.appStorage.moduleActual = 'Dashboard';
         break;
       case '/preseller/routes':
+      case '/admin/routes':
       case '/distributor/routes':
         this.appStorage.selectionMenu = 1;
         this.appStorage.moduleActual = 'Rutas';
+        break;
+      case '/admin/clients':
+        this.appStorage.selectionMenu = 2;
+        this.appStorage.moduleActual = 'Clientes';
         break;
       case '/preseller/presales':
         this.appStorage.selectionMenu = 2;
@@ -83,6 +88,10 @@ export class AuthGuard implements CanActivate {
       case '/distributor/clients':
         this.appStorage.selectionMenu = 3;
         this.appStorage.moduleActual = 'Clientes';
+        break;
+      case '/admin/reports':
+        this.appStorage.selectionMenu = 3;
+        this.appStorage.moduleActual = 'Reportes';
         break;
       case '/distributor/expenses':
         this.appStorage.selectionMenu = 4;
