@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PresalesStorage } from '../../presales.storage';
+import { User } from 'src/data/models/user';
+import { UserService } from 'src/data/services/user.service';
+import { showPopUp } from 'src/app/utils/SwalPopUp';
 
 @Component({
   selector: 'app-value-paid-modal',
@@ -8,6 +11,8 @@ import { PresalesStorage } from '../../presales.storage';
   styleUrls: ['./value-paid-modal.component.css']
 })
 export class ValuePaidModalComponent implements OnInit {
+  actualUser: number = 0;
+  users: User[] = [];
   price: any;
   value_to_paid: any;
   methods: string[] = ['Efectivo', 'Nequi', 'Daviplata', 'Bancolombia'];
@@ -19,9 +24,10 @@ export class ValuePaidModalComponent implements OnInit {
     'Bancolombia': 'BANCOLOMBIA'
   }
 
-  constructor(public preSaleStorage: PresalesStorage, private dialogRef: MatDialogRef<ValuePaidModalComponent>) { }
+  constructor(private userService: UserService, public preSaleStorage: PresalesStorage, private dialogRef: MatDialogRef<ValuePaidModalComponent>) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.getUsersDistribution()
     let quantity = 0
     if (this.preSaleStorage.actualClientDistribution.sale) {
       this.price = this.preSaleStorage.actualClientDistribution.sale.value_paid
@@ -50,6 +56,21 @@ export class ValuePaidModalComponent implements OnInit {
         this.actualMethod = 3;
         break;
     }
+    for (let i = 0; i < this.users.length; i++) {
+      if(this.users[i].id == this.preSaleStorage.actualClientDistribution.sale.user_id){
+        this.actualUser = i
+      }
+    }
+  }
+
+  async getUsersDistribution() {
+    try {
+      this.users = await this.userService.getDistributionUsers({
+        distribution_id: this.preSaleStorage.actualDistribution!.id
+      })
+    } catch (error) {
+      showPopUp('Error al obtener los usuarios de la distribución',  'error');
+    }
   }
 
   saveAndClose() {
@@ -60,6 +81,8 @@ export class ValuePaidModalComponent implements OnInit {
     }
     const method = this.methods[this.actualMethod] as keyof typeof this.method_enum;
     this.preSaleStorage.actualClientDistribution.payment_method = this.method_enum[method]
+    this.preSaleStorage.actualClientDistribution.sale.user_id = this.users[this.actualUser].id
+    this.preSaleStorage.actualClientDistribution.sale.user_name = this.users[this.actualUser].name
     this.dialogRef.close()
   }
 
@@ -87,6 +110,22 @@ export class ValuePaidModalComponent implements OnInit {
         this.actualMethod--
       } else {
         this.actualMethod = this.methods.length - 1
+      }
+    }
+  }
+
+  changeUser(index: number) {
+    if (index == 1) {
+      if (this.actualUser < this.users.length - 1) {
+        this.actualUser++
+      } else {
+        this.actualUser = 0
+      }
+    } else {
+      if (this.actualUser > 0) {
+        this.actualUser--
+      } else {
+        this.actualUser = this.users.length - 1
       }
     }
   }

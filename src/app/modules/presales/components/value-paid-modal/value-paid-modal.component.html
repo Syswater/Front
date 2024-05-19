@@ -92,7 +92,50 @@
           {{ ">" }}
         </button>
       </div>
+
+      <p class="col-span-4 text-center mb-10">Metodo de pago</p>
+
+      <div class="text-center">
+        <button
+          mat-raised-button
+          style="
+            background-color: #db6f6f;
+            color: white;
+            font-size: xx-large;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          "
+          (click)="changeUser(-1)"
+        >
+          {{ "<" }}
+        </button>
+      </div>
+      <input
+        type="text"
+        class="text-2xl border border-2 border-gray rounded text-center w-full h-full col-span-2"
+        [value]="users[actualUser].name"
+        readonly
+      />
+      <div class="text-center">
+        <button
+          mat-raised-button
+          style="
+            background-color: #6fdb90;
+            color: white;
+            font-size: xx-large;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          "
+          (click)="changeUser(1)"
+        >
+          {{ ">" }}
+        </button>
+      </div>
+      <p class="col-span-4 text-center">Quien recibe</p>
     </div>
+
   </div>
   <div class="grid grid-cols-2 gap-5 w-full px-5 mb-5">
     <div class="text-right">

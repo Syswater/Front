@@ -225,7 +225,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateChartView() {
-    if (this.appStorage.isDesktop) {
+    if (this.appStorage.isDesktop && this.completeRequest) {
       const height = 400;
       const widthSales = this.sales_desktop.nativeElement.offsetWidth + 20;
       const widthExpenses = this.expenses_desktop.nativeElement.offsetWidth - 150;
@@ -235,7 +235,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.viewExpenses = [widthExpenses, height];
       this.viewBalance = [widthBalance, height];
       this.viewContainers = [widthContainers, height];
-    } else if (!this.appStorage.isDesktop) {
+    } else if (!this.appStorage.isDesktop && this.completeRequest) {
       const height = 300;
       const widthSales = this.sales_mobile.nativeElement.offsetWidth + 20;
       const widthExpenses = this.expenses_mobile.nativeElement.offsetWidth - 20;
