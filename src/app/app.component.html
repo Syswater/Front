@@ -18,8 +18,8 @@
         <mat-icon class="text-gray">menu</mat-icon>
       </button>
       <span class="translate-y-[-7px] inline-block text-gray_dark select-none">{{ appStorage.moduleActual }}</span>
-      <div class="float-right grid grid-cols-9 mr-2 cursor-pointer w-96" [matMenuTriggerFor]="menu">
-        <div class="col-span-8 relative">
+      <div class="float-right grid grid-cols-9 mr-2 cursor-pointer w-96">
+        <div class="col-span-8 relative"  [matMenuTriggerFor]="menu">
           <p class="absolute top-2 text-right w-full pr-3 overflow-hidden whitespace-nowrap overflow-ellipsis">
             {{ appStorage.user.name }}
           </p>
@@ -28,7 +28,7 @@
             <span class="translate-y-[-7px] inline-block">{{ appStorage.actualRol }}</span>
           </p>
         </div>
-        <div class="mr-2 mt-1">
+        <div class="mr-2 mt-1" [matMenuTriggerFor]="menu">
           <img src="/assets/icons/svg/user_icon.svg" width="40" alt="User Icon" />
         </div>
       </div>
