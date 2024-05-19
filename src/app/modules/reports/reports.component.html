@@ -189,14 +189,23 @@
           </div>
   
           <div class="my-5 text-justify px-5">
-            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
-            ingreso un total recaudado de
-            <span class="font-black text-blue_1">{{ totalSales }}</span> en ventas
-            y salio un total de
-            <span class="font-black text-green_2">{{ totalExpenses }}</span>
-            destinado a gastos de la ruta <br /><br />
-            Por lo cual el balance de ruta es de
-            <span class="font-black text-blue_3">{{ totalBalance }}</span>
+            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> salió un
+            total de
+            <span class="font-black text-blue_1">{{ totalExpenses }}</span> en
+            gastos destinados a la ruta, donde se registro para gastos de:
+            Alimentación <span class="font-black text-blue_1">({{
+              totalExpenses
+            }})</span
+            >, Peajes <span class="font-black text-[#FF99B7]">({{
+              totalExpenses
+            }})</span
+            >, Transporte <span class="font-black text-blue_3">({{
+              totalExpenses
+            }})</span
+            >, y Otro <span class="font-black text-green_2">({{
+              totalExpenses
+            }})</span
+            >
           </div>
         </div>
       </mat-card>
