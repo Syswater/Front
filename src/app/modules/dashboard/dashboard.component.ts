@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import { AuthService } from 'src/data/services/auth.service';
 import { SpinnerService } from 'src/data/services/spinner.service';
@@ -11,13 +11,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Distribution } from 'src/data/models/distribution';
 import { getCurrentDate } from 'src/app/utils/DateUtils';
 import { AppStorage } from 'src/app/app.storage';
+import { Subscription, debounceTime, fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   single: any[] = [
     {
       name: 'Normal',
@@ -77,6 +78,14 @@ export class DashboardComponent implements OnInit {
   dataSourceClients = new MatTableDataSource<any>([]);
   displayedColumnsClients: string[] = ['Nombres', 'Dirección', 'Barrio', 'Contacto', 'Deuda']
 
+  @ViewChild('card_bar', { read: ElementRef, static: false })
+  card_bar!: ElementRef;
+  @ViewChild('card_pie', { read: ElementRef, static: false })
+  card_pie!: ElementRef;
+
+  resizeSubscription!: Subscription;
+  resizeTimer!: any;
+
   constructor(
     private routesService: RouteService,
     private authService: AuthService,
@@ -86,8 +95,28 @@ export class DashboardComponent implements OnInit {
     private distributionService: DistributionService,
     public appStorage: AppStorage
   ) { }
+  ngAfterViewInit(): void {
+    setTimeout(()=>{
+      this.updateChartView();
+    },1000)
+  }
+
+  ngOnDestroy(): void {
+    if (this.resizeSubscription) {
+      this.resizeSubscription.unsubscribe();
+    }
+  }
+
 
   async ngOnInit() {
+    this.resizeSubscription = fromEvent(window, 'resize')
+      .pipe(debounceTime(200))
+      .subscribe(() => {
+        clearTimeout(this.resizeTimer);
+        this.resizeTimer = setTimeout(() => {
+          this.updateChartView();
+        }, 10);
+      });
     this.authService.isLoginView = false;
     this.spinner.showSpinner(true);
     await this.getRoutes();
@@ -99,6 +128,16 @@ export class DashboardComponent implements OnInit {
     await this.getClientsByRoute(JSON.parse(`${localStorage.getItem('dashboard-pre-actualRoute')}`));
     this.updateGraphics()
     this.spinner.showSpinner(false);
+  }
+
+  updateChartView() {
+    if (this.card_bar && this.card_pie) {
+      const height = 200;
+      const widthBar = this.card_bar.nativeElement.offsetWidth - 40;
+      this.view = [widthBar, height];
+      const widthPie = this.card_pie.nativeElement.offsetWidth * 273 / 881;
+      this.viewPie = [widthPie, height];
+    }
   }
 
   updateGraphics() {
@@ -142,14 +181,14 @@ export class DashboardComponent implements OnInit {
   }
 
   async getClientsByRoute(route: Route | undefined | null) {
-    if(route){
+    if (route) {
       this.dataSourcePresales.data = (await this.clientService.getListClients({
         route_id: route!.id,
         distribution_id: this.dashboardStorage.actualDistribution?.id,
         with_notes: true,
         with_order: true
       })).map(d => ({ ...d, quantity: '-' }));
-    }else{
+    } else {
       this.dataSourcePresales.data = []
     }
   }
@@ -204,7 +243,7 @@ export class DashboardComponent implements OnInit {
       totalDebt += client.totalDebt ?? 0
       totalEnvases += client.borrowedContainers ?? 0
     }
-    return { totalDebt, totalEnvases}
+    return { totalDebt, totalEnvases }
   }
 
   getDate() {

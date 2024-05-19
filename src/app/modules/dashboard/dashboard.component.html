@@ -1,24 +1,26 @@
 <div class="h-full w-full">
   <div class="px-5 pt-2">
     <div
-      class="mt-5 w-full h-20 bg-white flex items-center pl-5 pt-2 shadow-lg"
+      class="my-5 w-full bg-white px-5 pt-2 shadow-lg grid grid-cols-2 text-justify"
     >
-      <p class="text-lg">
-        Hola <span class="text-teal-400">{{ appStorage.user.name }}</span
-        >, Bienvenido de vuelta
-      </p>
-      <mat-form-field class="mr-5 translate-y-2 absolute right-10">
-        <mat-select
-          [value]="dashboardStorage.actualRoute?.id"
-          (selectionChange)="changeRoute($event)"
-        >
-          <mat-option
-            *ngFor="let distribution of distributionRoutes"
-            [value]="distribution.route_id"
-            >{{ distribution.route.name }}</mat-option
+      <div class="text-lg col-span-2 md:col-span-1 flex items-center">
+        <p>
+          Hola <span class="text-teal-400">{{ appStorage.user.name }}</span
+          >, Bienvenido de vuelta
+        </p>
+      </div>
+      <div class="col-span-2 md:col-span-1 md:text-right">
+        <mat-form-field class="w-full md:w-1/2">
+          <mat-select
+            [value]="dashboardStorage.actualRoute?.id"
+            (selectionChange)="changeRoute($event)"
           >
-        </mat-select>
-      </mat-form-field>
+            <mat-option *ngFor="let distribution of distributionRoutes" [value]="distribution.route_id">{{
+              distribution.route.name
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
     <div
       class="mt-5 w-full grid md:grid-cols-2 2xl:grid-cols-4 gap-x-10 gap-y-5"
@@ -65,10 +67,10 @@
       ></app-card>
     </div>
     <div class="mt-5 grid grid-cols-2 gap-10" *ngIf="distributionRoutes.length">
-      <mat-card class="p-5">
+      <mat-card class="p-5 col-span-2 md:col-span-1" #card_bar>
         <div class="grid grid-cols-12 h-36">
           <div
-            class="w-36 h-36 col-span-2 rounded-full border border-cyan border-8 flex items-center justify-center"
+            class="2xl:w-36 2xl:h-36 col-span-2 rounded-full border border-cyan border-8 flex items-center justify-center"
           >
             <span class="text-cyan font-black text-2xl">{{
               getTotalProductsSelled()
@@ -118,9 +120,9 @@
         >
         </ngx-charts-bar-horizontal>
       </mat-card>
-      <div>
-        <mat-card class="p-5 h-[250px] mb-5">
-          <div class="grid grid-cols-12 h-36">
+      <div class="col-span-2 md:col-span-1">
+        <mat-card class="p-5 md:h-[250px] mb-5" #card_pie>
+          <div class="grid grid-cols-12 md:h-36">
             <div class="col-span-4">
               <ngx-charts-pie-chart
                 [view]="viewPie"
@@ -153,11 +155,11 @@
             </div>
           </div>
         </mat-card>
-        <mat-card class="p-5 h-[250px]">
-          <div class="grid grid-cols-12 h-36">
-            <div class="col-span-5 grid grid-cols-2 gap-5">
+        <mat-card class="p-5 md:h-[250px]">
+          <div class="grid grid-cols-12 md:h-36">
+            <div class="col-span-12 md:col-span-5 grid grid-cols-2 gap-5">
               <div
-                class="rounded-full border border-cyan border-8 flex items-center justify-center h-40 w-40 translate-y-6"
+                class="rounded-full border border-cyan border-8 flex items-center justify-center 2xl:h-40 2xl:w-40 translate-y-6"
               >
                 <span class="text-cyan font-black text-2xl"
                   >$.
@@ -167,14 +169,14 @@
                 >
               </div>
               <div
-                class="rounded-full border border-green_1 border-8 flex items-center justify-center h-40 w-40 translate-y-6"
+                class="rounded-full border border-green_1 border-8 flex items-center justify-center 2xl:h-40 2xl:w-40 translate-y-6"
               >
                 <span class="text-green_1 font-black text-2xl"
                   >{{ getTotalDebtAndEnvases().totalEnvases }} u</span
                 >
               </div>
             </div>
-            <div class="col-span-7 pl-5 text-right">
+            <div class="col-span-12 md:col-span-7 pl-5 text-right mt-10 md:mt-0">
               <p class="font-black text-2xl">
                 Total de deuda y envases prestados
               </p>
@@ -197,8 +199,7 @@
           </div>
         </mat-card>
       </div>
-      <app-card-info
-        class="h-[600px] mb-10"
+      <app-card-info class="h-[600px] mb-10 col-span-2 md:col-span-1"
         title="Preventa Actual"
         href="/preseller/presales"
         [menuSelection]="2"
@@ -252,8 +253,7 @@
           ></tr>
         </table>
       </app-card-info>
-      <app-card-info
-        class="h-[600px] mb-10"
+      <app-card-info class="h-[600px] mb-10 col-span-2 md:col-span-1"
         title="Clientes Totales Registrados"
         href="/preseller/clients"
         [menuSelection]="3"
@@ -320,7 +320,7 @@
         width="500"
       />
       <p class="text-4xl text-blue_3">
-        Oops! No encontramos rutas registradas en estado Preventa 
+        Oops! No encontramos rutas registradas en estado Preventa
       </p>
     </div>
   </div>
