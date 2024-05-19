@@ -1,0 +1,155 @@
+<app-modal>
+  <div class="px-5 md:px-10" [formGroup]="formUser">
+    <h1 class="text-2xl font-black text-center">
+      Usuario <br /><span class="text-green_1">{{
+        userStorage.actualUser?.name
+      }}</span>
+    </h1>
+    <div class="h-8"></div>
+
+    <div class="grid grid-cols-3 mb-5">
+      <app-icon
+        iconPath="assets/icons/svg/routes_icon.svg"
+        [color]="hasRol('PRE_SELLER') ? '#6DDBDA' : '#7E86A0'"
+        size="3.5rem"
+        class="inline-block"
+        matTooltip="Prevendedor"
+      ></app-icon>
+      <app-icon
+        iconPath="assets/icons/svg/distribution_icon.svg"
+        [color]="hasRol('DISTRIBUTOR') ? '#6DDBDA' : '#7E86A0'"
+        size="3.5rem"
+        class="inline-block"
+        matTooltip="Distribuidor"
+      ></app-icon>
+      <app-icon
+        iconPath="assets/icons/svg/clients_icon.svg"
+        [color]="hasRol('ADMIN') ? '#6DDBDA' : '#7E86A0'"
+        size="3.5rem"
+        class="inline-block"
+        matTooltip="Administrador"
+      ></app-icon>
+    </div>
+
+    <div class="md:grid md:grid-cols-2 md:gap-x-5">
+      <p class="text-xl">Nombre de usuario</p>
+      <p class="text-xl" *ngIf="appStorage.isDesktop">Teléfono</p>
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Ingresa el nombre</mat-label>
+        <input matInput type="text" formControlName="name" />
+        <mat-error *ngIf="formUser.get('name')?.hasError('required')"
+          >Este campo es requerido</mat-error
+        >
+      </mat-form-field>
+      <p class="text-xl" *ngIf="!appStorage.isDesktop">Teléfono</p>
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Ingresa el telefono</mat-label>
+        <input matInput type="number" formControlName="cellphone" min="0" />
+        <mat-error *ngIf="formUser.get('cellphone')?.hasError('required')"
+          >Este campo es requerido</mat-error
+        >
+      </mat-form-field>
+      <p class="text-xl">Roles</p>
+      <p class="text-xl" *ngIf="appStorage.isDesktop">Alias</p>
+
+      <mat-form-field class="w-full">
+        <mat-label>Roles</mat-label>
+        <mat-select [formControl]="rolesControl" multiple>
+          <mat-select-trigger>
+            <span
+              *ngIf="rolesControl.value?.length == 1"
+              >{{formatRole(rolesControl.value?.[0])}}</span
+            >
+            <span *ngIf="(rolesControl.value?.length || 0) > 1">
+              (+{{ rolesControl.value?.length - 1 || 0 }}
+              {{ rolesControl.value?.length === 2 ? "otro" : "otros" }})
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let role of roles" [value]="role.key">{{
+            role.value
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <p class="text-xl" *ngIf="!appStorage.isDesktop">Alias</p>
+
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Ingresa el Alias</mat-label>
+        <input matInput type="text" formControlName="username" [readonly]="!!userStorage.actualUser" />
+        <mat-error *ngIf="formUser.get('username')?.hasError('required')"
+          >Este campo es requerido</mat-error
+        >
+      </mat-form-field>
+      <p class="text-xl" *ngIf="!userStorage.actualUser">Contraseña</p>
+      <p class="text-xl" *ngIf="!userStorage.actualUser && appStorage.isDesktop">
+        Repite la Contraseña
+      </p>
+
+      <mat-form-field
+        appearance="fill"
+        class="w-full"
+        *ngIf="!userStorage.actualUser"
+      >
+        <mat-label>Ingresa la contraseña</mat-label>
+        <input matInput type="text" formControlName="password" />
+        <mat-error *ngIf="formUser.get('password')?.hasError('required')"
+          >Este campo es requerido</mat-error
+        >
+      </mat-form-field>
+
+      <p class="text-xl" *ngIf="!userStorage.actualUser && !appStorage.isDesktop">
+        Repite la Contraseña
+      </p>
+
+      <mat-form-field
+        appearance="fill"
+        class="w-full"
+        *ngIf="!userStorage.actualUser"
+      >
+        <mat-label>Repite la contraseña</mat-label>
+        <input matInput type="text" formControlName="passwordR" />
+        <mat-error *ngIf="formUser.get('passwordR')?.hasError('required')"
+          >Este campo es requerido</mat-error
+        >
+      </mat-form-field>
+      <button
+          mat-raised-button
+          type="button"
+          class="mt-5 bg-blue_1 text-white button-status w-full"
+          style="background-color: #404452; color: white"
+          (click)="openChangePassword()"
+          *ngIf="userStorage.actualUser"
+        >
+          Reestablecer contraseña
+        </button>
+    </div>
+
+    <div class="grid grid-cols-2 gap-5 w-full my-5">
+      <div class="text-right">
+        <button
+          mat-raised-button
+          type="button"
+          class="w-[150px] mt-5 bg-blue_1 text-white button-status"
+          style="background-color: #000000; color: white"
+          (click)="close()"
+        >
+          Cancelar
+        </button>
+      </div>
+      <button
+        mat-raised-button
+        type="button"
+        class="w-[150px] mt-5 bg-blue_1 text-white button-status"
+        [style]="
+          formUser.invalid
+            ? 'background-color: #999; color: white'
+            : 'background-color: #6fdb90; color: white'
+        "
+        [disabled]="formUser.invalid"
+        (click)="userStorage.actualUser ? updateUser() : createUser()"
+      >
+        {{ userStorage.actualUser ? "Actualizar" : "Crear" }}
+      </button>
+    </div>
+  </div>
+</app-modal>

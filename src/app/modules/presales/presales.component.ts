@@ -116,7 +116,8 @@ export class PresalesComponent implements OnInit, OnDestroy {
       localStorage.setItem('sales-actualDistribution', JSON.stringify(this.distributions[0]))
       this.preSaleStorage.actualDistribution = this.distributions.length > 0 ? this.distributions[0] : null
     }else{
-      this.preSaleStorage.actualDistribution = JSON.parse(`${localStorage.getItem('sales-actualDistribution')}`) as Distribution
+      if(localStorage.getItem('sales-actualDistribution') != "undefined")
+        this.preSaleStorage.actualDistribution = JSON.parse(`${localStorage.getItem('sales-actualDistribution')}`) as Distribution
     }
     this.spinner.showSpinner(false);
   }

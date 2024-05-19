@@ -187,7 +187,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnDestroy(): void {
-    this.resizeSubscription.unsubscribe();
+    if(this.resizeSubscription){
+      this.resizeSubscription.unsubscribe();
+    }
   }
 
   ngOnInit(): void {

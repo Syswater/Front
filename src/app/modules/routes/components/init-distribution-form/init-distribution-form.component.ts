@@ -74,4 +74,7 @@ export class InitDistributionFormComponent implements OnInit {
     }
   }
 
+  close() {
+    this.dialogRef.close()
+  }
 }

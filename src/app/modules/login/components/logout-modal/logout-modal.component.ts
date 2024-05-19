@@ -16,10 +16,11 @@ export class LogoutModalComponent {
     this.removeValuesLocalStorage()
     this.auth.isLoginView = true
     this.router.navigate(['/login']);
-    showPopUp('Sesion cerrada con exito', 'success')
+    showPopUp('Sesion cerrada con exito', 'success');
   }
 
   private removeValuesLocalStorage() {
+    localStorage.removeItem('dashboard-admin-actualRoute');
     localStorage.removeItem('dashboard-pre-actualDistribution');
     localStorage.removeItem('dashboard-pre-actualRoute');
     localStorage.removeItem('dashboard-dist-actualRoute');

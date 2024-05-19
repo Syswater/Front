@@ -22,6 +22,9 @@ import { ExpensesModule } from './modules/expenses/expenses.module';
 import { DashboardAdminComponent } from './modules/dashboard-admin/dashboard-admin.component';
 import { ReportsComponent } from './modules/reports/reports.component';
 import { UsersComponent } from './modules/users/users.component';
+import { DeleteUserModalComponent } from './modules/users/components/delete-user-modal/delete-user-modal.component';
+import { UserFormComponent } from './modules/users/components/user-form/user-form.component';
+import { ChangePasswordComponent } from './modules/users/components/user-form/components/change-password/change-password.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -33,6 +36,9 @@ export function tokenGetter() {
     DashboardAdminComponent,
     ReportsComponent,
     UsersComponent,
+    DeleteUserModalComponent,
+    UserFormComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

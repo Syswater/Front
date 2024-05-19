@@ -204,7 +204,9 @@ export class DashboardAdminComponent
   ) { }
 
   ngOnDestroy(): void {
-    this.resizeSubscription.unsubscribe();
+    if(this.resizeSubscription){
+      this.resizeSubscription.unsubscribe();
+    }
   }
 
   async ngOnInit() {

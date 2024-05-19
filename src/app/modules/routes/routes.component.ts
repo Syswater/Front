@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { RouteService } from '../../../data/services/route.service';
-import { Route } from '../../../data/models/route';
+import { Route, RouteStatus } from '../../../data/models/route';
 import { SpinnerService } from 'src/data/services/spinner.service';
 import { ModalService } from '../../../data/services/modal.service';
 import { RouteFormComponent } from './components/route-form/route-form.component';
@@ -116,6 +116,15 @@ export class RoutesComponent implements OnInit, OnDestroy {
         showPopUp('Error al crear la distribución', 'error');
       }
       this.spinnerService.showSpinner(false)
+    }
+    switch (route.status?.toString()) {
+      case 'PREORDER':
+        this.router.navigate(['/preseller/presales'])
+        break;
+      case 'OPENED':
+      case 'CLOSE_REQUEST':
+        this.router.navigate(['/distributor/distribution'])
+        break;
     }
   }
 
