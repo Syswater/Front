@@ -59,11 +59,11 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     id: this.client?.id,
     address: [this.client?.address, Validators.required],
     neighborhood: this.client?.neighborhood,
-    route_order: this.client?.route_order
+    route_order: [this.client?.route_order
       ? this.client.route_order
       : this.clientStorage.lastClient
         ? this.clientStorage.lastClient.route_order + 1
-        : 1,
+        : 1, Validators.min(0)],
     tape_preference: this.client
       ? this.client.tape_preference
       : this.tape_preference[0],

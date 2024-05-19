@@ -136,6 +136,10 @@
         >
           <mat-label>Orden</mat-label>
           <input type="number" min="0" formControlName="route_order" matInput />
+          <mat-error
+          *ngIf="formClient.get('route_order')?.hasError('min')"
+          >No se admiten números negativos</mat-error
+        >
         </mat-form-field>
 
         <div
@@ -207,6 +211,10 @@
               formControlName="route_order"
               matInput
             />
+            <mat-error
+            *ngIf="formClient.get('route_order')?.hasError('min')"
+            >No se admiten números negativos</mat-error
+          >
           </mat-form-field>
         </div>
 

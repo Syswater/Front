@@ -31,8 +31,8 @@ export class PaymentModalComponent implements OnInit {
     value: this.valueControl,
     payment_method: 'EFECTIVO',
     user_id:
-      parseInt(localStorage.getItem('lastUserTransaction') ?? '0') ??
-      this.appStorage.user.id,
+      [parseInt(localStorage.getItem('lastUserTransaction') ?? '0') ??
+      this.appStorage.user.id, Validators.required],
   });
   methods = ['Efectivo', 'Nequi', 'Daviplata', 'Bancolombia'];
   users: any = [];

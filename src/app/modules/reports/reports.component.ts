@@ -206,20 +206,6 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  reload(): void {
-    this.getRoutes()
-  }
-
-  async getRoutes() {
-    this.spinner.showSpinner(true);
-    this.routes = await this.routeService.getRoutes();
-    this.spinner.showSpinner(false);
-  }
-
-  changeRoute($event: MatSelectChange) {
-    throw new Error('Method not implemented.');
-  }
-
   ngAfterViewInit() {
     this.updateChartView();
   }
@@ -246,6 +232,20 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.viewBalance = [widthBalance, height];
       this.viewContainers = [widthContainers, height];
     }
+  }
+
+  reload(): void {
+    this.getRoutes()
+  }
+
+  async getRoutes() {
+    this.spinner.showSpinner(true);
+    this.routes = await this.routeService.getRoutes();
+    this.spinner.showSpinner(false);
+  }
+
+  changeRoute($event: MatSelectChange) {
+    throw new Error('Method not implemented.');
   }
 
   consultReportsRange() {

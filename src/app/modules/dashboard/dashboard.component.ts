@@ -164,7 +164,6 @@ export class DashboardComponent implements OnInit {
 
   async getRoutes() {
     this.distributionRoutes = await this.distributionService.getDistributions({ status: 'PREORDER', with_route: true })
-    console.log("🚀 ~ DashboardComponent ~ getRoutes ~ distributionRoutes:", this.distributionRoutes)
   }
 
   async changeRoute(event: any) {

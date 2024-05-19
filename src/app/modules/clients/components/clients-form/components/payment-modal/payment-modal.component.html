@@ -66,6 +66,10 @@
             >{{ method }}</mat-option
           >
         </mat-select>
+        <mat-error
+        *ngIf="formPayment.get('payment_method')?.hasError('required')"
+        >Este campo es obligatorio</mat-error
+      >
       </mat-form-field>
 
       <p class="text-xl mt-2 col-span-2">Recibido por</p>

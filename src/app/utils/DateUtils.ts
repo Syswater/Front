@@ -13,3 +13,7 @@ export function formatDate(date:string, format?:string){
 export function getStartDayCurrent(){
     return moment().tz(tz).startOf('day');
 }
+
+export function getLastDateOf(amount: moment.DurationInputArg1, duration: moment.DurationInputArg2){
+    return moment().tz(tz).subtract(amount, duration);
+}

@@ -20,11 +20,18 @@
             >{{ category.type }}</mat-option
           >
         </mat-select>
+        <mat-error
+          *ngIf="formExpense.get('expense_category_id')?.hasError('required')"
+          >Este campo es obligatorio</mat-error
+        >
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="w-full">
         <mat-label>Ingresa el valor</mat-label>
         <input matInput type="number" formControlName="value" step="500" />
+        <mat-error *ngIf="formExpense.get('value')?.hasError('min')"
+          >No se admiten números negativos</mat-error
+        >
       </mat-form-field>
     </div>
 
@@ -37,6 +44,10 @@
         style="height: 150px"
         formControlName="description"
       ></textarea>
+      <mat-error
+      *ngIf="formExpense.get('description')?.hasError('required')"
+      >Este campo es obligatorio</mat-error
+    >
     </mat-form-field>
 
     <div class="grid grid-cols-2 gap-5 w-full mb-5">

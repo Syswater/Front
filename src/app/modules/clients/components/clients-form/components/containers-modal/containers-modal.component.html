@@ -15,6 +15,10 @@
         min="0"
         formControlName="value"
       />
+      <mat-error
+      *ngIf="formContainers.get('value')?.hasError('min')"
+      >No se admiten números negativos</mat-error
+    >
     </mat-form-field>
 
     <p class="text-xl mt-5">Tipo</p>

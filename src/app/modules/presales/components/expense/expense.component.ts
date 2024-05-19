@@ -19,7 +19,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class ExpenseComponent implements OnInit {
   expensesCategories: ExpenseCategory[] = [];
   formExpense: FormGroup = this.fb.group({
-    value: [this.expensesStorage.actualExpense ? this.expensesStorage.actualExpense.value : 0, Validators.required],
+    value: [this.expensesStorage.actualExpense ? this.expensesStorage.actualExpense.value : 0, Validators.min(0)],
     date: getStartDayCurrent(),
     description: [this.expensesStorage.actualExpense ? this.expensesStorage.actualExpense.description : '', Validators.required],
     distribution_id: this.preSaleStorage.actualDistribution!.id,
