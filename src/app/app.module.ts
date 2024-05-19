@@ -21,6 +21,7 @@ import { DashboardDistributorModule } from './modules/dashboard-distributor/dash
 import { ExpensesModule } from './modules/expenses/expenses.module';
 import { DashboardAdminComponent } from './modules/dashboard-admin/dashboard-admin.component';
 import { ReportsComponent } from './modules/reports/reports.component';
+import { UsersComponent } from './modules/users/users.component';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -31,6 +32,7 @@ export function tokenGetter() {
     NotFoundComponent,
     DashboardAdminComponent,
     ReportsComponent,
+    UsersComponent,
   ],
   imports: [
     BrowserModule,

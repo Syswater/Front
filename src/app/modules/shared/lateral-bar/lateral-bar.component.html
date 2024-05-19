@@ -90,7 +90,7 @@
   </div>
   <div *ngIf="mode == 'Below'" class="flex justify-around">
     <span
-      *ngFor="let icon of getPartIcons(0)"
+      *ngFor="let icon of icons"
       (click)="
         appStorage.selectionMenu = icon.index; redirectTo(icon.redirectTo)
       "
@@ -106,23 +106,8 @@
     <img
       src="assets/icons/logo_basic_icon.png"
       alt=""
-      class="inline"
+      class="fixed icon_animation"
       width="50"
-      *ngIf="appStorage.actualRol != 'Distribuidor'"
     />
-    <span
-      *ngFor="let icon of getPartIcons(1); index as i"
-      (click)="
-        appStorage.selectionMenu = icon.index; redirectTo(icon.redirectTo)
-        "
-        [matTooltip]="icon.text"
-    >
-      <app-icon
-        [iconPath]="icon.iconPath"
-        [color]="icon.index == appStorage.selectionMenu ? '#6DDBDA' : '#7E86A0'"
-        class="cursor-pointer inline"
-        [size]="icon.size"
-      ></app-icon>
-    </span>
   </div>
 </div>

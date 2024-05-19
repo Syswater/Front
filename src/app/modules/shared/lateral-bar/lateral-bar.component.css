@@ -1,0 +1,17 @@
+.icon_animation {
+    animation: 2s moveAndRotate 2s forwards;
+    transition: ease-in-out;
+    z-index: 200;
+}
+
+@keyframes moveAndRotate {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1.5);
+    }
+    20% {
+        transform: translateY(-20px) rotate(0deg) scale(3);
+    }
+    100% {
+        transform: translateY(100px) rotate(360deg) scale(1);
+    }
+}

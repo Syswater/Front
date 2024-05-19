@@ -82,14 +82,17 @@ export class AuthGuard implements CanActivate {
         this.appStorage.moduleActual = 'Dashboard';
         break;
       case '/preseller/routes':
-      case '/admin/routes':
       case '/distributor/routes':
         this.appStorage.selectionMenu = 1;
         this.appStorage.moduleActual = 'Rutas';
         break;
-      case '/admin/clients':
+      case '/admin/users':
+        this.appStorage.selectionMenu = 1;
+        this.appStorage.moduleActual = 'Usuarios';
+        break;
+      case '/admin/routes':
         this.appStorage.selectionMenu = 2;
-        this.appStorage.moduleActual = 'Clientes';
+        this.appStorage.moduleActual = 'Rutas';
         break;
       case '/preseller/presales':
         this.appStorage.selectionMenu = 2;
@@ -104,8 +107,12 @@ export class AuthGuard implements CanActivate {
         this.appStorage.selectionMenu = 3;
         this.appStorage.moduleActual = 'Clientes';
         break;
-      case '/admin/reports':
+      case '/admin/clients':
         this.appStorage.selectionMenu = 3;
+        this.appStorage.moduleActual = 'Clientes';
+        break;
+      case '/admin/reports':
+        this.appStorage.selectionMenu = 4;
         this.appStorage.moduleActual = 'Reportes';
         break;
       case '/distributor/expenses':

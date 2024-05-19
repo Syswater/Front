@@ -49,25 +49,32 @@ export class LateralBarComponent implements OnInit, OnDestroy {
         index: 0
       },
       {
+        iconPath: 'assets/icons/svg/users_icon.svg',
+        size: '1.8rem',
+        redirectTo: 'admin/users',
+        text: 'Usuarios',
+        index: 1
+      },
+      {
         iconPath: 'assets/icons/svg/routes_icon.svg',
         size: '1.8rem',
         redirectTo: 'admin/routes',
         text: 'Rutas',
-        index: 1
+        index: 2
       },
       {
         iconPath: 'assets/icons/svg/clients_icon.svg',
         size: '1.8rem',
         redirectTo: 'admin/clients',
         text: 'Clientes',
-        index: 2
+        index: 3
       },
       {
         iconPath: 'assets/icons/svg/reports_icon.svg',
         size: '1.8rem',
         redirectTo: 'admin/reports',
         text: 'Reportes',
-        index: 3
+        index: 4
       }
     ]
   }
@@ -150,7 +157,4 @@ export class LateralBarComponent implements OnInit, OnDestroy {
 
   }
 
-  getPartIcons(index: number): any {
-    return index == 0 ? this.icons.slice(0, Math.floor(this.icons.length / 2)) : this.icons.slice(Math.floor(this.icons.length / 2))
-  }
 }
