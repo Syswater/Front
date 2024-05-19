@@ -14,14 +14,14 @@
     </p>
 
     <p
-      class="text-lg col-span-12 text-center md:text-right md:col-span-1 md:hidden 2xl:inline-block"
+      class="text-lg col-span-12 text-center md:text-right md:col-span-1 md:hidden 2xl:inline-block mr-5"
     >
       # Clientes:
       <span class="text-green_1 font-black">{{ dataSource.length }}</span>
     </p>
 
     <mat-form-field
-      class="md:mr-5 translate-y-2 col-span-12 md:col-span-8 2xl:col-span-5"
+      class="md:mr-5 translate-y-2 col-span-12 md:col-span-9 2xl:col-span-6"
     >
       <mat-label>Buscar Cliente</mat-label>
       <input
@@ -46,7 +46,7 @@
       </button>
     </mat-form-field>
 
-    <mat-form-field class="mr-5 translate-y-2 col-span-6 md:col-span-2">
+    <mat-form-field class="translate-y-2 col-span-6 md:col-span-3 2xl:col-span-2">
       <mat-select
         [value]="clientStorage.actualRoute?.id"
         (selectionChange)="changeRoute($event)"
@@ -59,9 +59,9 @@
       </mat-select>
     </mat-form-field>
 
-    <div class="text-right col-span-6 md:col-span-2">
+    <div class="text-right col-span-6 md:col-span-1 inline-block md:hidden 2xl:inline-block">
       <button
-        class="md:mt-5 w-full md:w-1/2"
+        class="w-full mx-2"
         mat-raised-button
         style="
           background-color: #6ddbda;
@@ -74,7 +74,7 @@
       </button>
     </div>
 
-    <p class="text-lg col-span-6 text-center hidden md:inline-block 2xl:hidden">
+    <p class="text-lg md:col-span-4 2xl:col-span-6 text-center hidden md:inline-block 2xl:hidden">
       Ruta
       <span class="text-cyan font-black">{{
         clientStorage.actualRoute?.name
@@ -83,10 +83,25 @@
       {{ clientStorage.actualRoute?.location }}
     </p>
 
-    <p class="text-lg col-span-6 text-center hidden md:inline-block 2xl:hidden">
+    <p class="text-lg md:col-span-4 2xl:col-span-6 text-center hidden md:inline-block 2xl:hidden">
       # Clientes:
       <span class="text-green_1 font-black">{{ dataSource.length }}</span>
     </p>
+
+    <div class="text-right col-span-4 hidden md:inline-block 2xl:hidden">
+      <button
+        class="w-1/2 mb-5"
+        mat-raised-button
+        style="
+          background-color: #6ddbda;
+          color: white;
+          padding: 0 50px 0 50px;
+        "
+        (click)="showDialogClient(null, 1)"
+      >
+        Agregar
+      </button>
+    </div>
   </div>
 
   <table

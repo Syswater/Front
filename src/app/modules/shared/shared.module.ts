@@ -19,7 +19,7 @@ import { ScrolldetectorDirective } from './directives/scrolldetector.directive';
     CircleButtonComponent,
     ConfirmationComponent,
     FormatNumberPipe,
-    ScrolldetectorDirective
+    ScrolldetectorDirective,
   ],
   imports: [
     CommonModule,
@@ -33,7 +33,7 @@ import { ScrolldetectorDirective } from './directives/scrolldetector.directive';
     CircleButtonComponent,
     ConfirmationComponent,
     FormatNumberPipe,
-    ScrolldetectorDirective
+    ScrolldetectorDirective,
   ]
 })
 export class SharedModule { }

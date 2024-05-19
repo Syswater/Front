@@ -36,7 +36,7 @@ body {
   padding: 0 !important;
 }
 
-g[ngx-charts-axis-label]{
+.chart-sales g[ngx-charts-axis-label]{
   display: none;
 }
 

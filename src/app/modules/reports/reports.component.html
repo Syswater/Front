@@ -1,11 +1,15 @@
-<div class="px-2 md:px-5 pt-2 md:pt-5 pb-14">
+<div class="px-2 md:px-5 pt-2 md:pt-5 pb-14 md:pb-5">
   <mat-card class="p-5 mb-5">
-    <div class="grid grid-cols-12">
-      <p class="col-span-12">Selecciona una ruta</p>
-      <mat-form-field class="col-span-12">
+    <div class="grid grid-cols-12 gap-x-5">
+      <p class="col-span-{{ appStorage.isDesktop ? '6' : '12' }}">
+        Selecciona una ruta
+      </p>
+      <p class="col-span-6" *ngIf="appStorage.isDesktop">
+        Selecciona un rango de fechas
+      </p>
+      <mat-form-field class="col-span-{{ appStorage.isDesktop ? '6' : '12' }}">
         <mat-select
           (selectionChange)="changeRoute($event)"
-          [value]="routes[0].id"
         >
           <mat-option
             *ngFor="let route of routes; index as i"
@@ -14,8 +18,10 @@
           >
         </mat-select>
       </mat-form-field>
-      <p class="col-span-12">Selecciona un rango de fechas</p>
-      <mat-form-field class="col-span-12">
+      <p class="col-span-12" *ngIf="!appStorage.isDesktop">
+        Selecciona un rango de fechas
+      </p>
+      <mat-form-field class="col-span-{{ appStorage.isDesktop ? '6' : '12' }}">
         <mat-date-range-input [rangePicker]="campaignOnePicker">
           <input matStartDate placeholder="Fecha inicial" />
           <input matEndDate placeholder="Fecha final" />
@@ -30,68 +36,539 @@
       <button
         mat-raised-button
         type="submit"
-        class="w-full mt-5 col-span-12"
+        class="w-{{ appStorage.isDesktop ? '1/2' : 'full' }} mt-5 col-span-{{
+          appStorage.isDesktop ? '6' : '12'
+        }}"
         style="background-color: #72dcdc; color: white"
+        (click)="consultReportsRange()"
       >
         Consultar
       </button>
     </div>
   </mat-card>
 
-  <div class="grid grid-cols-4">
-    <app-card
-      title="Total Vendido"
-      [footer]="totalSales"
-      color="blue_2"
-      [height]="32"
-      img_path="/assets/icons/icon2.png"
-      class="col-span-4"
-    ></app-card>
-
-    <mat-card class="col-span-4 mt-2">
-      <h1 class="pl-5 text-2xl font-black mt-5">Ventas realizadas</h1>
-      <h1 class="pl-5 mb-5">(Efectivo, Nequi, Bancolombia, Daviplata)</h1>
-      <ngx-charts-area-chart
-        [view]="[420, 400]"
-        [scheme]="reportsStorage.colorScheme"
-        [legend]="false"
-        [showXAxisLabel]="true"
-        [showYAxisLabel]="true"
-        [xAxis]="true"
-        [yAxis]="true"
-        xAxisLabel="xAxisLabel"
-        yAxisLabel="yAxisLabel"
-        [timeline]="true"
-        [results]="data"
-        class="translate-x-[-30px]"
-      >
-      </ngx-charts-area-chart>
-      <div
-        class="translate-y-[-30] inline-block mb-5"
-        style="margin-top: -75px"
-      >
-        <h1 class="pl-5 text-2xl mb-2">Metodo de pago</h1>
-        <div class="grid grid-cols-2 pl-5">
-          <div>
-            <p>Efectivo</p>
-            <p>Nequi</p>
-            <p>Bancolombia</p>
-            <p>Daviplata</p>
-          </div>
-          <div class="grid grid-cols-2">
-            <p>$ 40.000</p>
-            <p>$ 40.000</p>
-            <p>$ 40.000</p>
-            <p>$ 40.000</p>
-            <p>$ 40.000</p>
-            <p>$ 40.000</p>
-            <p>$ 40.000</p>
-            <p>$ 40.000</p>
+  <div *ngIf="completeRequest">
+    <div class="grid grid-cols-4" *ngIf="!appStorage.isDesktop; else desktopView">
+      <app-card
+        class="col-span-4 md:col-span-1"
+        title="Total Vendido"
+        [footer]="totalSales"
+        color="blue_2"
+        [height]="32"
+        img_path="/assets/icons/icon2.png"
+      ></app-card>
+  
+      <mat-card class="col-span-4 md:col-span-1 mt-5" #sales_mobile>
+        <h1 class="pl-5 text-2xl font-black mt-5">
+          Ventas realizadas
+          <span class="text-green_2 font-bold text-sm">({{ totalSales }})</span>
+        </h1>
+        <h1 class="pl-5 mb-5">(Efectivo, Nequi, Bancolombia, Daviplata)</h1>
+        <ngx-charts-area-chart
+          [view]="viewSales"
+          [scheme]="reportsStorage.colorScheme"
+          [legend]="false"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [xAxis]="true"
+          [yAxis]="true"
+          [timeline]="true"
+          [results]="dataSales"
+          class="translate-x-[-30px]"
+        >
+        </ngx-charts-area-chart>
+        <div
+          class="translate-y-[-30] inline-block mb-5"
+          style="margin-top: -75px"
+        >
+          <h1 class="pl-5 text-2xl mb-2 font-black">Metodo de pago</h1>
+          <div class="grid grid-cols-2 pl-5">
+            <div>
+              <p>Efectivo</p>
+              <p>Nequi</p>
+              <p>Bancolombia</p>
+              <p>Daviplata</p>
+            </div>
+            <div>
+              <p class="font-bold">$. 40.000 COP</p>
+              <p class="font-bold">$. 230.000 COP</p>
+              <p class="font-bold">$. 440.000 COP</p>
+              <p class="font-bold">$. 350.000 COP</p>
+            </div>
           </div>
         </div>
+        <div class="px-5 pb-5">
+          <h1 class="text-2xl mb-2 font-black">Productos vendidos</h1>
+          <div class="grid grid-cols-2 mt-2">
+            <div
+              class="w-36 h-36 rounded-full border border-cyan border-8 flex items-center justify-center"
+            >
+              <span class="text-cyan font-black text-2xl">{{
+                quantitySold
+              }}</span>
+            </div>
+            <div>
+              <p class="text-justify">
+                Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
+                vendieron
+                <span class="font-black text-blue_1">{{ quantitySold }}</span>
+                productos, con un total recaudado de
+                <span class="font-black text-green_2">$3.500.000 COP</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+  
+      <app-card
+        class="col-span-4 md:col-span-1 mt-5"
+        title="Total Gastos"
+        [footer]="totalExpenses"
+        color="blue_1"
+        [height]="32"
+        img_path="/assets/icons/svg/expenses_icon.svg"
+      ></app-card>
+  
+      <mat-card class="col-span-4 md:col-span-1 mt-5" #expenses_mobile>
+        <h1 class="pl-5 text-2xl font-black mt-5">
+          Gastos realizados
+          <span class="text-green_2 font-bold text-sm"
+            >({{ totalExpenses }})</span
+          >
+        </h1>
+        <h1 class="pl-5 mb-5">(Alimentacion, Peajes, Transporte, Otro)</h1>
+        <div class="text-center">
+          <ngx-charts-pie-chart
+            [view]="viewExpenses"
+            [scheme]="reportsStorage.colorScheme"
+            [results]="dataExpenses"
+            [gradient]="true"
+            [legend]="false"
+            [labels]="false"
+            [doughnut]="false"
+            class="inline-block"
+          >
+          </ngx-charts-pie-chart>
+        </div>
+        <div class="mb-5">
+          <div class="grid grid-cols-2 gap-x-5 pl-5">
+            <div>
+              <div class="flex items-center justify-end">
+                Alimentación
+                <div
+                  class="ml-2 w-5 h-5 bg-blue_2 inline-block rounded-full"
+                ></div>
+              </div>
+              <div class="text-right text-xs mr-7 text-[#4cadac]">($40.000)</div>
+              <div class="flex items-center justify-end font-black">
+                Peajes
+                <div
+                  class="ml-2 w-5 h-5 bg-[#6E96DB] inline-block rounded-full"
+                ></div>
+              </div>
+              <div class="text-right text-xs mr-7 text-[#6E96DB] font-black">
+                ($40.000)
+              </div>
+            </div>
+            <div class="text-left">
+              <div class="flex items-center justify-start">
+                <div
+                  class="mr-2 w-5 h-5 bg-[#FF99B7] inline-block rounded-full"
+                ></div>
+                Transporte
+              </div>
+              <div class="text-xs ml-7 text-[#FF99B7] font-black">($40.000)</div>
+              <div class="flex items-center justify-start">
+                <div
+                  class="mr-2 w-5 h-5 bg-[#6EB9DB] inline-block rounded-full"
+                ></div>
+                Otro
+              </div>
+              <div class="text-xs ml-7 text-[#6EB9DB] font-black">($40.000)</div>
+            </div>
+          </div>
+  
+          <div class="my-5 text-justify px-5">
+            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
+            ingreso un total recaudado de
+            <span class="font-black text-blue_1">{{ totalSales }}</span> en ventas
+            y salio un total de
+            <span class="font-black text-green_2">{{ totalExpenses }}</span>
+            destinado a gastos de la ruta <br /><br />
+            Por lo cual el balance de ruta es de
+            <span class="font-black text-blue_3">{{ totalBalance }}</span>
+          </div>
+        </div>
+      </mat-card>
+  
+      <app-card
+        class="col-span-4 md:col-span-1 mt-5"
+        title="Balance de Ruta"
+        [footer]="totalBalance"
+        color="green_2"
+        [height]="32"
+        img_path="/assets/icons/icon5.png"
+      ></app-card>
+  
+      <mat-card class="col-span-4 2xl:col-span-1 mt-5" #balance_mobile>
+        <h1 class="pl-5 text-2xl font-black mt-5">
+          Balance de ruta
+          <span class="text-green_2 font-bold text-sm">({{ totalBalance }})</span>
+        </h1>
+        <h1 class="pl-5 mb-5">(Ventas - Gastos)</h1>
+        <div class="text-center">
+          <ngx-charts-bar-vertical
+            [view]="viewBalance"
+            [scheme]="reportsStorage.colorScheme"
+            [results]="dataBalance"
+            [gradient]="false"
+            [xAxis]="true"
+            [yAxis]="true"
+            [legend]="false"
+            [showXAxisLabel]="false"
+            [showYAxisLabel]="false"
+          >
+          </ngx-charts-bar-vertical>
+        </div>
+        <div class="my-5 text-justify px-5">
+          Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se ingreso
+          un total recaudado de
+          <span class="font-black text-blue_1">{{ totalSales }}</span> en ventas y
+          salio un total de
+          <span class="font-black text-green_2">{{ totalExpenses }}</span>
+          destinado a gastos de la ruta <br /><br />
+          Por lo cual el balance de ruta es de
+          <span class="font-black text-blue_3">{{ totalBalance }}</span>
+        </div>
+      </mat-card>
+  
+      <app-card
+        class="col-span-4 2xl:col-span-1 mt-5"
+        title="Total Envases"
+        subtitle="Prestados/Devueltos/Rotos"
+        [footer]="containersCount"
+        color="green_1"
+        [height]="32"
+        img_path="/assets/icons/icon6.png"
+      ></app-card>
+  
+      <mat-card class="col-span-4 2xl:col-span-1 mt-5" #containers_mobile>
+        <h1 class="pl-5 text-2xl font-black mt-5">
+          Total Envases Inventario
+          <span class="text-green_2 font-bold text-sm"
+            >({{ totalContainers }})</span
+          >
+        </h1>
+        <h1 class="pl-5 font-bold">(Prestados, Devueltos, Rotos)</h1>
+        <h1 class="pl-5 text-sm mb-5">(Etiquetados, No Etiquetados)</h1>
+        <div class="text-center">
+          <ngx-charts-bar-horizontal-2d
+            [view]="viewContainers"
+            [scheme]="reportsStorage.colorScheme"
+            [results]="dataContainers"
+            [gradient]="false"
+            [xAxis]="true"
+            [yAxis]="true"
+            [legend]="false"
+            [showXAxisLabel]="false"
+            [showYAxisLabel]="false"
+          >
+          </ngx-charts-bar-horizontal-2d>
+        </div>
+        <div class="my-5 px-5">
+          <div class="grid grid-cols-2">
+            <h1 class="text-xl font-bold">Estado Envase</h1>
+            <h1 class="text-xl font-bold">
+              Tipo Envase <span class="text-xs font-normal">(E., No E.)</span>
+            </h1>
+            <div>
+              <p>Prestados</p>
+              <p>Devueltos</p>
+              <p>Rotos</p>
+            </div>
+            <div class="grid grid-cols-2">
+              <p class="font-bold">2</p>
+              <p class="font-bold">12</p>
+              <p class="font-bold">12</p>
+              <p class="font-bold">1</p>
+              <p class="font-bold">10</p>
+              <p class="font-bold">5</p>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  
+    <ng-template #desktopView>
+      <div class="grid grid-cols-4 gap-2">
+        <app-card class="col-span-4 md:col-span-2 2xl:col-span-1"
+          title="Total Vendido"
+          [footer]="totalSales"
+          color="blue_2"
+          [height]="32"
+          img_path="/assets/icons/icon2.png"
+        ></app-card>
+  
+        <app-card class="col-span-4 md:col-span-2 2xl:col-span-1"
+          title="Total Gastos"
+          [footer]="totalExpenses"
+          color="blue_1"
+          [height]="32"
+          img_path="/assets/icons/svg/expenses_icon.svg"
+        ></app-card>
+  
+        <app-card class="col-span-4 md:col-span-2 2xl:col-span-1"
+          title="Balance de Ruta"
+          [footer]="totalBalance"
+          color="green_2"
+          [height]="32"
+          img_path="/assets/icons/icon5.png"
+        ></app-card>
+  
+        <app-card class="col-span-4 md:col-span-2 2xl:col-span-1"
+          title="Total Envases"
+          subtitle="Prestados/Devueltos/Rotos"
+          [footer]="containersCount"
+          color="green_1"
+          [height]="32"
+          img_path="/assets/icons/icon6.png"
+        ></app-card>
+  
+        <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #sales_desktop>
+          <h1 class="pl-5 text-2xl font-black mt-5">
+            Ventas realizadas
+            <span class="text-green_2 font-bold text-sm">({{ totalSales }})</span>
+          </h1>
+          <h1 class="pl-5 mb-5">(Efectivo, Nequi, Bancolombia, Daviplata)</h1>
+          <ngx-charts-area-chart
+            [view]="viewSales"
+            [scheme]="reportsStorage.colorScheme"
+            [legend]="false"
+            [showXAxisLabel]="true"
+            [showYAxisLabel]="true"
+            [xAxis]="true"
+            [yAxis]="true"
+            [timeline]="true"
+            [results]="dataSales"
+            class="translate-x-[-30px]"
+          >
+          </ngx-charts-area-chart>
+          <div
+            class="translate-y-[-30] inline-block mb-5"
+            style="margin-top: -75px"
+          >
+            <h1 class="pl-5 text-2xl mb-2 font-black">Metodo de pago</h1>
+            <div class="grid grid-cols-2 pl-5">
+              <div>
+                <p>Efectivo</p>
+                <p>Nequi</p>
+                <p>Bancolombia</p>
+                <p>Daviplata</p>
+              </div>
+              <div>
+                <p class="font-bold">$. 40.000 COP</p>
+                <p class="font-bold">$. 230.000 COP</p>
+                <p class="font-bold">$. 440.000 COP</p>
+                <p class="font-bold">$. 350.000 COP</p>
+              </div>
+            </div>
+          </div>
+          <div class="px-5 pb-5">
+            <h1 class="text-2xl mb-2 font-black">Productos vendidos</h1>
+            <div class="grid grid-cols-2 mt-2">
+              <div
+                class="w-36 h-36 rounded-full border border-cyan border-8 flex items-center justify-center"
+              >
+                <span class="text-cyan font-black text-2xl">{{
+                  quantitySold
+                }}</span>
+              </div>
+              <div>
+                <p class="text-justify">
+                  Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
+                  vendieron
+                  <span class="font-black text-blue_1">{{ quantitySold }}</span>
+                  productos, con un total recaudado de
+                  <span class="font-black text-green_2">$3.500.000 COP</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+  
+        <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #expenses_desktop>
+          <h1 class="pl-5 text-2xl font-black mt-5">
+            Gastos realizados
+            <span class="text-green_2 font-bold text-sm"
+              >({{ totalExpenses }})</span
+            >
+          </h1>
+          <h1 class="pl-5 mb-5">(Alimentacion, Peajes, Transporte, Otro)</h1>
+          <div class="text-center">
+            <ngx-charts-pie-chart
+              [view]="viewExpenses"
+              [scheme]="reportsStorage.colorScheme"
+              [results]="dataExpenses"
+              [gradient]="true"
+              [legend]="false"
+              [labels]="false"
+              [doughnut]="false"
+              class="inline-block"
+            >
+            </ngx-charts-pie-chart>
+          </div>
+          <div class="mb-5">
+            <div class="grid grid-cols-2 gap-x-5 pl-5">
+              <div>
+                <div class="flex items-center justify-end">
+                  Alimentación
+                  <div
+                    class="ml-2 w-5 h-5 bg-blue_2 inline-block rounded-full"
+                  ></div>
+                </div>
+                <div class="text-right text-xs mr-7 text-[#4cadac]">
+                  ($40.000)
+                </div>
+                <div class="flex items-center justify-end font-black">
+                  Peajes
+                  <div
+                    class="ml-2 w-5 h-5 bg-[#6E96DB] inline-block rounded-full"
+                  ></div>
+                </div>
+                <div class="text-right text-xs mr-7 text-[#6E96DB] font-black">
+                  ($40.000)
+                </div>
+              </div>
+              <div class="text-left">
+                <div class="flex items-center justify-start">
+                  <div
+                    class="mr-2 w-5 h-5 bg-[#FF99B7] inline-block rounded-full"
+                  ></div>
+                  Transporte
+                </div>
+                <div class="text-xs ml-7 text-[#FF99B7] font-black">
+                  ($40.000)
+                </div>
+                <div class="flex items-center justify-start">
+                  <div
+                    class="mr-2 w-5 h-5 bg-[#6EB9DB] inline-block rounded-full"
+                  ></div>
+                  Otro
+                </div>
+                <div class="text-xs ml-7 text-[#6EB9DB] font-black">
+                  ($40.000)
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="my-5 text-justify px-5">
+            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> salió un
+            total de
+            <span class="font-black text-blue_1">{{ totalExpenses }}</span> en
+            gastos destinados a la ruta, donde se registro para gastos de:
+            Alimentación <span class="font-black text-blue_1">({{
+              totalExpenses
+            }})</span
+            >, Peajes <span class="font-black text-[#FF99B7]">({{
+              totalExpenses
+            }})</span
+            >, Transporte <span class="font-black text-blue_3">({{
+              totalExpenses
+            }})</span
+            >, y Otro <span class="font-black text-green_2">({{
+              totalExpenses
+            }})</span
+            >
+          </div>
+        </mat-card>
+  
+        <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #balance_desktop>
+          <h1 class="pl-5 text-2xl font-black mt-5">
+            Balance de ruta
+            <span class="text-green_2 font-bold text-sm"
+              >({{ totalBalance }})</span
+            >
+          </h1>
+          <h1 class="pl-5 mb-5">(Ventas - Gastos)</h1>
+          <div class="text-center">
+            <ngx-charts-bar-vertical
+              [view]="viewBalance"
+              [scheme]="reportsStorage.colorScheme"
+              [results]="dataBalance"
+              [gradient]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="false"
+              [showXAxisLabel]="false"
+              [showYAxisLabel]="false"
+            >
+            </ngx-charts-bar-vertical>
+          </div>
+          <div class="my-5 text-justify px-5">
+            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
+            ingreso un total recaudado de
+            <span class="font-black text-blue_1">{{ totalSales }}</span> en ventas
+            y salio un total de
+            <span class="font-black text-green_2">{{ totalExpenses }}</span>
+            destinado a gastos de la ruta <br /><br />
+            Por lo cual el balance de ruta es de
+            <span class="font-black text-blue_3">{{ totalBalance }}</span>
+          </div>
+        </mat-card>
+  
+        <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #containers_desktop>
+          <h1 class="pl-5 text-2xl font-black mt-5">
+            Total Envases Inventario
+            <span class="text-green_2 font-bold text-sm"
+              >({{ totalContainers }})</span
+            >
+          </h1>
+          <h1 class="pl-5 font-bold">(Prestados, Devueltos, Rotos)</h1>
+          <h1 class="pl-5 text-sm mb-5">(Etiquetados, No Etiquetados)</h1>
+          <div class="text-center">
+            <ngx-charts-bar-horizontal-2d
+              [view]="viewContainers"
+              [scheme]="reportsStorage.colorScheme"
+              [results]="dataContainers"
+              [gradient]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="false"
+              [showXAxisLabel]="false"
+              [showYAxisLabel]="false"
+            >
+            </ngx-charts-bar-horizontal-2d>
+          </div>
+          <div class="my-5 px-5">
+            <div class="grid grid-cols-2">
+              <h1 class="text-xl font-bold">Estado Envase</h1>
+              <h1 class="text-xl font-bold">
+                Tipo Envase <span class="text-xs font-normal">(E., No E.)</span>
+              </h1>
+              <div>
+                <p>Prestados</p>
+                <p>Devueltos</p>
+                <p>Rotos</p>
+              </div>
+              <div class="grid grid-cols-2">
+                <p>2</p>
+                <p>12</p>
+                <p>12</p>
+                <p>1</p>
+                <p>10</p>
+                <p>5</p>
+              </div>
+            </div>
+          </div>
+        </mat-card>
       </div>
-    </mat-card>
+    </ng-template>
   </div>
 
-  <mat-card class="p-5 mt-5"> </mat-card>
+  <mat-card *ngIf="initChargeReports" class="p-5 mb-5">
+    <div class="text-center">
+      <mat-spinner style="display: inline-block;"></mat-spinner>
+      <p>Generando el reporte...</p>
+    </div>
+  </mat-card>
 </div>
