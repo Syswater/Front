@@ -7,6 +7,8 @@ import { getStartDayCurrent } from 'src/app/utils/DateUtils';
 import { showPopUp } from 'src/app/utils/SwalPopUp';
 import { SpinnerService } from 'src/data/services/spinner.service';
 import { TransactionService } from 'src/data/services/transaction.service';
+import { DashboardDistributorStorage } from '../../../../../dashboard-distributor/dashboard-distributor.storage';
+import { PresalesStorage } from '../../../../../presales/presales.storage';
 
 @Component({
   selector: 'app-containers-modal',
@@ -15,7 +17,10 @@ import { TransactionService } from 'src/data/services/transaction.service';
 })
 export class ContainersModalComponent {
   formContainers: FormGroup = this.fb.group({
-    value: [this.clientStorage.actualClient?.borrowedContainers, Validators.required],
+    value: [
+      this.clientStorage.actualClient?.borrowedContainers,
+      [Validators.required, Validators.min(1)],
+    ],
     type: ['RETURNED', Validators.required],
   });
 
@@ -25,31 +30,38 @@ export class ContainersModalComponent {
     private spinner: SpinnerService,
     private dialogRef: MatDialogRef<ContainersModalComponent>,
     private appStorage: AppStorage,
+    private distributionStorage: PresalesStorage,
     private fb: FormBuilder
   ) {}
 
   close() {
-    this.dialogRef.close()
+    this.dialogRef.close();
   }
 
   async createContainer() {
     try {
-      this.spinner.showSpinner(true)
+      this.spinner.showSpinner(true);
       await this.transactionService.createTransactionContainer({
         date: getStartDayCurrent().format(),
         customer_id: this.clientStorage.actualClient!.id,
-        product_inventroy_id: 1,
+        product_inventory_id: 1,
         user_id: this.appStorage.user.id,
-        ...this.formContainers.value
-      })
-      this.clientStorage.actualClient!.borrowedContainers += 
-        this.formContainers.value.type == 'BORROWED' ? this.formContainers.value.value: -this.formContainers.value.value
-      showPopUp('Transacción creada con éxito', 'success')
-      this.clientStorage.setObservableValue(true, 'reloadTransactionContainers');
-      this.dialogRef.close()
+        distribution_id: this.distributionStorage.actualDistribution?.id,
+        ...this.formContainers.value,
+      });
+      this.clientStorage.actualClient!.borrowedContainers +=
+        this.formContainers.value.type == 'BORROWED'
+          ? this.formContainers.value.value
+          : -this.formContainers.value.value;
+      showPopUp('Transacción creada con éxito', 'success');
+      this.clientStorage.setObservableValue(
+        true,
+        'reloadTransactionContainers'
+      );
+      this.dialogRef.close();
     } catch (error) {
       showPopUp('Error al crear la transacción', 'error');
     }
-    this.spinner.showSpinner(false)
+    this.spinner.showSpinner(false);
   }
 }
