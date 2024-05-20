@@ -292,6 +292,15 @@
             [disabled]="
               route.status?.toString() === 'WHITOUT' ? formDate.invalid : false
             "
+            *ngIf="
+              (route.status?.toString() === 'PREORDER' &&
+                roleActual == 'Prevendedor') ||
+              ((route.status?.toString() === 'OPENED' ||
+                route.status?.toString() === 'CLOSE_REQUEST') &&
+                roleActual == 'Distribuidor') ||
+              (route.status?.toString() === 'CLOSED' &&
+                roleActual == 'Administrador')
+            "
           >
             {{
               route.status
@@ -345,6 +354,20 @@
             "
           >
             Aceptar solicitud
+          </button>
+
+          <button
+            mat-raised-button
+            type="button"
+            class="w-1/2 mt-5 bg-blue_3 text-white button-status"
+            style="background-color: #9f354a; color: white"
+            (click)="acceptClosed(route)"
+            *ngIf="
+              appStorage.actualRol == 'Administrador' &&
+              route.status!.toString() == 'OPENED'
+            "
+          >
+            Cerrar Distribución
           </button>
         </div>
       </div>
