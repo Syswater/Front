@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
           break;
       }
     }
+    this.authService.isLoginView = true
   }
 
   async login() {

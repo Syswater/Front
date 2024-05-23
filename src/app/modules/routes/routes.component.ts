@@ -19,6 +19,7 @@ import { ConfirmRejectDistributionComponent } from './components/confirm-reject-
 import { ConfirmAcceptDistributionComponent } from './components/confirm-accept-distribution/confirm-accept-distribution.component';
 import { InitDistributionFormComponent } from './components/init-distribution-form/init-distribution-form.component';
 import { Subscription } from 'rxjs';
+import { ModalReportDistributionComponent } from './components/modal-report-distribution/modal-report-distribution.component';
 @Component({
   selector: 'app-routes',
   templateUrl: './routes.component.html',
@@ -116,6 +117,7 @@ export class RoutesComponent implements OnInit, OnDestroy {
         showPopUp('Error al crear la distribución', 'error');
       }
       this.spinnerService.showSpinner(false)
+      return
     }
     switch (route.status?.toString()) {
       case 'PREORDER':
@@ -125,6 +127,10 @@ export class RoutesComponent implements OnInit, OnDestroy {
       case 'CLOSE_REQUEST':
         this.router.navigate(['/distributor/distribution'])
         break;
+      case 'CLOSED':
+        this.routeStorage.actualRoute = route
+        this.appStorage.fromDistributionReport = true
+        this.router.navigate(['admin/distribution-report'])
     }
   }
 

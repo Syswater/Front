@@ -53,11 +53,11 @@ export class UserFormComponent {
       : [], Validators.required
   );
   formUser: FormGroup = this.fb.group({
-    name: [this.userStorage.actualUser?.name, Validators.required],
-    cellphone: [this.userStorage.actualUser?.cellphone, Validators.required],
+    name: [this.userStorage.actualUser?.name, [Validators.required, Validators.min(4)]],
+    cellphone: [this.userStorage.actualUser?.cellphone, [Validators.required, Validators.min(10)]],
     username: [this.userStorage.actualUser?.username, Validators.required],
-    password: ['', this.userStorage.actualUser ? [] : Validators.required],
-    passwordR: ['', this.userStorage.actualUser ? [] : Validators.required],
+    password: ['', this.userStorage.actualUser ? [] : [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/)]],
+    passwordR: ['', this.userStorage.actualUser ? [] : [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/)]],
     roles: this.rolesControl,
   }, { validators: passwordMatchValidator() });
 
@@ -95,7 +95,6 @@ export class UserFormComponent {
       const { username, password, passwordR, cellphone, ...user } = this.formUser.value
       await this.userService.updateUser({
         id: this.userStorage.actualUser!.id,
-        cellphone: `${cellphone}`,
         ...user
       });
       showPopUp('Usuario actualizado con éxito', 'success')
@@ -116,7 +115,6 @@ export class UserFormComponent {
       const data = this.formUser.value
       await this.userService.createUser({
         ...data,
-        cellphone: `${data.cellphone}`
       });
       showPopUp('Usuario actualizado con éxito', 'success')
       this.userStorage.setObservableValue(true, 'reloadUsers');

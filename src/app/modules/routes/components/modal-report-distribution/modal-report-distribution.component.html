@@ -1,37 +1,20 @@
-<div class="px-2 md:px-5 pb-14 md:pb-5">
-  <div
-    class="my-5 w-full bg-white px-5 pt-2 shadow-lg grid grid-cols-2 text-justify"
-  >
-    <div class="text-lg col-span-2 md:col-span-1 flex items-center">
-      <p>
-        Hola <span class="text-teal-400">{{ appStorage.user.name }}</span
-        >, Bienvenido de vuelta
-      </p>
-    </div>
-    <div class="col-span-2 md:col-span-1 md:text-right">
-      <mat-form-field class="w-full md:w-1/2">
-        <mat-select
-          [value]="dashboardStorage.actualRoute?.id"
-          (selectionChange)="changeRoute($event)"
-        >
-          <mat-option *ngFor="let route of routes" [value]="route.id">{{
-            route.name
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <mat-card class="p-5 my-5 text-lg">
-    <p>
-      Esto es lo que ha pasado en la última semana
-      <span class="text-blue_3 font-black">{{ getRangeDate() }}</span>
+<div class="p-2 pb-14 md:p-5">
+  <mat-card class="mb-5 p-5">
+    <a
+      mat-raised-button
+      style="background-color: #404452; color: white"
+      class="w-full md:w-1/3"
+      routerLink="/admin/routes"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Regresar atrás
+    </a>
+    <h1 class="text-2xl font-black mt-5">Reporte de distribución</h1>
+    <p class="text-blue_2 font-bold">
+      {{ routeStorage.actualRoute?.name ?? "MIERCOLES SOCORRO" }}
     </p>
   </mat-card>
-
-  <!--  -->
-
-  <div class="grid grid-cols-4" *ngIf="!appStorage.isDesktop; else desktopView">
+  <div *ngIf="!appStorage.isDesktop; else desktopView" class="grid grid-cols-4">
     <app-card
       class="col-span-4 md:col-span-1"
       title="Total Vendido"
@@ -100,8 +83,7 @@
           </div>
           <div>
             <p class="text-justify">
-              Entre la fecha <b>{{ initDate.format("DD/MM/YYYY") }}</b> y la
-              fecha <b>{{ currentDate.format("DD/MM/YYYY") }}</b> se vendieron
+              Entre la distribución se vendieron
               <span class="font-black text-blue_1">{{ quantitySold }}</span>
               productos, con un total recaudado de
               <span class="font-black text-green_2"
@@ -188,8 +170,7 @@
         </div>
 
         <div class="my-5 text-justify px-5">
-          Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> salió un
-          total de
+          En la distribución se obtuvo un total de
           <span class="font-black text-blue_1"
             >${{ totalExpenses | formatNumberMiles }}</span
           >
@@ -243,8 +224,7 @@
         </ngx-charts-bar-vertical>
       </div>
       <div class="my-5 text-justify px-5">
-        Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se ingreso
-        un total recaudado de
+        En la distribución se ingreso un total recaudado de
         <span class="font-black text-blue_1"
           >${{ totalSales | formatNumberMiles }}</span
         >
@@ -312,6 +292,54 @@
         </div>
       </div>
     </mat-card>
+
+    <app-card
+      class="col-span-4 md:col-span-1 mt-5"
+      title="Productos vendidos"
+      subtitle="Cargue / Vendido / Sobrante"
+      [footer]="chargeTotal"
+      color="blue_1"
+      [height]="32"
+      img_path="/assets/icons/icon7.png"
+    ></app-card>
+
+    <mat-card class="col-span-4 2xl:col-span-1 mt-5" #charge_mobile>
+      <h1 class="pl-5 text-2xl font-black mt-5">
+        Productos Vendidos y Sobrantes
+      </h1>
+      <h1 class="pl-5 font-bold">(Cargue, Vendido, Sobrante)</h1>
+      <span class="text-green_2 font-bold text-sm pl-5"
+        >({{ chargeTotal }})</span
+      >
+      <div class="text-center">
+        <ngx-charts-pie-chart
+          [view]="viewCharge"
+          [scheme]="reportsStorage.colorScheme"
+          [results]="dataCharge"
+          [gradient]="true"
+          [legend]="false"
+          [labels]="false"
+          [doughnut]="true"
+          class="inline-block"
+        >
+        </ngx-charts-pie-chart>
+      </div>
+      <div class="my-5 px-5">
+        <div class="grid grid-cols-2">
+          <h1 class="text-xl font-bold col-span-2">Cantidad de Producto</h1>
+          <div>
+            <p>Cargados</p>
+            <p>Vendidos</p>
+            <p>Sobrantes</p>
+          </div>
+          <div>
+            <p>{{ totalCharged }}</p>
+            <p>{{ quantitySold }}</p>
+            <p>{{ (totalCharged ?? 0) - quantitySold }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card>
   </div>
 
   <ng-template #desktopView>
@@ -352,6 +380,20 @@
         [height]="32"
         img_path="/assets/icons/icon6.png"
       ></app-card>
+
+      <app-card
+        class="col-span-4 md:col-span-2 2xl:col-span-1"
+        title="Productos vendidos"
+        subtitle="Cargue / Vendido / Sobrante"
+        [footer]="chargeTotal"
+        color="blue_1"
+        [height]="32"
+        img_path="/assets/icons/icon7.png"
+      ></app-card>
+
+      <div></div>
+      <div class="hidden 2xl:block"></div>
+      <div class="hidden 2xl:block"></div>
 
       <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #sales_desktop>
         <h1 class="pl-5 text-2xl font-black mt-5">
@@ -414,8 +456,7 @@
             </div>
             <div>
               <p class="text-justify">
-                Entre la fecha <b>{{ initDate.format("DD/MM/YYYY") }}</b> y la
-                fecha <b>{{ currentDate.format("DD/MM/YYYY") }}</b> se vendieron
+                Entre la distribución se vendieron
                 <span class="font-black text-blue_1">{{ quantitySold }}</span>
                 productos, con un total recaudado de
                 <span class="font-black text-green_2"
@@ -496,9 +537,7 @@
           </div>
         </div>
         <div class="my-5 text-justify px-5">
-          Entre la fecha <b>{{ initDate.format("DD/MM/YYYY") }}</b> y la
-          fecha <b>{{ currentDate.format("DD/MM/YYYY") }}</b> salió un
-          total de
+          Entre la distribución se obtuvo un total de
           <span class="font-black text-blue_1"
             >${{ totalExpenses | formatNumberMiles }}</span
           >
@@ -545,8 +584,7 @@
           </ngx-charts-bar-vertical>
         </div>
         <div class="my-5 text-justify px-5">
-          Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
-          ingreso un total recaudado de
+          Entre la distribución se ingreso un total recaudado de
           <span class="font-black text-blue_1"
             >${{ totalSales | formatNumberMiles }}</span
           >
@@ -607,8 +645,44 @@
           </div>
         </div>
       </mat-card>
+
+      <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #charge_desktop>
+        <h1 class="pl-5 text-2xl font-black mt-5">
+          Productos Vendidos y Sobrantes
+        </h1>
+        <h1 class="pl-5 font-bold">(Cargue, Vendido, Sobrante)</h1>
+        <span class="text-green_2 font-bold text-sm pl-5"
+          >({{ chargeTotal }})</span
+        >
+        <div class="text-center">
+          <ngx-charts-pie-chart
+            [view]="viewCharge"
+            [scheme]="reportsStorage.colorScheme"
+            [results]="dataCharge"
+            [gradient]="true"
+            [legend]="false"
+            [labels]="false"
+            [doughnut]="true"
+            class="inline-block"
+          >
+          </ngx-charts-pie-chart>
+        </div>
+        <div class="my-5 px-5">
+          <div class="grid grid-cols-2">
+            <h1 class="text-xl font-bold col-span-2">Cantidad de Producto</h1>
+            <div>
+              <p>Cargados</p>
+              <p>Vendidos</p>
+              <p>Sobrantes</p>
+            </div>
+            <div>
+              <p>{{ totalCharged }}</p>
+              <p>{{ quantitySold }}</p>
+              <p>{{ (totalCharged ?? 0) - quantitySold }}</p>
+            </div>
+          </div>
+        </div>
+      </mat-card>
     </div>
   </ng-template>
-
-  <!--  -->
 </div>

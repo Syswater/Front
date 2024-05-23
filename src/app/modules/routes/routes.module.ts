@@ -9,6 +9,10 @@ import { DeleteRouteModalComponent } from './components/delete-route-modal/delet
 import { ConfirmRejectDistributionComponent } from './components/confirm-reject-distribution/confirm-reject-distribution.component';
 import { ConfirmAcceptDistributionComponent } from './components/confirm-accept-distribution/confirm-accept-distribution.component';
 import { InitDistributionFormComponent } from './components/init-distribution-form/init-distribution-form.component';
+import { ModalReportDistributionComponent } from './components/modal-report-distribution/modal-report-distribution.component';
+import { DashboardModule } from '../dashboard/dashboard.module';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -17,13 +21,17 @@ import { InitDistributionFormComponent } from './components/init-distribution-fo
     DeleteRouteModalComponent,
     ConfirmRejectDistributionComponent,
     ConfirmAcceptDistributionComponent,
-    InitDistributionFormComponent
+    InitDistributionFormComponent,
+    ModalReportDistributionComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DashboardModule,
+    NgxChartsModule,
+    RouterModule
   ]
 })
 

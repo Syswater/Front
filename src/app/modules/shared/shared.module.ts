@@ -9,6 +9,7 @@ import { CircleButtonComponent } from './circle-button/circle-button.component';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { FormatNumberPipe } from './pipes/format-number.pipe';
 import { ScrolldetectorDirective } from './directives/scrolldetector.directive';
+import { OnlyNumbersAndDashesDirective } from './directives/only-numbers-and-dashes.directive';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ScrolldetectorDirective } from './directives/scrolldetector.directive';
     ConfirmationComponent,
     FormatNumberPipe,
     ScrolldetectorDirective,
+    OnlyNumbersAndDashesDirective,
   ],
   imports: [
     CommonModule,
@@ -34,6 +36,7 @@ import { ScrolldetectorDirective } from './directives/scrolldetector.directive';
     ConfirmationComponent,
     FormatNumberPipe,
     ScrolldetectorDirective,
+    OnlyNumbersAndDashesDirective
   ]
 })
 export class SharedModule { }

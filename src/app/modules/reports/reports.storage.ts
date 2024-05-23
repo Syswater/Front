@@ -11,7 +11,7 @@ export class ReportStorage {
   colorScheme: Color = {
     selectable: true,
     name: 'SchemeSysWater',
-    group: ScaleType.Ordinal,
+    group: ScaleType.Linear,
     domain: ['#6EDBB6', '#6E96DB', '#FF99B7', '#6EB9DB', '#72DBDB','#6EDBDB', '#6EDB91', ]
   };
 

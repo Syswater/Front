@@ -1,6 +1,6 @@
 <div class="px-2 md:px-5 pt-2 md:pt-5 pb-14 md:pb-5">
   <mat-card class="p-5 mb-5">
-    <div class="grid grid-cols-12 gap-x-5">
+    <div class="grid grid-cols-12 gap-x-5" [formGroup]="formDates">
       <p class="col-span-{{ appStorage.isDesktop ? '6' : '12' }}">
         Selecciona una ruta
       </p>
@@ -10,6 +10,7 @@
       <mat-form-field class="col-span-{{ appStorage.isDesktop ? '6' : '12' }}">
         <mat-select
           (selectionChange)="changeRoute($event)"
+          [value]="this.reportsStorage.actualRoute?.id"
         >
           <mat-option
             *ngFor="let route of routes; index as i"
@@ -23,8 +24,16 @@
       </p>
       <mat-form-field class="col-span-{{ appStorage.isDesktop ? '6' : '12' }}">
         <mat-date-range-input [rangePicker]="campaignOnePicker">
-          <input matStartDate placeholder="Fecha inicial" />
-          <input matEndDate placeholder="Fecha final" />
+          <input
+            matStartDate
+            placeholder="Fecha inicial"
+            formControlName="initDate"
+          />
+          <input
+            matEndDate
+            placeholder="Fecha final"
+            formControlName="finalDate"
+          />
         </mat-date-range-input>
         <mat-hint>DD/MM/YYYY - DD/MM/YYYY</mat-hint>
         <mat-datepicker-toggle
@@ -39,7 +48,12 @@
         class="w-{{ appStorage.isDesktop ? '1/2' : 'full' }} mt-5 col-span-{{
           appStorage.isDesktop ? '6' : '12'
         }}"
-        style="background-color: #72dcdc; color: white"
+        [style]="
+          formDates.invalid
+            ? ' background-color: #999; color: white'
+            : ' background-color: #72dcdc; color: white'
+        "
+        [disabled]="formDates.invalid"
         (click)="consultReportsRange()"
       >
         Consultar
@@ -48,20 +62,22 @@
   </mat-card>
 
   <div *ngIf="completeRequest">
-    <div class="grid grid-cols-4" *ngIf="!appStorage.isDesktop; else desktopView">
+    <div *ngIf="!appStorage.isDesktop; else desktopView" class="grid grid-col-4">
       <app-card
         class="col-span-4 md:col-span-1"
         title="Total Vendido"
-        [footer]="totalSales"
+        [footer]="'$' + (totalSales | formatNumberMiles)"
         color="blue_2"
         [height]="32"
         img_path="/assets/icons/icon2.png"
       ></app-card>
-  
+
       <mat-card class="col-span-4 md:col-span-1 mt-5" #sales_mobile>
         <h1 class="pl-5 text-2xl font-black mt-5">
           Ventas realizadas
-          <span class="text-green_2 font-bold text-sm">({{ totalSales }})</span>
+          <span class="text-green_2 font-bold text-sm"
+            >(${{ totalSales | formatNumberMiles }})</span
+          >
         </h1>
         <h1 class="pl-5 mb-5">(Efectivo, Nequi, Bancolombia, Daviplata)</h1>
         <ngx-charts-area-chart
@@ -86,14 +102,22 @@
             <div>
               <p>Efectivo</p>
               <p>Nequi</p>
-              <p>Bancolombia</p>
               <p>Daviplata</p>
+              <p>Bancolombia</p>
             </div>
             <div>
-              <p class="font-bold">$. 40.000 COP</p>
-              <p class="font-bold">$. 230.000 COP</p>
-              <p class="font-bold">$. 440.000 COP</p>
-              <p class="font-bold">$. 350.000 COP</p>
+              <p class="font-bold">
+                ${{ totalSalesEfectivo | formatNumberMiles }}
+              </p>
+              <p class="font-bold">
+                ${{ totalSalesNequi | formatNumberMiles }}
+              </p>
+              <p class="font-bold">
+                ${{ totalSalesDaviplata | formatNumberMiles }}
+              </p>
+              <p class="font-bold">
+                ${{ totalSalesBancolombia | formatNumberMiles }}
+              </p>
             </div>
           </div>
         </div>
@@ -109,31 +133,33 @@
             </div>
             <div>
               <p class="text-justify">
-                Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
-                vendieron
+                Entre la fecha <b>{{ initDate.format("DD/MM/YYYY") }}</b> y la
+                fecha <b>{{ finalDate.format("DD/MM/YYYY") }}</b> se vendieron
                 <span class="font-black text-blue_1">{{ quantitySold }}</span>
                 productos, con un total recaudado de
-                <span class="font-black text-green_2">$3.500.000 COP</span>
+                <span class="font-black text-green_2"
+                  >${{ totalSales | formatNumberMiles }}</span
+                >
               </p>
             </div>
           </div>
         </div>
       </mat-card>
-  
+
       <app-card
         class="col-span-4 md:col-span-1 mt-5"
         title="Total Gastos"
-        [footer]="totalExpenses"
+        [footer]="'$' + (totalExpenses | formatNumberMiles)"
         color="blue_1"
         [height]="32"
         img_path="/assets/icons/svg/expenses_icon.svg"
       ></app-card>
-  
+
       <mat-card class="col-span-4 md:col-span-1 mt-5" #expenses_mobile>
         <h1 class="pl-5 text-2xl font-black mt-5">
           Gastos realizados
           <span class="text-green_2 font-bold text-sm"
-            >({{ totalExpenses }})</span
+            >(${{ totalExpenses | formatNumberMiles }})</span
           >
         </h1>
         <h1 class="pl-5 mb-5">(Alimentacion, Peajes, Transporte, Otro)</h1>
@@ -159,7 +185,9 @@
                   class="ml-2 w-5 h-5 bg-blue_2 inline-block rounded-full"
                 ></div>
               </div>
-              <div class="text-right text-xs mr-7 text-[#4cadac]">($40.000)</div>
+              <div class="text-right text-xs mr-7 text-[#4cadac]">
+                (${{ totalExpensesAlim }})
+              </div>
               <div class="flex items-center justify-end font-black">
                 Peajes
                 <div
@@ -167,7 +195,7 @@
                 ></div>
               </div>
               <div class="text-right text-xs mr-7 text-[#6E96DB] font-black">
-                ($40.000)
+                (${{ totalExpensesPeaj }})
               </div>
             </div>
             <div class="text-left">
@@ -177,52 +205,60 @@
                 ></div>
                 Transporte
               </div>
-              <div class="text-xs ml-7 text-[#FF99B7] font-black">($40.000)</div>
+              <div class="text-xs ml-7 text-[#FF99B7] font-black">
+                (${{ totalExpensesTrans }})
+              </div>
               <div class="flex items-center justify-start">
                 <div
                   class="mr-2 w-5 h-5 bg-[#6EB9DB] inline-block rounded-full"
                 ></div>
                 Otro
               </div>
-              <div class="text-xs ml-7 text-[#6EB9DB] font-black">($40.000)</div>
+              <div class="text-xs ml-7 text-[#6EB9DB] font-black">
+                (${{ totalExpensesOthers }})
+              </div>
             </div>
           </div>
-  
-          <div class="my-5 text-justify px-5"> 
-            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> salió un
-            total de
-            <span class="font-black text-blue_1">{{ totalExpenses }}</span> en
-            gastos destinados a la ruta, donde se registro para gastos de:
-            Alimentación <span class="font-black text-blue_1">({{
-              totalExpenses
-            }})</span
-            >, Peajes <span class="font-black text-[#FF99B7]">({{
-              totalExpenses
-            }})</span
-            >, Transporte <span class="font-black text-blue_3">({{
-              totalExpenses
-            }})</span
-            >, y Otro <span class="font-black text-green_2">({{
-              totalExpenses
-            }})</span
+
+          <div class="my-5 text-justify px-5">
+            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> salió
+            un total de
+            <span class="font-black text-blue_1"
+              >${{ totalExpenses | formatNumberMiles }}</span
+            >
+            en gastos destinados a la ruta, donde se registro para gastos de:
+            Alimentación
+            <span class="font-black text-blue_1"
+              >(${{ totalExpensesAlim | formatNumberMiles }})</span
+            >, Peajes
+            <span class="font-black text-[#FF99B7]"
+              >(${{ totalExpensesPeaj | formatNumberMiles }})</span
+            >, Transporte
+            <span class="font-black text-blue_3"
+              >(${{ totalExpensesTrans | formatNumberMiles }})</span
+            >, y Otro
+            <span class="font-black text-green_2"
+              >(${{ totalExpensesOthers | formatNumberMiles }})</span
             >
           </div>
         </div>
       </mat-card>
-  
+
       <app-card
         class="col-span-4 md:col-span-1 mt-5"
         title="Balance de Ruta"
-        [footer]="totalBalance"
+        [footer]="'$' + (totalBalance | formatNumberMiles)"
         color="green_2"
         [height]="32"
         img_path="/assets/icons/icon5.png"
       ></app-card>
-  
+
       <mat-card class="col-span-4 2xl:col-span-1 mt-5" #balance_mobile>
         <h1 class="pl-5 text-2xl font-black mt-5">
           Balance de ruta
-          <span class="text-green_2 font-bold text-sm">({{ totalBalance }})</span>
+          <span class="text-green_2 font-bold text-sm"
+            >(${{ totalBalance | formatNumberMiles }})</span
+          >
         </h1>
         <h1 class="pl-5 mb-5">(Ventas - Gastos)</h1>
         <div class="text-center">
@@ -240,17 +276,23 @@
           </ngx-charts-bar-vertical>
         </div>
         <div class="my-5 text-justify px-5">
-          Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se ingreso
-          un total recaudado de
-          <span class="font-black text-blue_1">{{ totalSales }}</span> en ventas y
-          salio un total de
-          <span class="font-black text-green_2">{{ totalExpenses }}</span>
+          Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
+          ingreso un total recaudado de
+          <span class="font-black text-blue_1"
+            >${{ totalSales | formatNumberMiles }}</span
+          >
+          en ventas y salio un total de
+          <span class="font-black text-green_2"
+            >${{ totalExpenses | formatNumberMiles }}</span
+          >
           destinado a gastos de la ruta <br /><br />
           Por lo cual el balance de ruta es de
-          <span class="font-black text-blue_3">{{ totalBalance }}</span>
+          <span class="font-black text-blue_3"
+            >${{ totalBalance | formatNumberMiles }}</span
+          >
         </div>
       </mat-card>
-  
+
       <app-card
         class="col-span-4 2xl:col-span-1 mt-5"
         title="Total Envases"
@@ -260,12 +302,12 @@
         [height]="32"
         img_path="/assets/icons/icon6.png"
       ></app-card>
-  
+
       <mat-card class="col-span-4 2xl:col-span-1 mt-5" #containers_mobile>
         <h1 class="pl-5 text-2xl font-black mt-5">
           Total Envases Inventario
           <span class="text-green_2 font-bold text-sm"
-            >({{ totalContainers }})</span
+            >({{ containersCount }})</span
           >
         </h1>
         <h1 class="pl-5 font-bold">(Prestados, Devueltos, Rotos)</h1>
@@ -295,46 +337,47 @@
               <p>Devueltos</p>
               <p>Rotos</p>
             </div>
-            <div class="grid grid-cols-2">
-              <p class="font-bold">2</p>
-              <p class="font-bold">12</p>
-              <p class="font-bold">12</p>
-              <p class="font-bold">1</p>
-              <p class="font-bold">10</p>
-              <p class="font-bold">5</p>
+            <div>
+              <p>{{ totalContainersBorrowed }}</p>
+              <p>{{ totalContainersReturned }}</p>
+              <p>{{ totalContainersBroken }}</p>
             </div>
           </div>
         </div>
       </mat-card>
     </div>
-  
+
     <ng-template #desktopView>
       <div class="grid grid-cols-4 gap-2">
-        <app-card class="col-span-4 md:col-span-2 2xl:col-span-1"
+        <app-card
+          class="col-span-4 md:col-span-2 2xl:col-span-1"
           title="Total Vendido"
-          [footer]="totalSales"
+          [footer]="'$' + (totalSales | formatNumberMiles)"
           color="blue_2"
           [height]="32"
           img_path="/assets/icons/icon2.png"
         ></app-card>
-  
-        <app-card class="col-span-4 md:col-span-2 2xl:col-span-1"
+
+        <app-card
+          class="col-span-4 md:col-span-2 2xl:col-span-1"
           title="Total Gastos"
-          [footer]="totalExpenses"
+          [footer]="'$' + (totalExpenses | formatNumberMiles)"
           color="blue_1"
           [height]="32"
           img_path="/assets/icons/svg/expenses_icon.svg"
         ></app-card>
-  
-        <app-card class="col-span-4 md:col-span-2 2xl:col-span-1"
+
+        <app-card
+          class="col-span-4 md:col-span-2 2xl:col-span-1"
           title="Balance de Ruta"
-          [footer]="totalBalance"
+          [footer]="'$' + (totalBalance | formatNumberMiles)"
           color="green_2"
           [height]="32"
           img_path="/assets/icons/icon5.png"
         ></app-card>
-  
-        <app-card class="col-span-4 md:col-span-2 2xl:col-span-1"
+
+        <app-card
+          class="col-span-4 md:col-span-2 2xl:col-span-1"
           title="Total Envases"
           subtitle="Prestados/Devueltos/Rotos"
           [footer]="containersCount"
@@ -342,11 +385,16 @@
           [height]="32"
           img_path="/assets/icons/icon6.png"
         ></app-card>
-  
-        <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #sales_desktop>
+
+        <mat-card
+          class="col-span-4 md:col-span-2 2xl:col-span-1"
+          #sales_desktop
+        >
           <h1 class="pl-5 text-2xl font-black mt-5">
             Ventas realizadas
-            <span class="text-green_2 font-bold text-sm">({{ totalSales }})</span>
+            <span class="text-green_2 font-bold text-sm"
+              >(${{ totalSales | formatNumberMiles }})</span
+            >
           </h1>
           <h1 class="pl-5 mb-5">(Efectivo, Nequi, Bancolombia, Daviplata)</h1>
           <ngx-charts-area-chart
@@ -371,14 +419,22 @@
               <div>
                 <p>Efectivo</p>
                 <p>Nequi</p>
-                <p>Bancolombia</p>
                 <p>Daviplata</p>
+                <p>Bancolombia</p>
               </div>
               <div>
-                <p class="font-bold">$. 40.000 COP</p>
-                <p class="font-bold">$. 230.000 COP</p>
-                <p class="font-bold">$. 440.000 COP</p>
-                <p class="font-bold">$. 350.000 COP</p>
+                <p class="font-bold">
+                  ${{ totalSalesEfectivo | formatNumberMiles }}
+                </p>
+                <p class="font-bold">
+                  ${{ totalSalesNequi | formatNumberMiles }}
+                </p>
+                <p class="font-bold">
+                  ${{ totalSalesDaviplata | formatNumberMiles }}
+                </p>
+                <p class="font-bold">
+                  ${{ totalSalesBancolombia | formatNumberMiles }}
+                </p>
               </div>
             </div>
           </div>
@@ -394,22 +450,27 @@
               </div>
               <div>
                 <p class="text-justify">
-                  Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
-                  vendieron
+                  Entre la fecha <b>{{ initDate.format("DD/MM/YYYY") }}</b> y la
+                  fecha <b>{{ finalDate.format("DD/MM/YYYY") }}</b> se vendieron
                   <span class="font-black text-blue_1">{{ quantitySold }}</span>
                   productos, con un total recaudado de
-                  <span class="font-black text-green_2">$3.500.000 COP</span>
+                  <span class="font-black text-green_2"
+                    >${{ totalSales | formatNumberMiles }}</span
+                  >
                 </p>
               </div>
             </div>
           </div>
         </mat-card>
-  
-        <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #expenses_desktop>
+
+        <mat-card
+          class="col-span-4 md:col-span-2 2xl:col-span-1"
+          #expenses_desktop
+        >
           <h1 class="pl-5 text-2xl font-black mt-5">
             Gastos realizados
             <span class="text-green_2 font-bold text-sm"
-              >({{ totalExpenses }})</span
+              >(${{ totalExpenses | formatNumberMiles }})</span
             >
           </h1>
           <h1 class="pl-5 mb-5">(Alimentacion, Peajes, Transporte, Otro)</h1>
@@ -436,7 +497,7 @@
                   ></div>
                 </div>
                 <div class="text-right text-xs mr-7 text-[#4cadac]">
-                  ($40.000)
+                  (${{ totalExpensesAlim | formatNumberMiles }})
                 </div>
                 <div class="flex items-center justify-end font-black">
                   Peajes
@@ -445,7 +506,7 @@
                   ></div>
                 </div>
                 <div class="text-right text-xs mr-7 text-[#6E96DB] font-black">
-                  ($40.000)
+                  (${{ totalExpensesPeaj | formatNumberMiles }})
                 </div>
               </div>
               <div class="text-left">
@@ -456,7 +517,7 @@
                   Transporte
                 </div>
                 <div class="text-xs ml-7 text-[#FF99B7] font-black">
-                  ($40.000)
+                  (${{ totalExpensesTrans | formatNumberMiles }})
                 </div>
                 <div class="flex items-center justify-start">
                   <div
@@ -465,37 +526,42 @@
                   Otro
                 </div>
                 <div class="text-xs ml-7 text-[#6EB9DB] font-black">
-                  ($40.000)
+                  (${{ totalExpensesOthers | formatNumberMiles }})
                 </div>
               </div>
             </div>
           </div>
           <div class="my-5 text-justify px-5">
-            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> salió un
-            total de
-            <span class="font-black text-blue_1">{{ totalExpenses }}</span> en
-            gastos destinados a la ruta, donde se registro para gastos de:
-            Alimentación <span class="font-black text-blue_1">({{
-              totalExpenses
-            }})</span
-            >, Peajes <span class="font-black text-[#FF99B7]">({{
-              totalExpenses
-            }})</span
-            >, Transporte <span class="font-black text-blue_3">({{
-              totalExpenses
-            }})</span
-            >, y Otro <span class="font-black text-green_2">({{
-              totalExpenses
-            }})</span
+            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> salió
+            un total de
+            <span class="font-black text-blue_1"
+              >${{ totalExpenses | formatNumberMiles }}</span
+            >
+            en gastos destinados a la ruta, donde se registro para gastos de:
+            Alimentación
+            <span class="font-black text-blue_1"
+              >(${{ totalExpensesAlim | formatNumberMiles }})</span
+            >, Peajes
+            <span class="font-black text-[#FF99B7]"
+              >(${{ totalExpensesPeaj | formatNumberMiles }})</span
+            >, Transporte
+            <span class="font-black text-blue_3"
+              >(${{ totalExpensesTrans | formatNumberMiles }})</span
+            >, y Otro
+            <span class="font-black text-green_2"
+              >(${{ totalExpensesOthers | formatNumberMiles }})</span
             >
           </div>
         </mat-card>
-  
-        <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #balance_desktop>
+
+        <mat-card
+          class="col-span-4 md:col-span-2 2xl:col-span-1"
+          #balance_desktop
+        >
           <h1 class="pl-5 text-2xl font-black mt-5">
             Balance de ruta
             <span class="text-green_2 font-bold text-sm"
-              >({{ totalBalance }})</span
+              >(${{ totalBalance | formatNumberMiles }})</span
             >
           </h1>
           <h1 class="pl-5 mb-5">(Ventas - Gastos)</h1>
@@ -514,22 +580,32 @@
             </ngx-charts-bar-vertical>
           </div>
           <div class="my-5 text-justify px-5">
-            Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
+            Entre la fecha <b>{{ initDate.format("DD/MM/YYYY") }}</b> y la
+            fecha <b>{{ finalDate.format("DD/MM/YYYY") }}</b> se
             ingreso un total recaudado de
-            <span class="font-black text-blue_1">{{ totalSales }}</span> en ventas
-            y salio un total de
-            <span class="font-black text-green_2">{{ totalExpenses }}</span>
+            <span class="font-black text-blue_1"
+              >${{ totalSales | formatNumberMiles }}</span
+            >
+            en ventas y salio un total de
+            <span class="font-black text-green_2"
+              >${{ totalExpenses | formatNumberMiles }}</span
+            >
             destinado a gastos de la ruta <br /><br />
             Por lo cual el balance de ruta es de
-            <span class="font-black text-blue_3">{{ totalBalance }}</span>
+            <span class="font-black text-blue_3"
+              >${{ totalBalance | formatNumberMiles }}</span
+            >
           </div>
         </mat-card>
-  
-        <mat-card class="col-span-4 md:col-span-2 2xl:col-span-1" #containers_desktop>
+
+        <mat-card
+          class="col-span-4 md:col-span-2 2xl:col-span-1"
+          #containers_desktop
+        >
           <h1 class="pl-5 text-2xl font-black mt-5">
             Total Envases Inventario
             <span class="text-green_2 font-bold text-sm"
-              >({{ totalContainers }})</span
+              >({{ containersCount }})</span
             >
           </h1>
           <h1 class="pl-5 font-bold">(Prestados, Devueltos, Rotos)</h1>
@@ -559,13 +635,10 @@
                 <p>Devueltos</p>
                 <p>Rotos</p>
               </div>
-              <div class="grid grid-cols-2">
-                <p>2</p>
-                <p>12</p>
-                <p>12</p>
-                <p>1</p>
-                <p>10</p>
-                <p>5</p>
+              <div>
+                <p>{{ totalContainersBorrowed }}</p>
+                <p>{{ totalContainersReturned }}</p>
+                <p>{{ totalContainersBroken }}</p>
               </div>
             </div>
           </div>
@@ -576,7 +649,7 @@
 
   <mat-card *ngIf="initChargeReports" class="p-5 mb-5">
     <div class="text-center">
-      <mat-spinner style="display: inline-block;"></mat-spinner>
+      <mat-spinner style="display: inline-block"></mat-spinner>
       <p>Generando el reporte...</p>
     </div>
   </mat-card>

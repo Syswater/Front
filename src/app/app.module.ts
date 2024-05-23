@@ -20,11 +20,11 @@ import { NotFoundComponent } from './modules/not-found/not-found.component';
 import { DashboardDistributorModule } from './modules/dashboard-distributor/dashboard-distributor.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
 import { DashboardAdminComponent } from './modules/dashboard-admin/dashboard-admin.component';
-import { ReportsComponent } from './modules/reports/reports.component';
 import { UsersComponent } from './modules/users/users.component';
 import { DeleteUserModalComponent } from './modules/users/components/delete-user-modal/delete-user-modal.component';
 import { UserFormComponent } from './modules/users/components/user-form/user-form.component';
 import { ChangePasswordComponent } from './modules/users/components/user-form/components/change-password/change-password.component';
+import { ReportsModule } from './modules/reports/reports.module';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -34,11 +34,10 @@ export function tokenGetter() {
     AppComponent,
     NotFoundComponent,
     DashboardAdminComponent,
-    ReportsComponent,
     UsersComponent,
     DeleteUserModalComponent,
     UserFormComponent,
-    ChangePasswordComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -54,6 +53,7 @@ export function tokenGetter() {
     PresalesModule,
     ClientsModule,
     NgxChartsModule,
+    ReportsModule,
     DashboardDistributorModule,
     ExpensesModule,
     JwtModule.forRoot({

@@ -31,7 +31,7 @@
       ></app-icon>
     </div>
 
-    <div class="md:grid md:grid-cols-2 md:gap-x-5">
+    <div class="md:grid md:grid-cols-2 md:gap-x-5 md:gap-y-2">
       <p class="text-xl">Nombre de usuario</p>
       <p class="text-xl" *ngIf="appStorage.isDesktop">Teléfono</p>
       <mat-form-field appearance="fill" class="w-full">
@@ -44,7 +44,7 @@
       <p class="text-xl" *ngIf="!appStorage.isDesktop">Teléfono</p>
       <mat-form-field appearance="fill" class="w-full">
         <mat-label>Ingresa el telefono</mat-label>
-        <input matInput type="number" formControlName="cellphone" min="0" />
+        <input matInput type="text" formControlName="cellphone" appOnlyNumbersAndDashes />
         <mat-error *ngIf="formUser.get('cellphone')?.hasError('required')"
           >Este campo es requerido</mat-error
         >
@@ -69,19 +69,33 @@
             role.value
           }}</mat-option>
         </mat-select>
+        <mat-error *ngIf="formUser.get('roles')?.hasError('required')"
+          >Elige al menos un rol</mat-error
+        >
       </mat-form-field>
 
       <p class="text-xl" *ngIf="!appStorage.isDesktop">Alias</p>
 
       <mat-form-field appearance="fill" class="w-full">
         <mat-label>Ingresa el Alias</mat-label>
-        <input matInput type="text" formControlName="username" [readonly]="!!userStorage.actualUser" />
+        <input
+          matInput
+          type="text"
+          formControlName="username"
+          [readonly]="!!userStorage.actualUser"
+        />
         <mat-error *ngIf="formUser.get('username')?.hasError('required')"
           >Este campo es requerido</mat-error
         >
+        <mat-error *ngIf="formUser.get('username')?.hasError('min')"
+          >Minimo 4 caracteres</mat-error
+        >
       </mat-form-field>
       <p class="text-xl" *ngIf="!userStorage.actualUser">Contraseña</p>
-      <p class="text-xl" *ngIf="!userStorage.actualUser && appStorage.isDesktop">
+      <p
+        class="text-xl"
+        *ngIf="!userStorage.actualUser && appStorage.isDesktop"
+      >
         Repite la Contraseña
       </p>
 
@@ -91,13 +105,16 @@
         *ngIf="!userStorage.actualUser"
       >
         <mat-label>Ingresa la contraseña</mat-label>
-        <input matInput type="text" formControlName="password" />
+        <input matInput type="password" formControlName="password" />
         <mat-error *ngIf="formUser.get('password')?.hasError('required')"
           >Este campo es requerido</mat-error
         >
       </mat-form-field>
 
-      <p class="text-xl" *ngIf="!userStorage.actualUser && !appStorage.isDesktop">
+      <p
+        class="text-xl"
+        *ngIf="!userStorage.actualUser && !appStorage.isDesktop"
+      >
         Repite la Contraseña
       </p>
 
@@ -107,21 +124,27 @@
         *ngIf="!userStorage.actualUser"
       >
         <mat-label>Repite la contraseña</mat-label>
-        <input matInput type="text" formControlName="passwordR" />
+        <input matInput type="password" formControlName="passwordR" />
         <mat-error *ngIf="formUser.get('passwordR')?.hasError('required')"
           >Este campo es requerido</mat-error
         >
       </mat-form-field>
+      <mat-error
+        *ngIf="formUser.get('password')?.hasError('pattern')"
+        class="col-span-2 w-full"
+        >La contraseña debe tener (min: 8 caracteres, 1: Mayus, 1: caracter
+        Esp)</mat-error
+      >
       <button
-          mat-raised-button
-          type="button"
-          class="mt-5 bg-blue_1 text-white button-status w-full"
-          style="background-color: #404452; color: white"
-          (click)="openChangePassword()"
-          *ngIf="userStorage.actualUser"
-        >
-          Reestablecer contraseña
-        </button>
+        mat-raised-button
+        type="button"
+        class="mt-5 bg-blue_1 text-white button-status w-full"
+        style="background-color: #404452; color: white"
+        (click)="openChangePassword()"
+        *ngIf="userStorage.actualUser"
+      >
+        Reestablecer contraseña
+      </button>
     </div>
 
     <div class="grid grid-cols-2 gap-5 w-full my-5">

@@ -12,6 +12,7 @@ import { ExpensesComponent } from './modules/expenses/expenses.component';
 import { ReportsComponent } from './modules/reports/reports.component';
 import { DashboardAdminComponent } from './modules/dashboard-admin/dashboard-admin.component';
 import { UsersComponent } from './modules/users/users.component';
+import { ModalReportDistributionComponent } from './modules/routes/components/modal-report-distribution/modal-report-distribution.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -39,6 +40,7 @@ const routes: Routes = [
       { path: 'routes', component: RoutesComponent, canActivate: [AuthGuard] },
       { path: 'clients', component: ClientsComponent, canActivate: [AuthGuard] },
       { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
+      { path: 'distribution-report', component: ModalReportDistributionComponent, canActivate: [AuthGuard] },
       { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
     ]
   },

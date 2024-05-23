@@ -72,6 +72,12 @@ export class AuthGuard implements CanActivate {
       if (role == 'Prevendedor') this.router.navigate(['/preseller/dashboard'])
       return false;
     }
+    
+    if (url == '/admin/distribution-report' && !this.appStorage.fromDistributionReport) {
+      this.router.navigate(['/admin/routes'])
+      showPopUp('No puede acceder directamente al reporte, consultelo primero', 'error');
+      return false
+    }
 
     this.appStorage.setObservableValue(true, 'reloadLateralMenu');
     switch (url) {
