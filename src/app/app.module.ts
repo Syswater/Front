@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +25,7 @@ import { DeleteUserModalComponent } from './modules/users/components/delete-user
 import { UserFormComponent } from './modules/users/components/user-form/user-form.component';
 import { ChangePasswordComponent } from './modules/users/components/user-form/components/change-password/change-password.component';
 import { ReportsModule } from './modules/reports/reports.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -61,7 +62,13 @@ export function tokenGetter() {
         tokenGetter: tokenGetter
       }
     }),
-    MatNativeDateModule
+    MatNativeDateModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
