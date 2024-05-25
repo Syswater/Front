@@ -54,7 +54,7 @@ export class UserFormComponent {
   );
   formUser: FormGroup = this.fb.group({
     name: [this.userStorage.actualUser?.name, [Validators.required, Validators.min(4)]],
-    cellphone: [this.userStorage.actualUser?.cellphone, [Validators.required, Validators.min(10)]],
+    cellphone: [this.userStorage.actualUser?.cellphone, [Validators.required, Validators.pattern(/^.{10,}$/)]],
     username: [this.userStorage.actualUser?.username, Validators.required],
     password: ['', this.userStorage.actualUser ? [] : [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/)]],
     passwordR: ['', this.userStorage.actualUser ? [] : [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/)]],
@@ -92,7 +92,7 @@ export class UserFormComponent {
   async updateUser() {
     try {
       this.spinner.showSpinner(true);
-      const { username, password, passwordR, cellphone, ...user } = this.formUser.value
+      const { username, password, passwordR, ...user } = this.formUser.value
       await this.userService.updateUser({
         id: this.userStorage.actualUser!.id,
         ...user
