@@ -112,7 +112,11 @@ export class RoutesComponent implements OnInit, OnDestroy {
         this.spinnerService.showSpinner(true)
         await this.distributionService.createDistribution({ date: getCurrentDate(), route_id: route.id });
         showPopUp('Distribución creada con exito', 'success');
-        this.router.navigate(['/preseller/presales']);
+        if(this.roleActual == 'Administrador'){
+          this.router.navigate(['/admin/dashboard']);
+        }else{
+          this.router.navigate(['/preseller/presales']);
+        }
       } catch (error) {
         showPopUp('Error al crear la distribución', 'error');
       }

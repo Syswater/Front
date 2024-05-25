@@ -295,7 +295,7 @@
             *ngIf="
               ((route.status?.toString() === 'PREORDER' ||
                 route.status?.toString() === 'WHITOUT') &&
-                roleActual == 'Prevendedor') ||
+                (roleActual == 'Prevendedor' || roleActual == 'Administrador')) ||
               ((route.status?.toString() === 'OPENED' ||
                 route.status?.toString() === 'CLOSE_REQUEST') &&
                 roleActual == 'Distribuidor') ||
