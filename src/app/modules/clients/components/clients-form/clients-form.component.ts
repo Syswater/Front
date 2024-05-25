@@ -50,7 +50,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     'User'
   ];
   tape_preference = ['NORMAL', 'SERVIFACIL'];
-  dataSource = new MatTableDataSource<any>([]);
+  dataSource: any[] = [];
   dataSourceAbonos = new MatTableDataSource<TransactionPayment>([]);
   dataSourceEnvases = new MatTableDataSource<TransactionContainer>([]);
   dataSourceVentas: Sale[] = [];
@@ -124,7 +124,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.spinnerService.showSpinner(true);
     this.routes = await this.routeService.getRoutes();
-    this.dataSource.data = (
+    this.dataSource = (
       this.clientStorage.actualClient
         ? this.clientStorage.actualClient.note
         : []
@@ -136,11 +136,8 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
         this.isActiveUpdate = true
       })
       this.$reloadNotesClient = this.clientStorage.getObservable('reloadNotesClient').subscribe(() => {
-        this.dataSource.data = (
-          this.clientStorage.actualClient
-            ? this.clientStorage.actualClient.note
-            : []
-        ).map((note) => ({ editable: false, ...note }));
+        console.log('entro')
+        this.dataSource = this.clientStorage.actualClient!.note.map((note) => ({ editable: false, ...note }));
       })
       this.$reloadTransactionPayment = this.clientStorage.getObservable('reloadTransactionPayment').subscribe(() => {
         this.pagePayment = 1
@@ -162,9 +159,9 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   }
 
   edit(id: number, clickCheck: boolean) {
-    const index = this.dataSource.data.findIndex((d: any) => d.id == id);
-    this.dataSource.data[index].editable =
-      !this.dataSource.data[index].editable;
+    const index = this.dataSource.findIndex((d: any) => d.id == id);
+    this.dataSource[index].editable =
+      !this.dataSource[index].editable;
     if (clickCheck && id < 0) {
       this.createNote(id);
     } else if (clickCheck && id > 0) {
@@ -189,10 +186,11 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
             : null,
       customer_id: this.clientStorage.actualClient?.id,
     };
-    this.dataSource.data.push(temporalNote);
-    this.clientStorage.actualClient?.note.push(temporalNote as Observation);
+    this.dataSource.push(temporalNote);
+    const { editable, ...note } = temporalNote
+    this.clientStorage.actualClient!.note.push(note as Observation);
     this.temporalPostUpdateNote.push(temporalNote);
-    this.dataSource.data = [...this.dataSource.data];
+    this.dataSource = [...this.dataSource];
   }
 
   changeDescriptionNote(event: Event, element: any) {
@@ -205,13 +203,13 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       if (this.clientStorage.actualClient.note[index])
         this.clientStorage.actualClient.note[index].description = value;
 
-      const indexData = this.dataSource.data.findIndex(
+      const indexData = this.dataSource.findIndex(
         (note) => note.id == element.id
       );
-      if (this.dataSource.data[indexData])
-        this.dataSource.data[indexData].description = value;
+      if (this.dataSource[indexData])
+        this.dataSource[indexData].description = value;
 
-      this.dataSource.data = [...this.dataSource.data];
+      this.dataSource = [...this.dataSource];
 
       const indexTemporal = this.temporalPostUpdateNote.findIndex(
         (temp) => temp.id == element.id
@@ -232,15 +230,15 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       )
         this.clientStorage.actualClient.note[index].distribution_id =
           $event.value == '2' ? null : this.preSaleStorage.actualDistribution!.id;
-      const indexData = this.dataSource.data.findIndex(
+      const indexData = this.dataSource.findIndex(
         (note) => note.id == element.id
       );
       if (
-        this.dataSource.data[indexData]
+        this.dataSource[indexData]
       )
-        this.dataSource.data[indexData].distribution_id =
+        this.dataSource[indexData].distribution_id =
           $event.value == '2' ? null : this.preSaleStorage.actualDistribution!.id;
-      this.dataSource.data = [...this.dataSource.data];
+      this.dataSource = [...this.dataSource];
 
       const indexTemporal = this.temporalPostUpdateNote.findIndex(
         (temp) => temp.id == element.id
@@ -256,11 +254,13 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       this.spinnerService.showSpinner(true);
       const temporalNote =
         this.temporalPostUpdateNote.find((temp) => temp.id == id) || [];
-      const indexTmp = this.dataSource.data.findIndex((note) => note.id == id);
+      const indexTmp = this.dataSource.findIndex((note) => note.id == id);
       delete temporalNote.editable;
       delete temporalNote.id;
       const note = await this.clientService.createNote(temporalNote);
-      this.dataSource.data[indexTmp].id = note.id;
+      this.dataSource[indexTmp].id = note.id;
+      const index = this.clientStorage.actualClient!.note.findIndex((note) => note.id == id)
+      this.clientStorage.actualClient!.note[index].id = note.id
       showPopUp('Observación creada con éxito', 'success');
       this.clientStorage.setObservableValue(true, 'reloadClients');
     } catch (error) {
@@ -272,7 +272,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
   async updateNote(id: number) {
     try {
       this.spinnerService.showSpinner(true);
-      const note = this.dataSource.data.find((data) => data.id == id);
+      const note = this.dataSource.find((data) => data.id == id);
       delete note.editable;
       await this.clientService.updateNote(note);
       showPopUp('Observación actualizada con éxito', 'success');
