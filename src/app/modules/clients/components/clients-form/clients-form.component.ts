@@ -63,7 +63,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
       ? this.client.route_order
       : this.clientStorage.lastClient
         ? this.clientStorage.lastClient.route_order + 1
-        : 1, Validators.min(0)],
+        : 1, [Validators.min(1), Validators.required]],
     tape_preference: this.client
       ? this.client.tape_preference
       : this.tape_preference[0],
@@ -132,7 +132,7 @@ export class ClientsFormComponent implements OnInit, OnDestroy {
     this.spinnerService.showSpinner(false);
     if (this.clientStorage.actualClient) {
       this.isActiveUpdate = false
-      this.$changesForm = this.formClient.valueChanges.subscribe(()=>{
+      this.$changesForm = this.formClient.valueChanges.subscribe(() => {
         this.isActiveUpdate = true
       })
       this.$reloadNotesClient = this.clientStorage.getObservable('reloadNotesClient').subscribe(() => {

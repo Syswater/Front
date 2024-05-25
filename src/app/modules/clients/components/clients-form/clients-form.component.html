@@ -140,6 +140,9 @@
           *ngIf="formClient.get('route_order')?.hasError('min')"
           >No se admiten números negativos</mat-error
         >
+        <mat-error *ngIf="formClient.get('route_order')?.hasError('required')">
+          Este campo es <strong>obligatorio</strong>
+        </mat-error>
         </mat-form-field>
 
         <div
@@ -215,6 +218,9 @@
             *ngIf="formClient.get('route_order')?.hasError('min')"
             >No se admiten números negativos</mat-error
           >
+          <mat-error *ngIf="formClient.get('route_order')?.hasError('required')">
+            Este campo es <strong>obligatorio</strong>
+          </mat-error>
           </mat-form-field>
         </div>
 
