@@ -9,8 +9,7 @@
       <span class="text-cyan font-black">{{
         clientStorage.actualRoute?.name
       }}</span
-      >-
-      {{ clientStorage.actualRoute?.location }}
+      >
     </p>
 
     <p
@@ -79,8 +78,7 @@
       <span class="text-cyan font-black">{{
         clientStorage.actualRoute?.name
       }}</span
-      >-
-      {{ clientStorage.actualRoute?.location }}
+      >
     </p>
 
     <p class="text-lg md:col-span-4 2xl:col-span-6 text-center hidden md:inline-block 2xl:hidden">
@@ -130,19 +128,17 @@
       <th mat-header-cell *matHeaderCellDef>Telefono</th>
       <td mat-cell *matCellDef="let element">
         <div>
-          <app-icon
-            iconPath="assets/icons/svg/phone_icon.svg"
-            [color]="element.is_contactable ? '#6FDB90' : '#DB6F6F'"
-            class="inline-block"
-          ></app-icon>
-          <span class="ml-2">{{ element.cellphone }}</span>
+          <mat-icon class="translate-y-2 text-[19px]" [ngStyle]="{
+            color: element.is_contactable ? '#6FDB90' : '#DB6F6F'
+          }">phone</mat-icon>
+          <span class="ml-1"> {{ element.cellphone }}</span>
         </div>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="Deudas">
       <th mat-header-cell *matHeaderCellDef>Deudas <br> </th>
-      <td mat-cell *matCellDef="let element">$ {{ element.totalDebt ?? 0 }}</td>
+      <td mat-cell *matCellDef="let element">$ {{ (element.totalDebt ?? 0) | formatNumberMiles }}</td>
     </ng-container>
 
     <ng-container matColumnDef="Envases prestados">

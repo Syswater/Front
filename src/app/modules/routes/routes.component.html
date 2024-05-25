@@ -293,7 +293,8 @@
               route.status?.toString() === 'WHITOUT' ? formDate.invalid : false
             "
             *ngIf="
-              (route.status?.toString() === 'PREORDER' &&
+              ((route.status?.toString() === 'PREORDER' ||
+                route.status?.toString() === 'WHITOUT') &&
                 roleActual == 'Prevendedor') ||
               ((route.status?.toString() === 'OPENED' ||
                 route.status?.toString() === 'CLOSE_REQUEST') &&

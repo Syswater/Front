@@ -260,7 +260,7 @@
               *matCellDef="let element"
             >
               <span *ngIf="!element.editable">{{
-                element.distribution_id != null ? "Normal" : "Fija"
+                element.distribution_id != null ? "Temporal" : "Fija"
               }}</span>
               <mat-form-field
                 appearance="fill"
@@ -273,7 +273,7 @@
                   (selectionChange)="selectNoteType($event, element)"
                   [disabled]="actualPath == 'clients'"
                 >
-                  <mat-option value="1">Normal</mat-option>
+                  <mat-option value="1">Temporal</mat-option>
                   <mat-option value="2">Fija</mat-option>
                 </mat-select>
               </mat-form-field>

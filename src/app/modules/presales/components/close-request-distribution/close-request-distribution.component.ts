@@ -3,6 +3,7 @@ import { PresalesStorage } from '../../presales.storage';
 import { showPopUp } from 'src/app/utils/SwalPopUp';
 import { DistributionService } from 'src/data/services/distribution.service';
 import { SpinnerService } from 'src/data/services/spinner.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-close-request-distribution',
@@ -13,7 +14,8 @@ export class CloseRequestDistributionComponent {
   constructor(
     private spinner: SpinnerService,
     private distributionService: DistributionService,
-    public preSaleStorage: PresalesStorage
+    public preSaleStorage: PresalesStorage,
+    private router: Router
   ) { }
 
   async rejectCloseRequest() {
@@ -23,6 +25,7 @@ export class CloseRequestDistributionComponent {
         id: this.preSaleStorage.actualDistribution!.id,
         status: "CLOSE_REQUEST"
       })
+      this.router.navigate(['/distributor/dashboard'])
       showPopUp('Solicitud de cierre creada exitosamente', 'success')
     } catch (error) {
       showPopUp('Error al crear la solicitud de cierre', 'error')

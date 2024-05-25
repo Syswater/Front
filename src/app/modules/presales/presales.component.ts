@@ -102,7 +102,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
         with_order: true,
         filter: this.filter,
         with_sale: this.role == 'Distribuidor' ? true : undefined
-      })).map(d => ({ ...d, editable: false, quantity: '-', unit_value: this.preSaleStorage.actualDistribution?.route.price, value_paid: d.sale ? d.sale.value_paid : 0, payment_method: 'EFECTIVO' }));
+      })).map(d => ({ ...d, editable: false, quantity: '-', unit_value: this.preSaleStorage.actualDistribution?.route.price, value_paid: d.sale ? d.sale.value_paid : 0, payment_method: 'EFECTIVO', user_id: this.appStorage.user.id }));
     }
     this.spinner.showSpinner(false);
   }

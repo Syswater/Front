@@ -56,10 +56,14 @@ export class ValuePaidModalComponent implements OnInit {
         this.actualMethod = 3;
         break;
     }
-    for (let i = 0; i < this.users.length; i++) {
-      if(this.users[i].id == this.preSaleStorage.actualClientDistribution.sale.user_id){
-        this.actualUser = i
+    if(this.preSaleStorage.actualClientDistribution.sale){
+      for (let i = 0; i < this.users.length; i++) {
+        if(this.users[i].id == this.preSaleStorage.actualClientDistribution.sale.user_id){
+          this.actualUser = i
+        }
       }
+    }else{
+      this.actualUser = 0
     }
   }
 
@@ -76,13 +80,15 @@ export class ValuePaidModalComponent implements OnInit {
   saveAndClose() {
     if (this.preSaleStorage.actualClientDistribution.sale) {
       this.preSaleStorage.actualClientDistribution.sale.value_paid = this.price
+      this.preSaleStorage.actualClientDistribution.sale.user_id = this.users[this.actualUser].id
+      this.preSaleStorage.actualClientDistribution.sale.user_name = this.users[this.actualUser].name
     } else {
       this.preSaleStorage.actualClientDistribution.value_paid = this.price
+      this.preSaleStorage.actualClientDistribution.user_id = this.users[this.actualUser].id
+      this.preSaleStorage.actualClientDistribution.user_name = this.users[this.actualUser].name
     }
     const method = this.methods[this.actualMethod] as keyof typeof this.method_enum;
     this.preSaleStorage.actualClientDistribution.payment_method = this.method_enum[method]
-    this.preSaleStorage.actualClientDistribution.sale.user_id = this.users[this.actualUser].id
-    this.preSaleStorage.actualClientDistribution.sale.user_name = this.users[this.actualUser].name
     this.dialogRef.close()
   }
 
