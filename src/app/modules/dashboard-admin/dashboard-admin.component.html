@@ -144,49 +144,6 @@
         </ngx-charts-pie-chart>
       </div>
       <div class="mb-5">
-        <div class="grid grid-cols-2 gap-x-5 pl-5">
-          <div>
-            <div class="flex items-center justify-end">
-              Alimentación
-              <div
-                class="ml-2 w-5 h-5 bg-blue_2 inline-block rounded-full"
-              ></div>
-            </div>
-            <div class="text-right text-xs mr-7 text-[#4cadac]">
-              (${{ totalExpensesAlim }})
-            </div>
-            <div class="flex items-center justify-end font-black">
-              Peajes
-              <div
-                class="ml-2 w-5 h-5 bg-[#6E96DB] inline-block rounded-full"
-              ></div>
-            </div>
-            <div class="text-right text-xs mr-7 text-[#6E96DB] font-black">
-              (${{ totalExpensesPeaj }})
-            </div>
-          </div>
-          <div class="text-left">
-            <div class="flex items-center justify-start">
-              <div
-                class="mr-2 w-5 h-5 bg-[#FF99B7] inline-block rounded-full"
-              ></div>
-              Transporte
-            </div>
-            <div class="text-xs ml-7 text-[#FF99B7] font-black">
-              (${{ totalExpensesTrans }})
-            </div>
-            <div class="flex items-center justify-start">
-              <div
-                class="mr-2 w-5 h-5 bg-[#6EB9DB] inline-block rounded-full"
-              ></div>
-              Otro
-            </div>
-            <div class="text-xs ml-7 text-[#6EB9DB] font-black">
-              (${{ totalExpensesOthers }})
-            </div>
-          </div>
-        </div>
-
         <div class="my-5 text-justify px-5">
           Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> salió un
           total de
@@ -451,50 +408,6 @@
           >
           </ngx-charts-pie-chart>
         </div>
-        <div class="mb-5">
-          <div class="grid grid-cols-2 gap-x-5 pl-5">
-            <div>
-              <div class="flex items-center justify-end">
-                Alimentación
-                <div
-                  class="ml-2 w-5 h-5 bg-blue_2 inline-block rounded-full"
-                ></div>
-              </div>
-              <div class="text-right text-xs mr-7 text-[#4cadac]">
-                (${{ totalExpensesAlim | formatNumberMiles }})
-              </div>
-              <div class="flex items-center justify-end font-black">
-                Peajes
-                <div
-                  class="ml-2 w-5 h-5 bg-[#6E96DB] inline-block rounded-full"
-                ></div>
-              </div>
-              <div class="text-right text-xs mr-7 text-[#6E96DB] font-black">
-                (${{ totalExpensesPeaj | formatNumberMiles }})
-              </div>
-            </div>
-            <div class="text-left">
-              <div class="flex items-center justify-start">
-                <div
-                  class="mr-2 w-5 h-5 bg-[#FF99B7] inline-block rounded-full"
-                ></div>
-                Transporte
-              </div>
-              <div class="text-xs ml-7 text-[#FF99B7] font-black">
-                (${{ totalExpensesTrans | formatNumberMiles }})
-              </div>
-              <div class="flex items-center justify-start">
-                <div
-                  class="mr-2 w-5 h-5 bg-[#6EB9DB] inline-block rounded-full"
-                ></div>
-                Otro
-              </div>
-              <div class="text-xs ml-7 text-[#6EB9DB] font-black">
-                (${{ totalExpensesOthers | formatNumberMiles }})
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="my-5 text-justify px-5">
           Entre la fecha <b>{{ initDate.format("DD/MM/YYYY") }}</b> y la
           fecha <b>{{ currentDate.format("DD/MM/YYYY") }}</b> salió un
@@ -545,7 +458,8 @@
           </ngx-charts-bar-vertical>
         </div>
         <div class="my-5 text-justify px-5">
-          Entre la fecha <b>12/05/2024</b> y la fecha <b>22/05/2024</b> se
+          Entre la fecha <b>{{ initDate.format("DD/MM/YYYY") }}</b> y la
+          fecha <b>{{ currentDate.format("DD/MM/YYYY") }}</b> se
           ingreso un total recaudado de
           <span class="font-black text-blue_1"
             >${{ totalSales | formatNumberMiles }}</span
