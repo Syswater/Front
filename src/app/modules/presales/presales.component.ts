@@ -181,7 +181,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
     try {
       this.spinner.showSpinner(true);
       const { customer_id, distribution_id, product_inventory_id, user_name, transaction_payment, ...sale } = element.sale
-      await this.saleService.updateSale({ ...sale, payment_method: element.payment_method });
+      await this.saleService.updateSale({ ...sale, payment_method: element.payment_method, user_id: element.user_id });
       await this.clientService.updateClient({ id: element.id, is_served: true });
       showPopUp('Venta actualizada con exito', 'success')
       this.getClientsByRoute(this.preSaleStorage.actualDistribution?.route)
@@ -201,7 +201,7 @@ export class PresalesComponent implements OnInit, OnDestroy {
           customer_id: element.id,
           distribution_id: this.preSaleStorage.actualDistribution!.id,
           value_paid: element.value_paid,
-          user_id: this.appStorage.user.id,
+          user_id: element.user_id,
           product_inventory_id: 1,
           payment_method: element.payment_method
         });

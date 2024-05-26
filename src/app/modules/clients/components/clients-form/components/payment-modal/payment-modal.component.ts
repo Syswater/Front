@@ -26,13 +26,11 @@ export class PaymentModalComponent implements OnInit {
       selected: false,
     },
   ];
-  valueControl = new FormControl(this.clientStorage.actualClient!.totalDebt, [Validators.max(this.chips[0].selected ? this.clientStorage.actualClient!.totalDebt : 999999), Validators.min(0)])
+  valueControl = new FormControl(this.clientStorage.actualClient!.totalDebt, [Validators.max(this.chips[0].selected ? this.clientStorage.actualClient!.totalDebt : 999999), Validators.min(1), Validators.required])
   formPayment: FormGroup = this.fb.group({
     value: this.valueControl,
     payment_method: 'EFECTIVO',
-    user_id:
-      [parseInt(localStorage.getItem('lastUserTransaction') ?? '0') ??
-      this.appStorage.user.id, Validators.required],
+    user_id: [parseInt(localStorage.getItem('lastUserTransaction') ?? this.appStorage.user.id), Validators.required]
   });
   methods = ['Efectivo', 'Nequi', 'Daviplata', 'Bancolombia'];
   users: any = [];

@@ -70,4 +70,8 @@ export class ExpenseComponent implements OnInit {
     }
     this.spinner.showSpinner(false)
   }
+
+  close() {
+    this.dialogRef.close()
+  }
 }

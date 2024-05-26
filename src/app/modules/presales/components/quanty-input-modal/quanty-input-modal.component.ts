@@ -8,7 +8,6 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./quanty-input-modal.component.css']
 })
 export class QuantyInputModalComponent implements OnInit {
-
   lastQuanty: number = 0
   lastPrice: number = 0
 
@@ -29,7 +28,7 @@ export class QuantyInputModalComponent implements OnInit {
       this.price = this.preSaleStorage.actualClientDistribution.unit_value
       this.lastPrice = this.preSaleStorage.actualClientDistribution.unit_value
     } else {
-      this.quantity = this.preSaleStorage.actualClientDistribution.quantity
+      this.quantity = this.preSaleStorage.actualClientDistribution.quantity == '-' ? 0 : this.preSaleStorage.actualClientDistribution.quantity
       this.lastQuanty = this.preSaleStorage.actualClientDistribution.quantity
       this.price = this.preSaleStorage.actualClientDistribution.unit_value
       this.lastPrice = this.preSaleStorage.actualClientDistribution.unit_value
@@ -56,46 +55,56 @@ export class QuantyInputModalComponent implements OnInit {
 
   incrementPrice() {
     this.price += 1000
-    if(this.preSaleStorage.actualClientDistribution.sale){
-      this.preSaleStorage.actualClientDistribution.sale.unit_value += 1000
+    if (this.preSaleStorage.actualClientDistribution.sale) {
+      this.preSaleStorage.actualClientDistribution.sale.unit_value = this.price
     } else {
-      this.preSaleStorage.actualClientDistribution.unit_value += 1000
+      this.preSaleStorage.actualClientDistribution.unit_value = this.price
     }
   }
 
   decrementPrice() {
     if (this.price > 1000) this.price -= 1000
-    if(this.preSaleStorage.actualClientDistribution.sale){
-      if (this.preSaleStorage.actualClientDistribution.sale.unit_value > 1000) this.preSaleStorage.actualClientDistribution.sale.unit_value -= 1000
-    }else{
-      if (this.preSaleStorage.actualClientDistribution.unit_value > 1000) this.preSaleStorage.actualClientDistribution.unit_value -= 1000
+    if (this.preSaleStorage.actualClientDistribution.sale) {
+      this.preSaleStorage.actualClientDistribution.sale.unit_value = this.price
+    } else {
+      this.preSaleStorage.actualClientDistribution.unit_value = this.price
     }
   }
 
   incrementQuanty() {
     if (this.quantity == '-') this.quantity = 0;
     this.quantity++
+    if (this.quantity > 1000) this.quantity = 1000
     if (this.preSaleStorage.actualClientDistribution.sale) {
-      this.preSaleStorage.actualClientDistribution.sale.amount++
+      this.preSaleStorage.actualClientDistribution.sale.amount = this.quantity
     } else if (this.preSaleStorage.actualClientDistribution.order) {
-      this.preSaleStorage.actualClientDistribution.order.amount++
+      this.preSaleStorage.actualClientDistribution.order.amount = this.quantity
     } else {
-      if (this.preSaleStorage.actualClientDistribution.quantity == '-') this.preSaleStorage.actualClientDistribution.quantity = 0;
-      this.preSaleStorage.actualClientDistribution.quantity++
+      this.preSaleStorage.actualClientDistribution.quantity = this.quantity
     }
   }
 
   decrementQuanty() {
     if (this.quantity > 0) this.quantity--
     if (this.preSaleStorage.actualClientDistribution.sale) {
-      if (this.preSaleStorage.actualClientDistribution.sale.amount > 0)
-        this.preSaleStorage.actualClientDistribution.sale.amount--
+        this.preSaleStorage.actualClientDistribution.sale.amount = this.price
     } else if (this.preSaleStorage.actualClientDistribution.order) {
-      if (this.preSaleStorage.actualClientDistribution.order.amount > 0)
-        this.preSaleStorage.actualClientDistribution.order.amount--
+        this.preSaleStorage.actualClientDistribution.order.amount = this.price
     } else {
-      if (this.preSaleStorage.actualClientDistribution.quantity != '-' && this.preSaleStorage.actualClientDistribution.quantity > 0)
-        this.preSaleStorage.actualClientDistribution.quantity--
+        this.preSaleStorage.actualClientDistribution.quantity = this.price
+    }
+  }
+
+  updateValues() {
+    if (this.preSaleStorage.actualClientDistribution.sale) {
+      this.preSaleStorage.actualClientDistribution.sale.amount = this.quantity
+      this.preSaleStorage.actualClientDistribution.sale.unit_value = this.price
+    } else if (this.preSaleStorage.actualClientDistribution.order) {
+      this.preSaleStorage.actualClientDistribution.order.amount = this.quantity
+      this.preSaleStorage.actualClientDistribution.unit_value = this.price
+    } else {
+      this.preSaleStorage.actualClientDistribution.quantity = this.quantity
+      this.preSaleStorage.actualClientDistribution.unit_value = this.price
     }
   }
 }

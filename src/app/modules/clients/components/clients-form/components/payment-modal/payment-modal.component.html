@@ -46,6 +46,10 @@
         <mat-error *ngIf="formPayment.get('value')?.hasError('min')"
           >No se admiten números negativos</mat-error
         >
+        <mat-error
+        *ngIf="formPayment.get('value')?.hasError('required')"
+        >Este campo es obligatorio</mat-error
+      >
       </mat-form-field>
 
       <p class="text-xl mt-2 col-span-2" *ngIf="isAbonos() && !appStorage.isDesktop">
